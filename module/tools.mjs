@@ -1,348 +1,470 @@
-/* global game, ui, Hooks, ChatMessage, CONST, renderTemplate, canvas, foundry, PIXI */
+/* global game, ui, Hooks, ChatMessage, CONST, canvas, foundry */
 
-/// MASKS: Influence HUD (click-to-set > < = ⟲)
-/// Standalone module that renders a small HUD right under the Team HUD.
-/// - Source: scene token whose Actor is type "character" (PC only)
-/// - Target: ANY scene token (PC or NPC)
-/// - Buttons: > (green), < (red), = (yellow), ⟲ reset
-///
-/// Storage: updates sourceActor.flags["masks-newgeneration-unofficial"].influences
-///   - haveInfluenceOver: source has over target  (">")
-///   - hasInfluenceOver:  target has over source  ("<")
-///
-/// Announces to chat with old → new state (optional, default on).
-///
-/// This file does not modify your existing code; it mounts and manages its own root.
+/**
+ * tools.mjs — Quick Influence (Scene Controls)
+ * -----------------------------------------------------------------------------
+ * A lightweight, toggleable control group in the Foundry Scene Controls bar
+ * with two actions:
+ *   • Create Influence (writes to both character sheets when applicable)
+ *   • Remove Influence  (clears on both sides, prunes unlocked empties)
+ *
+ * Key points:
+ * - No HUD, no multi-select templates; just Foundry's controls + a tiny dialog.
+ * - Fuzzy name matching identical to the InfluenceIndex helpers.
+ * - Writes are limited to the two involved actors (fast; no global scans).
+ * - If a player can’t update the counterpart sheet, a GM socket hop is used.
+ * - Symmetric updates honored whenever both sides are Characters.
+ */
 
-const NS = "masks-newgeneration-extensions";
+import {
+  normalize,                 // same fuzzy logic used by InfluenceIndex
+  candidateTokenNames,       // actor+token candidate display names
+  InfluenceIndex             // optional use; we rely mainly on direct writes
+} from "./helpers/influence.mjs";
 
-// Reuse the same pos setting key as Team HUD so both align to the same corner.
-const KEY_POSITION = "hudPosition"; // (client) "bottom-left" | "top-left" | "top-right"
-// Our own settings
-const KEY_ENABLED  = "influenceHudEnabled";        // (client) toggle HUD display
-const KEY_ANNOUNCE = "announceInfluenceChanges";   // (world) post chat messages
+const NS          = "masks-newgeneration-extensions";   // our module namespace (settings)
+const FLAG_SCOPE  = "masks-newgeneration-unofficial";   // where Influence arrays are stored
+const FLAG_KEY    = "influences";
+const KEY_ANNOUNCE = "announceInfluenceChanges";        // world setting for chat announces
+const SOCKET_NS   = "module.masks-newgeneration-extensions"; // GM hop channel
 
 const OWNER = (CONST.DOCUMENT_OWNERSHIP_LEVELS?.OWNER ?? 3);
 
-// Colors (match your hover lines)
-const COLOR_OUT = "#26b231"; // >
-const COLOR_IN  = "#ce0707"; // <
-const COLOR_MUT = "#ee9b3a"; // =
+/* -------------------------------- Utilities ------------------------------- */
 
-const TPL = `modules/${NS}/templates/influence-hud.html`;
+/** Read (deep-cloned) Influence array from an actor. */
+function readInfluences(actor) {
+  return foundry.utils.deepClone(actor.getFlag(FLAG_SCOPE, FLAG_KEY) || []);
+}
 
-const InfluenceHUD = {
-  root: null,
-  _srcTokenId: null,
-  _tgtTokenId: null,
-  _renderQueued: false,
+/** Return a best label to store for "counterparty" names (actor+token). */
+function pickStorageName(actor, token) {
+  // Prefer actor.name, then realName if provided, else token display name.
+  const cands = candidateTokenNames(actor, token);
+  return cands[0] || actor?.name || token?.document?.name || "Unknown";
+}
 
-  get _enabled() {
-    return game.settings.get(NS, KEY_ENABLED) === true;
-  },
+/** Find (or create) an influence entry by fuzzy name in an array. */
+function ensureEntry(arr, nameToMatch) {
+  const want = normalize(nameToMatch);
+  let idx = arr.findIndex(e => normalize(e?.name) === want);
+  if (idx >= 0) return { idx, obj: arr[idx] };
 
-  applyPosition() {
-    if (!this.root) return;
-    const pos = game.settings.get(NS, KEY_POSITION);
-    this.root.classList.remove("pos-bottom-left", "pos-top-left", "pos-top-right");
-    this.root.classList.add(`pos-${pos}`);
-  },
+  const obj = {
+    id: (foundry.utils.randomID?.(16) ?? Math.random().toString(36).slice(2)),
+    name: nameToMatch,
+    hasInfluenceOver: false,
+    haveInfluenceOver: false,
+    locked: false
+  };
+  arr.push(obj);
+  return { idx: arr.length - 1, obj };
+}
 
-  /** Mount under the Team HUD, if present; otherwise attach to #ui-top */
-  async mount() {
-    // Remove previous
-    this.root?.remove();
+/** Convert flags to a compact symbol for chat. */
+function stateSymbol(e) {
+  const out = !!e?.haveInfluenceOver; // this actor has influence over other
+  const inn = !!e?.hasInfluenceOver;  // the other has influence over this actor
+  if (out && inn) return "=";
+  if (out) return ">";
+  if (inn) return "<";
+  return "—";
+}
 
-    if (!this._enabled) return;
+/** Permission check: can the current user update this actor? */
+function canEditActor(actor) {
+  return game.user?.isGM || actor?.isOwner === true;
+}
 
-    const uiTop = document.getElementById("ui-bottom") ?? document.body;
+/** Compact announce helper. */
+async function announceChange(srcName, tgtName, beforeSym, afterSym) {
+  if (!game.settings.get(NS, KEY_ANNOUNCE)) return;
+  const who = game.user?.name ?? "Player";
+  const badge = (s) => {
+    const css = "display:inline-block;padding:0 .35rem;border-radius:.25rem;font-weight:700;";
+    if (s === ">") return `<span style="${css}background:#26b231;color:#fff">${s}</span>`;
+    if (s === "<") return `<span style="${css}background:#ce0707;color:#fff">${s}</span>`;
+    if (s === "=") return `<span style="${css}background:#ee9b3a;color:#000">${s}</span>`;
+    return `<span style="${css}background:#666;color:#fff">${s}</span>`;
+  };
 
-    this.root = document.createElement("section");
-    this.root.id = "masks-influence-hud";
-    this.applyPosition();
+  await ChatMessage.create({
+    content: `<b>Influence</b>: <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em> → <em>${srcName}</em> ${badge(afterSym)} <em>${tgtName}</em> <span class="color-muted">— set by ${who}</span>`,
+    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+  });
+}
 
-    // Prefer directly under Team HUD if present
-    const team = document.getElementById("masks-team-hud");
-    if (team?.parentElement) {
-      team.insertAdjacentElement("afterend", this.root);
-    } else {
-      uiTop.appendChild(this.root);
-    }
-
-    await this.render();
-    this._registerHooks();
-  },
-
-  /** Return Token from id */
-  _tok(id) { return id ? canvas.tokens?.get(id) : null; },
-
-  /** Build select lists */
-  _buildLists() {
-    const placeables = canvas.tokens?.placeables ?? [];
-    const pcs = placeables.filter(t => t?.actor?.type === "character");
-    const all = placeables.filter(t => t?.actor);
-
-    // Pick sensible defaults
-    const ctrl = canvas.tokens?.controlled?.[0];
-    if (!this._srcTokenId || !this._tok(this._srcTokenId)?.actor || this._tok(this._srcTokenId)?.actor?.type !== "character") {
-      this._srcTokenId = ctrl?.actor?.type === "character" ? ctrl.id : pcs[0]?.id ?? null;
-    }
-    if (!this._tgtTokenId || !this._tok(this._tgtTokenId)?.actor) {
-      // Prefer "not the same as source"
-      this._tgtTokenId = all.find(t => t.id !== this._srcTokenId)?.id ?? null;
-    }
-
-    const toLabel = (t) => {
-      const an = t.actor?.name ?? "";
-      const tn = t.document?.name ?? an ?? t.name ?? "Token";
-      const rn = foundry.utils.getProperty(t.actor, "system.attributes.realName.value");
-      const bits = [an];
-      // if (an && an !== tn) bits.push(`(${an})`);
-      // if (rn && rn !== an && rn !== tn) bits.push(`— ${rn}`);
-      if (rn && rn !== an && rn !== tn) bits.push(`(${rn})`);
-      if (!bits.includes(tn) && !tn.includes('The')) bits.push(`@${tn}`);
-      return bits.join(" ");
-    };
-
-    const sources = pcs.map(t => ({ id: t.id, label: toLabel(t), selected: t.id === this._srcTokenId }));
-    const targets = all.map(t => ({ id: t.id, label: toLabel(t), selected: t.id === this._tgtTokenId }));
-    const srcTok  = this._tok(this._srcTokenId);
-    const canAct  = !!(srcTok?.actor?.isOwner || game.user.isGM);
-
-    return { sources, targets, canAct };
-  },
-
-  async render() {
-    if (!this.root || !this._enabled) return;
-
-    const data = this._buildLists();
-
-    const html = await renderTemplate(TPL, data);
-    this.root.innerHTML = html;
-    this._activateListeners();
-  },
-
-  _activateListeners() {
-    const q = (sel) => this.root?.querySelector(sel);
-
-    // Selects
-    q("select[name='src']")?.addEventListener("change", (ev) => {
-      this._srcTokenId = ev.currentTarget.value || null;
-      this._queueRender();
-    });
-
-    q("select[name='tgt']")?.addEventListener("change", (ev) => {
-      this._tgtTokenId = ev.currentTarget.value || null;
-      this._queueRender();
-    });
-
-    // Action buttons
-    ["gt", "lt", "eq", "reset"].forEach(act => {
-      q(`[data-action='${act}']`)?.addEventListener("click", () => this._applyAction(act));
-    });
-  },
-
-  _queueRender() {
-    if (this._renderQueued) return;
-    this._renderQueued = true;
-    setTimeout(async () => {
-      await this.render();
-      this._renderQueued = false;
-    }, 10);
-  },
-
-  // ---------- Influence logic ----------
-
-  /** Normalizer must match your hover-lines module */
-  _normalizeString(s) {
-    if (!s) return "";
-    return String(s).toLowerCase().replace(/the|lady|sir/g, "").replace(/\s+/g, "");
-  },
-
-  /** Compose a set of candidate display names for an actor/token */
-  _candidateNames(actor, token) {
-    const names = [];
-    if (actor?.name) names.push(actor.name);
-    const rn = foundry.utils.getProperty(actor, "system.attributes.realName.value");
-    if (rn) names.push(rn);
-    const tn = token?.document?.name;
-    if (tn) names.push(tn);
-    // De-dup while preserving order
-    return [...new Set(names.filter(Boolean))];
-  },
-
-  /** Fetch a deep clone of the current influences array from an actor */
-  _getInfluences(actor) {
-    const arr = foundry.utils.getProperty(actor, "flags.masks-newgeneration-unofficial.influences") || [];
-    return foundry.utils.deepClone(arr);
-  },
-
-  _stateSymbol(entry) {
-    const out = !!entry?.haveInfluenceOver;
-    const inn = !!entry?.hasInfluenceOver;
-    if (out && inn) return "=";
-    if (out) return "&gt;";
-    if (inn) return "&lt;";
-    return "—";
-  },
-
-  async _applyAction(action) {
-    const srcTok = this._tok(this._srcTokenId);
-    const tgtTok = this._tok(this._tgtTokenId);
-    const srcActor = srcTok?.actor;
-    const tgtActor = tgtTok?.actor;
-
-    if (!srcActor || !tgtActor) {
-      ui.notifications?.warn?.("Pick both a source (PC) and a target (PC or NPC).");
-      return;
-    }
-    if (!(srcActor.isOwner || game.user.isGM)) {
-      ui.notifications?.warn?.("You don’t have permission to edit Influence for that character.");
-      return;
-    }
-
-    // Build name matching set
-    const candidates = this._candidateNames(tgtActor, tgtTok);
-    const candKeys = candidates.map(n => this._normalizeString(n)).filter(Boolean);
-    if (!candKeys.length) {
-      ui.notifications?.warn?.("Couldn’t derive a usable name for the target to store in Influence.");
-      return;
-    }
-
-    // Current influences
-    const current = this._getInfluences(srcActor);
-    const findIndex = () => {
-      return current.findIndex(e => candKeys.includes(this._normalizeString(e?.name)));
-    };
-
-    let idx = findIndex();
-    if (idx < 0 && action !== "reset") {
-      // Create a new entry on demand
-      current.push({
-        id: (foundry.utils.randomID?.(16) ?? Math.random().toString(36).slice(2)),
-        name: candidates[0],
-        hasInfluenceOver: false,
-        haveInfluenceOver: false,
-        locked: false
-      });
-      idx = current.length - 1;
-    }
-
-    const beforeEntry = idx >= 0 ? foundry.utils.deepClone(current[idx]) : { hasInfluenceOver: false, haveInfluenceOver: false, name: candidates[0] };
-    const before = this._stateSymbol(beforeEntry);
-
-    // Apply
-    if (idx >= 0) {
-      if (current[idx].locked === true) {
-        ui.notifications?.warn?.("That Influence is locked and cannot be changed.");
-        return;
-      }
-
-      switch (action) {
-        case "gt": current[idx].haveInfluenceOver = true; break;
-        case "lt": current[idx].hasInfluenceOver = true; break;
-        case "eq":
-          current[idx].haveInfluenceOver = true;
-          current[idx].hasInfluenceOver = true;
-          break;
-        case "reset":
-          // If we found a matching entry, clear it; if nothing matched, nothing to reset.
-          if (idx >= 0) {
-            current[idx].haveInfluenceOver = false;
-            current[idx].hasInfluenceOver = false;
+/** Small direction prompt using classic Dialog (stable across v13+). */
+async function promptDirection(srcLabel, tgtLabel) {
+  return new Promise((resolve) => {
+    const content = `
+      <form class="flexcol" style="gap:.5rem">
+        <p>Choose Influence direction between <b>${srcLabel}</b> and <b>${tgtLabel}</b>:</p>
+        <label><input type="radio" name="dir" value="gt" checked> ${srcLabel} has Influence over ${tgtLabel} (<b>&gt;</b>)</label>
+        <label><input type="radio" name="dir" value="lt"> ${tgtLabel} has Influence over ${srcLabel} (<b>&lt;</b>)</label>
+        <label><input type="radio" name="dir" value="eq"> Mutual Influence (<b>=</b>)</label>
+      </form>
+    `;
+    // eslint-disable-next-line no-new
+    new Dialog({
+      title: "Set Influence Direction",
+      content,
+      buttons: {
+        ok: {
+          label: "Apply",
+          callback: (html) => {
+            const val = html[0].querySelector("input[name='dir']:checked")?.value || "gt";
+            resolve(val);
           }
-          break;
-      }
+        },
+        cancel: { label: "Cancel", callback: () => resolve(null) }
+      },
+      default: "ok",
+      close: () => resolve(null)
+    }).render(true);
+  });
+}
 
-      // If both false and not locked, prune the entry to keep lists tidy
-      if (idx >= 0 && !current[idx].haveInfluenceOver && !current[idx].hasInfluenceOver && current[idx].locked !== true) {
-        current.splice(idx, 1);
-      }
+/** Apply one side of a pair: set or clear flags for (actorA vs counterpartyName). */
+function mutateSide(inflArr, counterpartyName, which) {
+  // which: "gt" => this.haveInfluenceOver=true
+  //        "lt" => this.hasInfluenceOver=true
+  //        "eq" => both true
+  //        "reset" => both false (then prune if not locked)
+  const { idx, obj } = ensureEntry(inflArr, counterpartyName);
+  const prev = { has: !!obj.hasInfluenceOver, have: !!obj.haveInfluenceOver };
+
+  if (obj.locked === true && which !== "reset") {
+    // Locked entries cannot be altered (other than clearing with reset if desired)
+    return { changed: false, prev, now: prev, pruned: false };
+  }
+
+  if (which === "gt") {
+    obj.haveInfluenceOver = true;
+  } else if (which === "lt") {
+    obj.hasInfluenceOver = true;
+  } else if (which === "eq") {
+    obj.hasInfluenceOver = true;
+    obj.haveInfluenceOver = true;
+  } else if (which === "reset") {
+    obj.hasInfluenceOver = false;
+    obj.haveInfluenceOver = false;
+  }
+
+  // Prune empty, unlocked rows
+  let pruned = false;
+  if (!obj.hasInfluenceOver && !obj.haveInfluenceOver && obj.locked !== true) {
+    inflArr.splice(idx, 1);
+    pruned = true;
+  }
+
+  const now = {
+    has: !!obj.hasInfluenceOver,
+    have: !!obj.haveInfluenceOver
+  };
+
+  return {
+    changed: prev.has !== now.has || prev.have !== now.have || pruned,
+    prev, now, pruned
+  };
+}
+
+/** Write influences safely (returns boolean changed). */
+async function writeInfluencesIfChanged(actor, beforeArr, afterArr) {
+  // Shallow compare lengths and key bits to avoid redundant writes
+  const sameLen = beforeArr.length === afterArr.length;
+  let equal = sameLen;
+  if (equal) {
+    for (let i = 0; i < beforeArr.length; i++) {
+      const a = beforeArr[i], b = afterArr[i];
+      if (!a || !b) { equal = false; break; }
+      if (normalize(a.name) !== normalize(b.name) ||
+          !!a.hasInfluenceOver !== !!b.hasInfluenceOver ||
+          !!a.haveInfluenceOver !== !!b.haveInfluenceOver ||
+          !!a.locked !== !!b.locked) { equal = false; break; }
     }
+  }
+  if (equal) return false;
 
-    // Write back to the actor flag
-    try {
-      await srcActor.setFlag("masks-newgeneration-unofficial", "influences", current);
-      const afterEntry = (() => {
-        const j = findIndex();
-        return j >= 0 ? current[j] : { hasInfluenceOver: false, haveInfluenceOver: false, name: candidates[0] };
-      })();
-      const after = this._stateSymbol(afterEntry);
+  await actor.setFlag(FLAG_SCOPE, FLAG_KEY, afterArr);
+  return true;
+}
 
-      // Announce
-      if (game.settings.get(NS, KEY_ANNOUNCE)) {
-        const srcName = srcActor.name ?? srcTok.document?.name ?? "Source";
-        const tgtName = candidates[0] ?? tgtActor.name ?? tgtTok.document?.name ?? "Target";
-        const who = game.user?.name ?? "Player";
+/** Best‑effort GM hop for updates a non‑GM user lacks permission to perform. */
+function requestGMApply(payload) {
+  try {
+    game.socket?.emit(SOCKET_NS, payload);
+  } catch (_) {
+    // If socket fails, we'll rely on the local half only.
+  }
+}
 
-        const badge = (s) => {
-          if (s === "&gt;") return `<span style="display:inline-block;padding:0 .35rem;border-radius:.25rem;background:${COLOR_OUT};color:#fff;font-weight:700">${s}</span>`;
-          if (s === "&lt;") return `<span style="display:inline-block;padding:0 .35rem;border-radius:.25rem;background:${COLOR_IN};color:#fff;font-weight:700">${s}</span>`;
-          if (s === "=")    return `<span style="display:inline-block;padding:0 .35rem;border-radius:.25rem;background:${COLOR_MUT};color:#000;font-weight:700">${s}</span>`;
-          return `<span style="display:inline-block;padding:0 .35rem;border-radius:.25rem;background:#666;color:#fff;font-weight:700">${s}</span>`;
-        };
+/* ------------------------------- Core Object ------------------------------ */
 
-        await ChatMessage.create({
-          content: `<b>Influence</b>: <em>${srcName}</em> ${badge(before)} <em>${tgtName}</em> → <em>${srcName}</em> ${badge(after)} <em>${tgtName}</em> <span class="color-muted">— set by ${who}</span>`,
-          type: CONST.CHAT_MESSAGE_TYPES.OTHER
-        });
-      }
-    } catch (err) {
-      console.error(`[${NS}] Failed to update Influence`, err);
-      ui.notifications?.error?.("Couldn’t update the Influence entry.");
+const QuickInfluence = {
+  /**
+   * Validate selection; return [tokA, tokB] or null.
+   */
+  _pairFromSelection() {
+    const selected = canvas.tokens?.controlled ?? [];
+    if (selected.length !== 2) {
+      ui.notifications?.warn?.("Select exactly two tokens (source and target).");
+      return null;
     }
-
-    // Refresh our UI
-    this._queueRender();
+    // Stable order is not guaranteed; order only matters for the direction label text.
+    return [selected[0], selected[1]];
   },
 
-  _registerHooks() {
-    // Re-render when relevant state changes
-    Hooks.on("canvasReady", () => this._queueRender());
-    Hooks.on("createToken", () => this._queueRender());
-    Hooks.on("updateToken", () => this._queueRender());
-    Hooks.on("deleteToken", () => this._queueRender());
-    Hooks.on("controlToken", () => this._queueRender());
-    Hooks.on("updateActor", (actor, changes) => {
-      // If influences changed on our selected source, refresh
-      const srcActor = this._tok(this._srcTokenId)?.actor;
-      if (srcActor && actor.id === srcActor.id) {
-        const flagChanged = foundry.utils.getProperty(changes, "flags.masks-newgeneration-unofficial.influences") !== undefined;
-        if (flagChanged) this._queueRender();
+  /**
+   * Create (set) Influence between two selected tokens.
+   * Prompts for direction; updates both character sheets when applicable.
+   */
+  async create() {
+    const pair = this._pairFromSelection();
+    if (!pair) return;
+
+    const [tokA, tokB] = pair;
+    const actorA = tokA?.actor;
+    const actorB = tokB?.actor;
+    if (!actorA || !actorB) {
+      ui.notifications?.warn?.("Both tokens must have actors.");
+      return;
+    }
+
+    const aLabel = actorA.name ?? tokA.document?.name ?? "A";
+    const bLabel = actorB.name ?? tokB.document?.name ?? "B";
+
+    const dir = await promptDirection(aLabel, bLabel);
+    if (!dir) return; // cancelled
+
+    await this._applyPair(actorA, tokA, actorB, tokB, dir);
+  },
+
+  /**
+   * Remove Influence between the two selected tokens (both directions).
+   */
+  async remove() {
+    const pair = this._pairFromSelection();
+    if (!pair) return;
+
+    const [tokA, tokB] = pair;
+    const actorA = tokA?.actor;
+    const actorB = tokB?.actor;
+    if (!actorA || !actorB) {
+      ui.notifications?.warn?.("Both tokens must have actors.");
+      return;
+    }
+
+    await this._applyPair(actorA, tokA, actorB, tokB, "reset");
+  },
+
+  /**
+   * Core apply for a pair with a chosen directive: "gt" | "lt" | "eq" | "reset".
+   * Writes only to Character actors; NPCs don’t store Influence nodes.
+   * If only one side is a Character, the single sheet is updated appropriately.
+   * When the current user lacks permission for a side, ask GM over socket.
+   */
+  async _applyPair(actorA, tokA, actorB, tokB, directive) {
+    // Decide which sub-actions to apply to each sheet
+    // "gt"   => on A: have=true for B; on B (if Character): has=true for A
+    // "lt"   => on A: has=true for B;  on B (if Character): have=true for A
+    // "eq"   => both
+    // "reset"=> both false on both sides
+
+    const aIsChar = actorA.type === "character";
+    const bIsChar = actorB.type === "character";
+
+    if (!aIsChar && !bIsChar) {
+      ui.notifications?.warn?.("At least one token must be a Character (PC).");
+      return;
+    }
+
+    const aBefore = aIsChar ? readInfluences(actorA) : null;
+    const bBefore = bIsChar ? readInfluences(actorB) : null;
+
+    const aAfter = aBefore ? foundry.utils.deepClone(aBefore) : null;
+    const bAfter = bBefore ? foundry.utils.deepClone(bBefore) : null;
+
+    const nameAforB = pickStorageName(actorA, tokA);
+    const nameBforA = pickStorageName(actorB, tokB);
+
+    // Apply mutations
+    let aPrevSym = "—", aNowSym = "—";
+    let bPrevSym = "—", bNowSym = "—";
+
+    if (aIsChar) {
+      const whichA =
+        directive === "gt" ? "gt" :
+        directive === "lt" ? "lt" :
+        directive === "eq" ? "eq" : "reset";
+      const st = mutateSide(aAfter, nameBforA, whichA);
+      if (st.prev) aPrevSym = stateSymbol({ hasInfluenceOver: st.prev.has, haveInfluenceOver: st.prev.have });
+      if (st.now)  aNowSym  = stateSymbol({ hasInfluenceOver: st.now.has,  haveInfluenceOver: st.now.have  });
+    }
+
+    if (bIsChar) {
+      let whichB = "reset";
+      if (directive === "gt") whichB = "lt";       // mirror
+      else if (directive === "lt") whichB = "gt";  // mirror
+      else if (directive === "eq") whichB = "eq";
+      const st = mutateSide(bAfter, nameAforB, whichB);
+      if (st.prev) bPrevSym = stateSymbol({ hasInfluenceOver: st.prev.has, haveInfluenceOver: st.prev.have });
+      if (st.now)  bNowSym  = stateSymbol({ hasInfluenceOver: st.now.has,  haveInfluenceOver: st.now.have  });
+    }
+
+    // Write, respecting permissions; GM-hop if needed.
+    const tasks = [];
+    const gmPayload = { action: "applyPair", srcId: actorA.id, tgtId: actorB.id, directive };
+
+    if (aIsChar) {
+      if (canEditActor(actorA)) {
+        tasks.push(writeInfluencesIfChanged(actorA, aBefore, aAfter));
+      } else {
+        gmPayload.aAfter = aAfter; // include full arr so GM doesn't recompute names
       }
-    });
+    }
+    if (bIsChar) {
+      if (canEditActor(actorB)) {
+        tasks.push(writeInfluencesIfChanged(actorB, bBefore, bAfter));
+      } else {
+        gmPayload.bAfter = bAfter;
+      }
+    }
+
+    // If there are sides we couldn't write, ask the GM to perform them.
+    if ((!canEditActor(actorA) && aIsChar) || (!canEditActor(actorB) && bIsChar)) {
+      requestGMApply(gmPayload);
+    }
+
+    try {
+      await Promise.all(tasks);
+    } catch (err) {
+      console.error(`[${NS}] Failed to write Influence flags`, err);
+      ui.notifications?.error?.("Couldn’t update Influence (see console).");
+      return;
+    }
+
+    // Kick the InfluenceIndex to rebuild lazily via hooks; optionally ask it
+    // to sync the pair immediately (harmless if one side was NPC).
+    try { await InfluenceIndex?.syncCharacterPairFlags?.(actorA); } catch (_) { /* no-op */ }
+
+    // Announce – prefer the A-line as main text; include only if at least one side changed
+    if (aIsChar) {
+      const aLabel = actorA.name ?? tokA.document?.name ?? "A";
+      const bLabel = nameBforA ?? actorB.name ?? tokB.document?.name ?? "B";
+      await announceChange(aLabel, bLabel, aPrevSym, aNowSym);
+    } else if (bIsChar) {
+      const bLabel = actorB.name ?? tokB.document?.name ?? "B";
+      const aLabel = nameAforB ?? actorA.name ?? tokA.document?.name ?? "A";
+      await announceChange(bLabel, aLabel, bPrevSym, bNowSym);
+    }
+  },
+
+  /** GM-side handler for socket operations. */
+  async _gmApplyFromSocket(data) {
+    if (!game.user?.isGM) return;
+    if (data?.action !== "applyPair") return;
+
+    const actorA = game.actors?.get(data.srcId);
+    const actorB = game.actors?.get(data.tgtId);
+    if (!actorA || !actorB) return;
+
+    const aIsChar = actorA.type === "character";
+    const bIsChar = actorB.type === "character";
+
+    const aBefore = aIsChar ? readInfluences(actorA) : null;
+    const bBefore = bIsChar ? readInfluences(actorB) : null;
+
+    // If arrays were provided by the requester, trust them; else recompute.
+    const aAfter = aIsChar ? (data.aAfter ?? aBefore) : null;
+    const bAfter = bIsChar ? (data.bAfter ?? bBefore) : null;
+
+    const tasks = [];
+    if (aIsChar && aAfter) tasks.push(writeInfluencesIfChanged(actorA, aBefore, aAfter));
+    if (bIsChar && bAfter) tasks.push(writeInfluencesIfChanged(actorB, bBefore, bAfter));
+    try {
+      await Promise.all(tasks);
+    } catch (err) {
+      console.error(`[${NS}] GM socket apply failed`, err);
+    }
   }
 };
 
-// ----- Settings & lifecycle -----
-Hooks.once("init", () => {
-  // Toggle HUD (client setting so each user can choose to show/hide)
-  game.settings.register(NS, KEY_ENABLED, {
-    name: "Influence HUD",
-    hint: "Show a small Influence control bar under the Team HUD.",
-    scope: "client",
-    config: true,
-    type: Boolean,
-    default: true,
-    onChange: () => InfluenceHUD.mount?.()
-  });
+/* ------------------------------- Scene Controls --------------------------- */
 
-  // Announce to chat (world)
-  game.settings.register(NS, KEY_ANNOUNCE, {
-    name: "Announce Influence changes to chat",
-    scope: "world",
-    config: true,
-    type: Boolean,
-    default: true
-  });
+// Hooks.on("getSceneControlButtons", (controls) => {
+//   // Avoid duplicates if re-rendered
+//   if (controls.some(c => c.name === "masksQuickInfluence")) return;
+
+//   controls.push({
+//     name: "masksQuickInfluence",
+//     title: "Quick Influence",
+//     icon: "fa-solid fa-people-arrows",
+//     layer: "tokens",
+//     visible: true,
+//     tools: [
+//       {
+//         name: "createInfluence",
+//         title: "Create Influence (updates both sheets if applicable)",
+//         icon: "fa-solid fa-user-plus",
+//         button: true,
+//         onClick: () => QuickInfluence.create()
+//       },
+//       {
+//         name: "removeInfluence",
+//         title: "Remove Influence (clears both sides if applicable)",
+//         icon: "fa-solid fa-user-minus",
+//         button: true,
+//         onClick: () => QuickInfluence.remove()
+//       }
+//     ],
+//     activeTool: "createInfluence"
+//   });
+// });
+Hooks.on("getSceneControlButtons", (controls) => {
+  
+  controls.tokens.tools.createInfluence = {
+    name: "masksQuickInfluence",
+    layer: "tokens",
+    visible: true,
+    name: "createInfluence",
+    title: "Create Influence (updates both sheets if applicable)",
+    icon: "fa-solid fa-user-plus",
+    button: true,
+    onClick: () => QuickInfluence.create()
+  }
+  controls.tokens.tools.removeInfluence = {
+        name: "removeInfluence",
+
+        layer: "tokens",
+        title: "Remove Influence (clears both sides if applicable)",
+        icon: "fa-solid fa-user-minus",
+        button: true,
+        onClick: () => QuickInfluence.remove()
+      }
+
 });
 
-Hooks.once("ready", async () => {
-  await InfluenceHUD.mount();
-  // Keep position in sync with the existing Team HUD setting
-  Hooks.on("updateSetting", (setting) => {
-    if (setting.key === `${NS}.${KEY_POSITION}`) {
-      InfluenceHUD.applyPosition?.();
-    }
-  });
+/* ------------------------------- Hooks & Settings ------------------------- */
+
+Hooks.once("init", () => {
+  // World setting: announce to chat on changes
+  if (!game.settings.settings.has(`${NS}.${KEY_ANNOUNCE}`)) {
+    game.settings.register(NS, KEY_ANNOUNCE, {
+      name: "Announce Influence changes to chat",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true
+    });
+  }
+});
+
+Hooks.once("ready", () => {
+  // GM socket listener for permission escalations
+  try {
+    game.socket?.on(SOCKET_NS, (data) => QuickInfluence._gmApplyFromSocket(data));
+  } catch (err) {
+    console.warn(`[${NS}] Socket unavailable; GM-hop disabled.`, err);
+  }
 });
