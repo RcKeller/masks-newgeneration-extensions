@@ -1,0 +1,96 @@
+:root {
+  --actor-gradient: linear-gradient(
+    to bottom,
+    #58a4fc 0%,
+    #b0c2b8 80%,
+    #fff1b6 100%
+  );
+  --masks-primary-text-color: #ffffff;
+  --masks-secondary-text-color: #000000;
+  --masks-title-text-color: #173f6e;
+  --masks-input-text-color: #000000;
+  --masks-input-placeholder-color: #979797;
+  --masks-input-disabled-color: #0e2949;
+  --masks-interactive-bg-color: #1e528f;
+  --masks-interactive-bg-hover-color: #173f6e;
+  --masks-option-bg-color: #683b47;
+  --masks-tabs-border-color: #ffeb98;
+  --masks-tab-bg-active-color: #ffeb98;
+  --masks-input-bg-color: rgb(255 255 255 / 75%);
+  --masks-input-border-color: rgb(0 0 0 / 75%);
+  --masks-tox-edit-area-bg-color: rgba(255, 255, 255, 0.5);
+  --masks-resource-border-color: #bcc8de;
+  --masks-resource-control-bg-color: #ffffff;
+  --masks-stats-border-color: rgb(229 222 210 / 37%);
+  --masks-cell-title-border-color: #173f6e;
+  --masks-header-bg-color: #173f6e;
+  --masks-window-bg-image: url("/modules/masks-newgeneration-unofficial/images/skyline.webp"),
+    var(--actor-gradient);
+  --masks-window-bg-position: bottom left;
+  --masks-influence-icon-color: invert(100%);
+  --masks-influence-icon-disabled-color: invert(100%) opacity(50%);
+}
+
+/* Minimal, Foundry-aligned styling for the GM Whisper control */
+#xcard-btn-wrapper {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  /* margin: 0 4px; */
+}
+
+#xcard.ui-control.icon {
+  transition: var(--ui-fade-delay);
+}
+
+#xcard.ui-control.icon:hover {
+  background-color: var(--color-level-warning);
+}
+
+/* A lightweight, inline HUD that sits wherever you mount it. */
+#masks-team-hud {
+  /* Make centering in wide containers easy */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* Don't block clicks outside the panel */
+  pointer-events: none;
+  z-index: 100;
+  margin: 0.25rem 0;
+}
+
+/* Interactive inner content */
+#masks-team-hud .panel {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: start;
+  gap: 8px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--masks-primary-text-color, #fff);
+}
+
+/* The only styled element: the "Team" tag */
+#masks-team-hud .tag {
+  height: 100%;
+  margin: 0;
+  color: var(--masks-primary-text-color, #fff);
+  background: var(--masks-interactive-bg-color, #3da7db);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  font-size: 20px;
+}
+
+/* Keep native buttons; just a nudge to input width */
+#masks-team-hud input[name=team] {
+  max-width: 3.6rem;
+  text-align: center;
+}
+
+/*# sourceMappingURL=masks-extensions.css.map */
