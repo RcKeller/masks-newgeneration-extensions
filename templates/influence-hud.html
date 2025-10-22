@@ -1,7 +1,4 @@
 <section class="panel faded-ui" role="group" aria-label="Masks Influence HUD">
-    <span class="tag" title="Masks Influence">Influence</span>
-
-    <!-- Source (PC only) -->
     <label class="sr-only" for="mi-source">Source: Playable Character</label>
     <select id="mi-source" name="src" aria-label="Source Token (Playable Character)">
         {{#each sources}}
@@ -27,10 +24,6 @@
         <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
         {{/each}}
     </select>
-
-    <!-- Mutual + reset -->
-    <button type="button" class="ui-control plain icon btn-eq" data-action="eq" title="Mutual Influence (=)"
-        aria-label="Mutual Influence" {{#unless canAct}}disabled{{/unless}}>=</button>
 
     <button type="button" class="ui-control plain icon btn-reset" data-action="reset" title="Clear Influence"
         aria-label="Reset Influence" {{#unless canAct}}disabled{{/unless}}>⟲</button>

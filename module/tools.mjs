@@ -55,7 +55,7 @@
 
       if (!this._enabled) return;
 
-      const uiTop = document.getElementById("ui-top") ?? document.body;
+      const uiTop = document.getElementById("ui-bottom") ?? document.body;
 
       this.root = document.createElement("section");
       this.root.id = "masks-influence-hud";
@@ -96,9 +96,11 @@
         const an = t.actor?.name ?? "";
         const tn = t.document?.name ?? an ?? t.name ?? "Token";
         const rn = foundry.utils.getProperty(t.actor, "system.attributes.realName.value");
-        const bits = [tn];
-        if (an && an !== tn) bits.push(`(${an})`);
-        if (rn && rn !== an && rn !== tn) bits.push(`— ${rn}`);
+        const bits = [an];
+        // if (an && an !== tn) bits.push(`(${an})`);
+        // if (rn && rn !== an && rn !== tn) bits.push(`— ${rn}`);
+        if (rn && rn !== an && rn !== tn) bits.push(`(${rn})`);
+        if (!bits.includes(tn) && !tn.includes('The')) bits.push(`@${tn}`);
         return bits.join(" ");
       };
 
