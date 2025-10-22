@@ -14,7 +14,6 @@
 ///
 /// This file does not modify your existing code; it mounts and manages its own root.
 
-(() => {
   const NS = "masks-newgeneration-extensions";
 
   // Reuse the same pos setting key as Team HUD so both align to the same corner.
@@ -345,4 +344,3 @@
       }
     });
   });
-})();
