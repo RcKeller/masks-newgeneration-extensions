@@ -7,15 +7,16 @@
     </select>
 
     <!-- Direction buttons -->
-    <div class="btn-group" role="group" aria-label="Influence Direction">
         <button type="button" class="ui-control plain icon btn-gt" data-action="gt"
             title="Source has Influence over Target (>)" aria-label="Source has Influence over Target" {{#unless
             canAct}}disabled{{/unless}}>&gt;</button>
 
+    <button type="button" class="ui-control plain icon btn-reset" data-action="reset" title="Clear Influence"
+        aria-label="Reset Influence" {{#unless canAct}}disabled{{/unless}}>⟲</button>
+
         <button type="button" class="ui-control plain icon btn-lt" data-action="lt"
             title="Target has Influence over Source (<)" aria-label="Target has Influence over Source" {{#unless
             canAct}}disabled{{/unless}}>&lt;</button>
-    </div>
 
     <!-- Target (PC or NPC) -->
     <label class="sr-only" for="mi-target">Target: Character or NPC</label>
@@ -25,6 +26,4 @@
         {{/each}}
     </select>
 
-    <button type="button" class="ui-control plain icon btn-reset" data-action="reset" title="Clear Influence"
-        aria-label="Reset Influence" {{#unless canAct}}disabled{{/unless}}>⟲</button>
 </section>
