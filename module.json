@@ -1,32 +1,67 @@
 {
-  "id": "masks-newgeneration-extensions",
-  "title": "Masks: A New Generation – Extensions",
-  "version": "1.1.0",
-  "compatibility": {
-    "minimum": "13",
-    "verified": "13"
-  },
-  "description": "<p>Lightweight Team Pool HUD for Masks, built without the deprecated Application V1 API.</p>",
-  "authors": [
-    {
-      "name": "Your Name",
-      "flags": {}
-    }
-  ],
-  "esmodules": [
-    "team-hud.js",
-    "xcard.js",
-    "influence.js"
-  ],
-  "styles": [
-    {
-      "src": "team-hud.css"
-    },
-    {
-      "src": "xcard.css"
-    }
-  ],
-  "flags": {
-    "canUpload": true
-  }
+	"id": "masks-newgeneration-extensions",
+	"title": "Masks: A New Generation (PbtA) Extensions",
+	"description": "Additional features for the unoffical Masks: A New Generation system",
+	"version": "#{VERSION}#",
+	"compatibility": {
+		"minimum": 13,
+		"verified": 13.350,
+		"maximum": 13
+	},
+	"authors": [
+		{
+			"name": "RcKeller",
+			"url": "https://github.com/RcKeller"
+		}
+	],
+	"packs": [
+		
+	],
+	"packFolders": [
+	],
+	"esmodules": ["module/masks.mjs"],
+	"styles": ["css/masks-sheets.css"],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "languages/en.json"
+		}
+	],
+	"flags": {
+		"hotReload": {
+			"extensions": ["css", "html", "hbs", "json"],
+			"paths": ["css", "languages", "templates"]
+		}
+	},
+	"relationships": {
+		"systems": [
+			{
+				"id": "pbta",
+				"type": "system",
+				"compatibility": {
+					"minimum": "1.1.16"
+				}
+			}
+		]
+	},
+	"url": "#{URL}#",
+	"manifest": "#{MANIFEST}#",
+	"download": "#{DOWNLOAD}#",
+	"license": "LICENSE",
+	"readme": "README.md",
+	"media": [
+		{
+			"type": "screenshot",
+			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/main/images/screenshots/character-sheet_light.webp",
+			"loop": false,
+			"caption": "Masks character sheet screenshot from Foundry VTT."
+		},
+		{
+			"type": "cover",
+			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/main/images/cover.webp",
+			"loop": false,
+			"caption": "Cover Image for the Unofficial Rhapsody of Blood package."
+		}
+	]
 }

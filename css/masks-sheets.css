@@ -1,0 +1,561 @@
+:root {
+  --actor-gradient: linear-gradient(
+    to bottom,
+    #58a4fc 0%,
+    #b0c2b8 80%,
+    #fff1b6 100%
+  );
+  --masks-primary-text-color: #ffffff;
+  --masks-secondary-text-color: #000000;
+  --masks-title-text-color: #173f6e;
+  --masks-input-text-color: #000000;
+  --masks-input-placeholder-color: #979797;
+  --masks-input-disabled-color: #0e2949;
+  --masks-interactive-bg-color: #1e528f;
+  --masks-interactive-bg-hover-color: #173f6e;
+  --masks-option-bg-color: #683b47;
+  --masks-tabs-border-color: #ffeb98;
+  --masks-tab-bg-active-color: #ffeb98;
+  --masks-input-bg-color: rgb(255 255 255 / 75%);
+  --masks-input-border-color: rgb(0 0 0 / 75%);
+  --masks-tox-edit-area-bg-color: rgba(255, 255, 255, 0.5);
+  --masks-resource-border-color: #bcc8de;
+  --masks-resource-control-bg-color: #ffffff;
+  --masks-stats-border-color: rgb(229 222 210 / 37%);
+  --masks-cell-title-border-color: #173f6e;
+  --masks-header-bg-color: #173f6e;
+  --masks-window-bg-image: url("/modules/masks-newgeneration-unofficial/images/skyline.webp"),
+    var(--actor-gradient);
+  --masks-window-bg-position: bottom left;
+  --masks-influence-icon-color: invert(100%);
+  --masks-influence-icon-disabled-color: invert(100%) opacity(50%);
+}
+
+.pbta.window-app .window-content {
+  color: var(--masks-secondary-text-color);
+  padding: 0;
+}
+.pbta.window-app .window-content a.content-link, .pbta.window-app .window-content a.inline-roll {
+  color: var(--masks-input-text-color);
+}
+.pbta.window-app input,
+.pbta.window-app button,
+.pbta.window-app select,
+.pbta.window-app textarea {
+  background: var(--masks-input-bg-color);
+  color: var(--masks-input-text-color);
+  border: 0.5px solid var(--masks-input-border-color);
+  accent-color: var(--masks-tab-bg-active-color);
+  font-weight: bold;
+}
+.pbta.window-app input:disabled,
+.pbta.window-app button:disabled,
+.pbta.window-app select:disabled,
+.pbta.window-app textarea:disabled {
+  background: rgba(153, 153, 153, 0.2509803922);
+  color: var(--masks-input-disabled-color);
+}
+.pbta.window-app input::placeholder {
+  color: var(--masks-input-placeholder-color) !important;
+}
+
+.pbta.sheet {
+  /** Playbook customizations **/
+}
+.pbta.sheet .advancement {
+  display: none;
+}
+.pbta.sheet .sheet-header__fields .adv-tab {
+  display: none;
+}
+.pbta.sheet .cell__title.warning {
+  background-color: #d68888;
+  color: #000000;
+}
+.pbta.sheet .cell__title.warning::before {
+  height: 0px;
+  background-color: none;
+}
+.pbta.sheet .cell__title.warning::after {
+  width: 0px;
+  background-color: none;
+}
+.pbta.sheet .cell--influences,
+.pbta.sheet .cell--relationshipQuestions,
+.pbta.sheet .cell--adv-tab,
+.pbta.sheet .cell--advancements,
+.pbta.sheet .cell--later-advances {
+  margin-top: 10px;
+}
+.pbta.sheet .cell--momentOfTruth label div.moment-unlock {
+  font-style: italic;
+  text-transform: capitalize;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+.pbta.sheet .sheet-header, .pbta.sheet .sheet-body {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.pbta.sheet .sheet-look .cell--influence {
+  display: none;
+}
+.pbta.sheet .sheet-main .cell--equipment {
+  display: none;
+}
+.pbta.sheet input::placeholder,
+.pbta.sheet .sheet-header select.charplaybook:has(option[value=""]:checked),
+.pbta.sheet .sheet-header select.charplaybook option[value=""] {
+  color: var(--masks-input-placeholder-color);
+  font-style: italic;
+}
+.pbta.sheet.item input[type=checkbox], .pbta.sheet.item input[type=radio] {
+  vertical-align: middle;
+  position: relative;
+  bottom: 1px;
+  height: 15px;
+}
+.pbta.sheet.item label {
+  color: var(--masks-secondary-text-color);
+}
+.pbta.sheet .cell--image {
+  border: 1px solid var(--masks-cell-title-border-color);
+}
+.pbta.sheet .window-header {
+  background-color: var(--masks-interactive-bg-color);
+}
+.pbta.sheet .sheet-resources {
+  align-items: start;
+}
+.pbta.sheet .sheet-resources .cell {
+  text-align: left;
+}
+.pbta.sheet .sheet-resources .cell > .cell__title {
+  justify-content: start;
+}
+.pbta.sheet .sheet-resources .cell--ongoing .resource-control,
+.pbta.sheet .sheet-resources .cell--forward .resource-control,
+.pbta.sheet .sheet-resources .cell--roll-formula .resource-control {
+  border: 0.5px solid var(--masks-input-border-color);
+  background: var(--masks-resource-control-bg-color);
+}
+.pbta.sheet .cell__checkboxes,
+.pbta.sheet .cell__radio {
+  margin: 0;
+}
+.pbta.sheet .cell__checkboxes label.flexrow,
+.pbta.sheet .cell__radio label.flexrow {
+  margin: 0 0 5px 0;
+}
+.pbta.sheet .window-content {
+  background-image: var(--masks-window-bg-image);
+  background-position: var(--masks-window-bg-position);
+  background-repeat: repeat-x;
+  background-size: auto;
+}
+.pbta.sheet .tox.tox-tinymce .tox-edit-area__iframe {
+  background: var(--masks-tox-edit-area-bg-color);
+}
+.pbta.sheet .sheet-header__fields {
+  width: 100%;
+}
+.pbta.sheet .cell--influences .cell__title .item-group-label {
+  cursor: pointer;
+}
+.pbta.sheet .cell--influences .item-details-toggle {
+  display: inline-block;
+  width: 24px;
+  height: 16px;
+  text-align: center;
+  border-radius: 5px;
+  transition: all ease-in-out 0.25s;
+}
+.pbta.sheet .cell--influences .fas {
+  transition: all ease-in-out 0.25s;
+}
+.pbta.sheet .cell--influences .open .fas {
+  transform: rotate(180deg);
+}
+.pbta.sheet .editor-content {
+  background: var(--masks-input-bg-color);
+  color: var(--masks-input-text-color);
+  border: 0.5px solid var(--masks-input-border-color);
+  min-height: 31px;
+  padding: 5px;
+}
+.pbta.sheet .editor-content a.content-link, .pbta.sheet .editor-content a.inline-roll {
+  background: var(--masks-input-bg-color);
+  border: 0.5px solid var(--masks-input-border-color);
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom {
+  padding: 0px 10px;
+}
+.pbta.sheet .sheet-wrapper .sheet-top .sheet-attributes-top {
+  padding: 10px;
+}
+.pbta.sheet .sheet-wrapper .sheet-top .sheet-attributes-top .cell--attributes-top > .cell + .cell::before {
+  left: 0;
+  width: 0;
+  background: none;
+}
+.pbta.sheet .sheet-wrapper .sheet-header {
+  background-color: var(--masks-header-bg-color);
+}
+.pbta.sheet .sheet-wrapper .editor-content {
+  background: var(--masks-input-bg-color);
+  color: var(--masks-secondary-text-color);
+  border: 0.5px solid var(--masks-input-border-color);
+  color: var(--masks-input-text-color);
+  min-height: 31px;
+  padding: 0 10px;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--LongText,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--ListMany,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--moves,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--xp,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--Text,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--Checkbox,
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--Number {
+  padding-top: 5px;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .cell--conditions {
+  padding-top: 0px;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .description .sheet-tab {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  gap: 10px;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .description .cell.cell--bio {
+  min-height: 175px;
+  margin-bottom: 5px;
+  width: 48%;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .description .cell.cell--bio:nth-child(3), .pbta.sheet .sheet-wrapper .sheet-bottom .description .cell.cell--bio:nth-child(4) {
+  width: 100%;
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .description .cell.cell--bio .editor {
+  min-height: calc(100% - 40px);
+}
+.pbta.sheet .sheet-wrapper .sheet-bottom .description .cell.cell--bio .editor .editor-content {
+  height: 145px;
+}
+.pbta.sheet .cell__wrapper {
+  position: relative;
+  width: 100%;
+}
+.pbta.sheet .cell__wrapper > input[type=number] {
+  font-size: 18px;
+  text-align: center;
+  background-color: var(--masks-input-bg-color);
+  color: var(--masks-input-text-color);
+  font-weight: bold;
+  margin: 0;
+  display: block;
+  width: 100%;
+}
+.pbta.sheet .cell--influences .influence-name {
+  flex: 2;
+  display: flex;
+  gap: 2px;
+}
+.pbta.sheet .cell--influences input.influence--name {
+  width: calc(100% - 36px);
+  font-size: 18px;
+  text-align: left;
+  height: 32px;
+  margin: 0px 0px 8px 0px;
+}
+.pbta.sheet .cell--influences .influence-management {
+  margin: 0px 0px 8px 0px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  flex: 1;
+}
+.pbta.sheet .cell--influences .influence-management .influence-disabled {
+  filter: var(--masks-influence-icon-disabled-color);
+}
+.pbta.sheet .cell--influences img.influence-icon {
+  flex: 1;
+  vertical-align: top;
+  border: 0;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  filter: var(--masks-influence-icon-color);
+}
+.pbta.sheet .cell--influences .influence-management .influence-control.influence-delete, .pbta.sheet .cell--influences .influence-management .influence-control.influence-lock, .pbta.sheet .cell--influences .influence-management .influence-control.influence-unlock {
+  font-size: 28px;
+  flex: 1;
+}
+.pbta.sheet .sheet-attributes {
+  position: relative;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.pbta.sheet .sheet-attributes .cell--stats .stat {
+  background: var(--masks-interactive-bg-color);
+  color: var(--masks-primary-text-color);
+}
+.pbta.sheet .sheet-attributes .cell--stats .stat .cell__title {
+  color: var(--masks-primary-text-color);
+}
+.pbta.sheet .sheet-attributes .cell--stats .stat:hover {
+  background: var(--masks-interactive-bg-hover-color);
+}
+.pbta.sheet .sheet-attributes .cell--stats .stat .stat-value {
+  border: 1px solid var(--masks-stats-border-color);
+}
+.pbta.sheet .bio_style {
+  font-style: italic;
+  position: relative;
+  padding-left: 8px;
+  border-bottom: none;
+  color: var(--masks-secondary-text-color);
+  letter-spacing: 0.05rem;
+  font-size: 22px;
+  font-weight: normal;
+  margin: 10px 10px 0px 0px;
+}
+.pbta.sheet .bio_style::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  height: 2px;
+  width: calc(100% - 10px);
+  background-color: var(--masks-bio-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .bio_style::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--masks-bio-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .cell__title {
+  font-style: italic;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+  padding-left: 8px;
+  border-bottom: none;
+  color: var(--masks-title-text-color);
+  letter-spacing: 0.05rem;
+  font-size: 22px;
+}
+.pbta.sheet .cell__title::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  height: 2px;
+  width: calc(100% - 10px);
+  background-color: var(--masks-cell-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .cell__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--masks-cell-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .tabs {
+  border-bottom: 2px solid var(--masks-tabs-border-color);
+}
+.pbta.sheet .sheet-tabs.tabs > a.item {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-style: italic;
+  background-color: var(--masks-interactive-bg-color);
+  color: var(--masks-primary-text-color);
+}
+.pbta.sheet .sheet-tabs.tabs > a.item.active, .pbta.sheet .sheet-tabs.tabs > a.item.active:hover {
+  background-color: var(--masks-tab-bg-active-color);
+  color: var(--masks-secondary-text-color);
+}
+.pbta.sheet .sheet-tabs.tabs > a.item:hover, .pbta.sheet .sheet-tabs.tabs > a.item:focus {
+  background-color: var(--masks-interactive-bg-hover-color);
+  color: var(--masks-primary-text-color);
+  font-weight: bold;
+}
+.pbta.sheet .sheet-header__fields .view-playbook {
+  background: var(--masks-tab-bg-active-color);
+  color: var(--masks-secondary-text-color);
+  opacity: 1;
+  border: 0.5px solid var(--masks-interactive-bg-hover-color);
+}
+.pbta.sheet .sheet-header__fields .view-playbook:hover {
+  opacity: 1;
+  background: var(--masks-interactive-bg-hover-color);
+}
+.pbta.sheet .cell--theReformed input[type=checkbox] {
+  margin: 3px 1px;
+  flex: 0 0 14px;
+}
+.pbta.sheet .cell--theReformed .cell__title {
+  font-size: 20px;
+}
+.pbta.sheet .cell--theScionGreatestEnemy input[type=checkbox],
+.pbta.sheet .cell--theScionGreatestVictim input[type=checkbox],
+.pbta.sheet .cell--theScionPersonalIdol input[type=checkbox],
+.pbta.sheet .cell--theScionGreatestLeader input[type=checkbox],
+.pbta.sheet .cell--theScionGreatestHero input[type=checkbox],
+.pbta.sheet .cell--theScionBiggestCelebrity input[type=checkbox] {
+  margin: 3px 1px;
+  flex: 0 0 14px;
+}
+.pbta.sheet .cell--theScionGreatestEnemy .cell__title,
+.pbta.sheet .cell--theScionGreatestVictim .cell__title,
+.pbta.sheet .cell--theScionPersonalIdol .cell__title,
+.pbta.sheet .cell--theScionGreatestLeader .cell__title,
+.pbta.sheet .cell--theScionGreatestHero .cell__title,
+.pbta.sheet .cell--theScionBiggestCelebrity .cell__title {
+  font-size: 20px;
+}
+.pbta.sheet .cell--theScionGreatestEnemy input[type=checkbox]:nth-child(5n),
+.pbta.sheet .cell--theScionGreatestVictim input[type=checkbox]:nth-child(5n),
+.pbta.sheet .cell--theScionPersonalIdol input[type=checkbox]:nth-child(5n),
+.pbta.sheet .cell--theScionGreatestLeader input[type=checkbox]:nth-child(5n),
+.pbta.sheet .cell--theScionGreatestHero input[type=checkbox]:nth-child(5n),
+.pbta.sheet .cell--theScionBiggestCelebrity input[type=checkbox]:nth-child(5n) {
+  margin-left: 5px;
+}
+.pbta.sheet .cell--theScionGreatestEnemy input[type=checkbox]:nth-child(5n)::before,
+.pbta.sheet .cell--theScionGreatestVictim input[type=checkbox]:nth-child(5n)::before,
+.pbta.sheet .cell--theScionPersonalIdol input[type=checkbox]:nth-child(5n)::before,
+.pbta.sheet .cell--theScionGreatestLeader input[type=checkbox]:nth-child(5n)::before,
+.pbta.sheet .cell--theScionGreatestHero input[type=checkbox]:nth-child(5n)::before,
+.pbta.sheet .cell--theScionBiggestCelebrity input[type=checkbox]:nth-child(5n)::before {
+  display: inline-block;
+  content: "";
+  border-left: 2px solid #7a7971;
+  height: 18px;
+  margin: 0 -4px;
+}
+.pbta.sheet .cell--Checkbox label {
+  display: flex;
+  align-items: center;
+}
+
+/** NPCs **/
+.pbta.sheet.npc .sheet-main [data-tab=equipment] {
+  display: none;
+}
+.pbta.sheet.npc .sheet-wrapper {
+  max-height: none;
+}
+.pbta.sheet.npc .sheet-wrapper .sheet-header {
+  background: none;
+  margin-bottom: 10px;
+  padding: 8px;
+  max-height: none;
+}
+.pbta.sheet.npc .sheet-attributes {
+  grid-column: span 5;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.pbta.sheet.npc .sheet-attributes .cell-npc-text {
+  grid-column: span 2;
+}
+.pbta.sheet.npc .sheet-attributes .cell-npc-text .editor {
+  min-height: 150px;
+  max-height: 150px;
+}
+.pbta.sheet.npc .sheet-header__fields {
+  padding: 0px;
+}
+.pbta.sheet.npc .cell--aesthetics .cell--conditions ul.cell__checkboxes label {
+  display: flex;
+  align-items: center;
+}
+.pbta.sheet.npc .sheet-attributes .cell-npc-text .editor .tox-editor-container {
+  min-height: 150px;
+  height: 100% !important;
+}
+
+/** Items **/
+.pbta.sheet.item.playbook {
+  min-height: 600px;
+  min-width: 800px;
+}
+
+.pbta.sheet .editor-content .playbook {
+  padding: 10px;
+}
+.pbta.sheet .editor-content .playbook h1 {
+  width: 100%;
+  text-align-last: center;
+}
+.pbta.sheet .editor-content .playbook h2 {
+  font-style: italic;
+  position: relative;
+  padding-left: 8px;
+  color: var(--masks-input-text-color);
+  letter-spacing: 0.05rem;
+  font-size: 22px;
+}
+.pbta.sheet .editor-content .playbook h2::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  height: 2px;
+  width: calc(100% - 10px);
+  background-color: var(--masks-cell-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .editor-content .playbook h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--masks-cell-title-border-color);
+  transform: skewX(-15deg);
+}
+.pbta.sheet .editor-content .playbook h1, .pbta.sheet .editor-content .playbook h2, .pbta.sheet .editor-content .playbook h3 {
+  border-bottom: none;
+}
+.pbta.sheet .editor-content .playbook h2, .pbta.sheet .editor-content .playbook h3 {
+  margin-top: 30px;
+}
+.pbta.sheet .editor-content .playbook .special {
+  color: #ae0000;
+  font-weight: bold;
+}
+.pbta.sheet .editor-content .playbook .rules {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 10px 20px;
+}
+.pbta.sheet .editor-content .playbook .rules div {
+  width: 48%;
+}
+.pbta.sheet .editor-content .playbook .rules div h2:nth-child(1) {
+  margin-top: 10px;
+}
+.pbta.sheet .editor-content .playbook .extras {
+  margin-top: 30px;
+}
+
+/*# sourceMappingURL=masks-sheets.css.map */
