@@ -1,5 +1,5 @@
 import './influence.mjs';
-import './team-hud.mjs';
+import './team.mjs';
 import './xcard.mjs'
 
 // // import { configSheet } from "./helpers/config-sheet.mjs";

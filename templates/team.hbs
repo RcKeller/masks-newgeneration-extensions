@@ -1,0 +1,15 @@
+<div class="panel faded-ui" role="group" aria-label="Masks Team HUD">
+    <span class="tag" title="Masks Team Pool">Team</span>
+
+    <button type="button" class="ui-control plain" data-action="minus" title="Spend 1 Team" {{#unless
+        canEdit}}disabled{{/unless}} aria-label="Spend 1 Team">−</button>
+
+    <input type="number" name="team" min="0" step="1" value="{{team}}" {{#unless canEdit}}disabled{{/unless}}
+        aria-label="Team pool value" />
+
+    <button type="button" class="ui-control plain" data-action="plus" title="Add 1 Team" {{#unless
+        canEdit}}disabled{{/unless}} aria-label="Add 1 Team">+</button>
+
+    <button type="button" class="ui-control plain" data-action="reset" title="Reset to 0" {{#unless
+        canEdit}}disabled{{/unless}} aria-label="Reset Team to 0">⟲</button>
+</div>

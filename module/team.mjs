@@ -1,4 +1,4 @@
-// masks-newgeneration-extensions / team-hud.js
+// masks-newgeneration-extensions / team.js
 /* global game, ui, Hooks, ChatMessage, CONST, renderTemplate, foundry */
 
 const NS = "masks-newgeneration-extensions";
@@ -124,7 +124,7 @@ const MasksTeamHUD = {
     // Create root
     const uiTop = document.getElementById("ui-top") ?? document.body;
     this.root = document.createElement("section");
-    this.root.id = "masks-team-hud";
+    this.root.id = "masks-team";
     uiTop.appendChild(this.root);
 
     this.applyPosition();
@@ -151,7 +151,7 @@ const MasksTeamHUD = {
     const canEdit = this._canEdit;
     const team = this.team;
 
-    const html = await renderTemplate(`modules/${NS}/templates/team-hud.html`, {
+    const html = await renderTemplate(`modules/${NS}/templates/team.hbs`, {
       team,
       canEdit,
       links: LINKS

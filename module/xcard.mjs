@@ -8,7 +8,7 @@
  */
 
 const NS = "masks-newgeneration-extensions";
-const TEMPLATE_PATH = `modules/${NS}/templates/xcard.html`; // keep if your file is at module root
+const TEMPLATE_PATH = `modules/${NS}/templates/xcard.hbs`; // keep if your file is at module root
 
 /** Normalize the message to start with "/w GM " */
 function ensureWhisperToGM(text) {
