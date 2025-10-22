@@ -1,24 +1,25 @@
 {
-  "name": "masks-newgeneration-extensions",
-  "version": "1.0.0",
-  "author": "Andrew Keller Barrows",
-  "description": "Extensions to the Masks system for Foundry VTT",
-  "browserslist": [
-    "last 3 versions"
-  ],
-  "license": "MIT",
-  "private": true,
-  "scripts": {
-    "build": "sass src/scss/masks-extensions.scss css/masks-extensions.css --style=expanded --no-source-map",
-    "watch": "sass src/scss/masks-extensions.scss css/masks-extensions.css --style=expanded --source-map --watch",
-    "pushLDBtoJSON": "node ./tools/pushLDBtoJSON.mjs",
-    "pullJSONtoLDB": "node ./tools/pullJSONtoLDB.mjs"
-  },
-  "devDependencies": {
-    "@foundryvtt/foundryvtt-cli": "^1.0.3",
-    "sass": "^1.53.0",
-    "@eslint/js": "^9.16.0",
-    "eslint": "^9.16.0",
-    "globals": "^15.13.0"
-  }
+	"name": "masks-newgeneration-extensions",
+	"version": "1.0.0",
+	"author": "Andrew Keller Barrows",
+	"description": "Extensions to the Masks system for Foundry VTT",
+	"browserslist": [
+		"last 3 versions"
+	],
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "sass src/scss/masks-extensions.scss css/masks-extensions.css --style=expanded --no-source-map",
+		"watch": "sass src/scss/masks-extensions.scss css/masks-extensions.css --style=expanded --source-map --watch",
+		"uuid": "node ./tools/generate-uuids.mjs",
+		"pushLDBtoJSON": "node ./tools/pushLDBtoJSON.mjs",
+		"pullJSONtoLDB": "node ./tools/pullJSONtoLDB.mjs"
+	},
+	"devDependencies": {
+		"@foundryvtt/foundryvtt-cli": "^1.0.3",
+		"sass": "^1.53.0",
+		"@eslint/js": "^9.16.0",
+		"eslint": "^9.16.0",
+		"globals": "^15.13.0"
+	}
 }

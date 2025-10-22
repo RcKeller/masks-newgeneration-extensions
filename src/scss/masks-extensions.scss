@@ -100,44 +100,28 @@
   max-width: 3.6rem;
   text-align: center;
 }
-
-/* MASKS: Influence HUD (inline bar that mirrors Team HUD styling) */
+/* A lightweight HUD that mirrors the Team HUD, mounted beneath it */
 #masks-influence-hud {
   width: 100%;
   display: flex;
   justify-content: center;
   pointer-events: none;
   z-index: 100;
-  margin: 0.25rem 0;
+  margin: 0.15rem 0 0.25rem;
 }
 
-/* Position helper classes (match Team HUD behavior) */
-#masks-influence-hud.pos-top-right {
-  justify-content: flex-end;
-}
-
-#masks-influence-hud.pos-top-left {
-  justify-content: flex-start;
-}
-
-#masks-influence-hud.pos-bottom-left {
-  justify-content: flex-start;
-}
-
-/* Interactive inner content */
 #masks-influence-hud .panel {
   pointer-events: auto;
   display: inline-flex;
-  align-items: start;
+  align-items: center;
   gap: 8px;
-  padding: 12px;
+  padding: 8px 12px;
   background: transparent;
   border: none;
   box-shadow: none;
   color: var(--masks-primary-text-color, #fff);
 }
 
-/* Tag style (like Team) */
 #masks-influence-hud .tag {
   height: 100%;
   margin: 0;
@@ -149,69 +133,78 @@
   text-transform: uppercase;
   font-style: italic;
   letter-spacing: 0.03em;
-  font-size: 20px;
+  font-size: 16px;
 }
 
-/* Controls */
-#masks-influence-hud select {
-  max-width: 18rem;
-  background: rgba(0, 0, 0, .25);
+#masks-influence-hud .mode-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
   color: var(--masks-primary-text-color, #fff);
-  border: 1px solid rgba(255, 255, 255, .15);
   border-radius: 4px;
-  padding: 2px 6px;
+  padding: 4px 8px;
+  font-weight: 600;
+  transition: background 120ms ease-in-out;
 }
 
-#masks-influence-hud .btn-group {
-  display: inline-flex;
-  gap: 4px;
-}
-
-#masks-influence-hud .icon {
-  min-width: 2rem;
-  min-height: 2rem;
-  line-height: 1rem;
-  font-weight: 800;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, .15);
-}
-
-#masks-influence-hud .btn-gt {
+#masks-influence-hud .mode-btn.add.active {
   background: #26b231;
   color: #fff;
 }
 
-#masks-influence-hud .btn-lt {
+#masks-influence-hud .mode-btn.remove.active {
   background: #ce0707;
   color: #fff;
 }
 
-#masks-influence-hud .btn-eq {
-  background: #ee9b3a;
-  color: #000;
+#masks-influence-hud .mode-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
-#masks-influence-hud .btn-reset {
-  background: transparent;
-  color: var(--masks-primary-text-color, #fff);
+#masks-influence-hud .hint {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  margin-left: 6px;
 }
 
-/* Subtle focus */
-#masks-influence-hud button:focus,
-#masks-influence-hud select:focus {
-  outline: 2px solid rgba(255, 255, 255, .35);
-  outline-offset: 1px;
+.masks-influence-log .color-muted {
+  color: #cccccc;
+  opacity: 0.85;
+  font-size: 12px;
 }
 
-/* Screen-reader only helper */
-#masks-influence-hud .sr-only {
+.masks-influence-log .masks-influence-diff {
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.pos-bottom-left {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  bottom: 0.25rem;
+  left: 0;
+  right: 0;
+}
+
+.pos-top-left {
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  right: 0;
+}
+
+.pos-top-right {
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  right: 0;
+}
+
+/* Optional: keep the HUD below the Team HUD visually if both are top-right */
+#masks-team-hud~#masks-influence-hud.pos-top-right {
+  margin-top: 0.1rem;
+}
+
+/* Subtle crosshair cursor while our tools are active */
+body.tool-influenceAdd canvas,
+body.tool-influenceRemove canvas {
+  cursor: crosshair !important;
 }

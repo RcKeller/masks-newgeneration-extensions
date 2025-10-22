@@ -5,8 +5,8 @@
 	"version": "#{VERSION}#",
 	"compatibility": {
 		"minimum": 13,
-		"verified": 13.350,
-		"maximum": 13
+		"verified": 13.348,
+		"maximum": 15
 	},
 	"authors": [
 		{
@@ -15,9 +15,26 @@
 		}
 	],
 	"packs": [
-		
+		{
+			"name": "villains",
+			"label": "Villains",
+			"path": "packs/villains",
+			"type": "Actor",
+			"system": "pbta",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		}
 	],
 	"packFolders": [
+		{
+			"name": "Villains",
+			"packs": [
+				"villains"
+			],
+			"folders": []
+		}
 	],
 	"esmodules": ["module/masks-extensions.mjs"],
 	"styles": ["css/masks-extensions.css"],
