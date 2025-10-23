@@ -73,10 +73,10 @@ function ensureEntry(arr, nameToMatch) {
 function stateSymbol(e) {
   const out = !!e?.haveInfluenceOver; // me → them
   const inn = !!e?.hasInfluenceOver;  // them → me
-  if (out && inn) return "=";
-  if (out) return ">";
-  if (inn) return "<";
-  return "—";
+  if (out && inn) return "⬌";
+  if (out) return "⬆";
+  if (inn) return "⬇";
+  return "x";
 }
 
 function canEditActor(actor) {
@@ -139,20 +139,20 @@ async function announceChange(srcName, tgtName, beforeSym, afterSym) {
   const who = game.user?.name ?? "Player";
   const badge = (s) => {
     const css = "display:inline-block;padding:0 .35rem;border-radius:.25rem;font-weight:700;";
-    if (s === ">") return `<span style="${css}background:#4CAF50;color:#fff">${s}</span>`;
-    if (s === "<") return `<span style="${css}background:#9C27B0;color:#fff">${s}</span>`;
-    if (s === "=") return `<span style="${css}background:#2196F3;color:#000">${s}</span>`;
+    if (s === "⬆") return `<span style="${css}background:#4CAF50;color:#fff">${s}</span>`;
+    if (s === "⬇") return `<span style="${css}background:#9C27B0;color:#fff">${s}</span>`;
+    if (s === "⬌") return `<span style="${css}background:#2196F3;color:#fff">${s}</span>`;
     return `<span style="${css}background:#F44336;color:#fff">${s}</span>`;
   };
   let title = "Influence Change";
   switch (afterSym) {
-    case ">": title = `${srcName} gains Influence over ${tgtName}`; break;
-    case "<": title = `${srcName} gives Influence to ${tgtName}`; break;
-    case "=": title = `${srcName} and ${tgtName}<br/>share Influence`; break;
+    case "⬆": title = `${srcName} gains Influence over ${tgtName}`; break;
+    case "⬇": title = `${srcName} gives Influence to ${tgtName}`; break;
+    case "⬌": title = `${srcName} and ${tgtName}<br/>share Influence`; break;
     default: title = `${srcName} and ${tgtName}<br/>do not share Influence`; break;
   }
   let content = `<h6>${badge(afterSym)} ${title}</h6>`
-  if (beforeSym !== "—" && beforeSym !== afterSym) content += `<b>Previous:</b> <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em>`
+  if (beforeSym !== "x" && beforeSym !== afterSym) content += `<b>Previous:</b> <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em>`
   await ChatMessage.create({
     // content: `
     // <h6>${badge(afterSym)} ${title}</h6>
@@ -475,7 +475,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     layer: "tokens",
     name: "influenceMutual",
     title: "Give & receive Influence (Shift: click to pick target)",
-    icon: "fa-solid fa-arrows-cross",
+    icon: "fa-solid fa-arrows-left-right",
     button: true,
     onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
     visible: true
