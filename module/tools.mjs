@@ -428,7 +428,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     layer: "tokens",
     name: "influenceMutual",
     title: "Share Mutual Influence",
-    icon: "fa-solid fa-arrows-left-right",
+    icon: "fa-solid fa-left-right",
     button: true,
     onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
     visible: true
@@ -448,7 +448,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     layer: "tokens",
     name: "influenceClear",
     title: "Reset Influence between targets",
-    icon: "fa-solid fa-square-xmark",
+    icon: "fa-solid fa-rotate-left",
     button: true,
     onClick: (evt) => QuickInfluence.run("reset", evt), // clear
     visible: true
