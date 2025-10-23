@@ -139,13 +139,25 @@ async function announceChange(srcName, tgtName, beforeSym, afterSym) {
   const who = game.user?.name ?? "Player";
   const badge = (s) => {
     const css = "display:inline-block;padding:0 .35rem;border-radius:.25rem;font-weight:700;";
-    if (s === ">") return `<span style="${css}background:#26b231;color:#fff">${s}</span>`;
-    if (s === "<") return `<span style="${css}background:#ce0707;color:#fff">${s}</span>`;
-    if (s === "=") return `<span style="${css}background:#ee9b3a;color:#000">${s}</span>`;
-    return `<span style="${css}background:#666;color:#fff">${s}</span>`;
+    if (s === ">") return `<span style="${css}background:#4CAF50;color:#fff">${s}</span>`;
+    if (s === "<") return `<span style="${css}background:#9C27B0;color:#fff">${s}</span>`;
+    if (s === "=") return `<span style="${css}background:#2196F3;color:#000">${s}</span>`;
+    return `<span style="${css}background:#F44336;color:#fff">${s}</span>`;
   };
+  let title = "Influence Change";
+  switch (afterSym) {
+    case ">": title = `${srcName} gains Influence over ${tgtName}`; break;
+    case "<": title = `${srcName} gives Influence to ${tgtName}`; break;
+    case "=": title = `${srcName} and ${tgtName}<br/>share Influence`; break;
+    default: title = `${srcName} and ${tgtName}<br/>do not share Influence`; break;
+  }
+  let content = `<h6>${badge(afterSym)} ${title}</h6>`
+  if (beforeSym !== "—" && beforeSym !== afterSym) content += `<b>Previous:</b> <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em>`
   await ChatMessage.create({
-    content: `<b>Influence</b>: <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em> → <em>${srcName}</em> ${badge(afterSym)} <em>${tgtName}</em> <span class="color-muted">— set by ${who}</span>`,
+    // content: `
+    // <h6>${badge(afterSym)} ${title}</h6>
+    // <b>Previous:</b> ${srcName} ${badge(beforeSym)} ${tgtName}</em>`,
+    content,
     type: CONST.CHAT_MESSAGE_TYPES.OTHER
   });
 }
