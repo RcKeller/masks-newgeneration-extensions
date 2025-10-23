@@ -297,7 +297,7 @@ async function injectButton(htmlRoot) {
 
   // Render our tiny fragment
   const fragHtml = await renderTpl(TEMPLATE_PATH, {
-    title: XCARD_TITLE,
+    title: "X-Card",
     label: "GM"
   });
 
