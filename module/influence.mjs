@@ -27,6 +27,7 @@ import {
 // Settings (client)
 const KEY_ENABLED = "influenceLinesEnabled";
 const KEY_HALF_OPACITY = "influenceLinesHalfOpacity";
+const KEY_LINE_THICKNESS = "influenceLinesThicknessPx";
 
 // Colors
 const COLOR_OUT = 0x4CAF50; // green
@@ -42,7 +43,11 @@ const InfluenceLines = {
   },
 
   get alpha() {
-    return game.settings.get(NS, KEY_HALF_OPACITY) ? 0.25 : 0.5;
+    // Backward compatibility: if legacy boolean, map true=>0.25, false=>0.5
+    const v = game.settings.get(NS, KEY_HALF_OPACITY);
+    if (typeof v === "boolean") return v ? 0.25 : 0.5;
+    const n = Number(v);
+    return Number.isFinite(n) ? Math.min(Math.max(n, 0), 1) : 0.5;
   },
 
   ensureContainer() {
@@ -83,7 +88,8 @@ const InfluenceLines = {
     this.container.addChild(g);
 
     // Keep line width constant in screen pixels
-    const desiredPx = 4;
+    const desiredPxRaw = game.settings.get(NS, KEY_LINE_THICKNESS);
+    const desiredPx = Math.min(Math.max(Number(desiredPxRaw) || 4, 1), 12);
     const w = desiredPx / Math.max(0.0001, canvas.stage.scale.x);
 
     const aKey = InfluenceIndex.tokenKey(token);
@@ -148,12 +154,24 @@ Hooks.once("init", () => {
   });
 
   game.settings.register(NS, KEY_HALF_OPACITY, {
-    name: "Influence Lines: Half Opacity",
-    hint: "Render lines at reduced opacity so they don’t dominate the scene.",
+    name: "Influence Lines: Opacity",
+    hint: "Render lines with this opacity (0–1). 0 = invisible, 1 = fully opaque.",
     scope: "client",
     config: true,
-    type: Boolean,
-    default: false,
+    type: Number,
+    range: { min: 0, max: 1, step: 0.05 },
+    default: 0.5,
+    onChange: () => InfluenceLines._redrawIfActive()
+  });
+
+  game.settings.register(NS, KEY_LINE_THICKNESS, {
+    name: "Influence Lines: Thickness (px)",
+    hint: "Line thickness in screen pixels (1–12).",
+    scope: "client",
+    config: true,
+    type: Number,
+    range: { min: 1, max: 12, step: 1 },
+    default: 4,
     onChange: () => InfluenceLines._redrawIfActive()
   });
 
