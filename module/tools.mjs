@@ -465,7 +465,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   controls.tokens.tools.influenceGainOverThem = {
     layer: "tokens",
     name: "influenceGainOverThem",
-    title: "Gain Influence over them (Shift: click to pick target)",
+    title: "Gain Influence over target",
     icon: "fa-solid fa-up",
     button: true,
     onClick: (evt) => QuickInfluence.run("gt", evt), // you ⇒ target
@@ -474,7 +474,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   controls.tokens.tools.influenceMutual = {
     layer: "tokens",
     name: "influenceMutual",
-    title: "Give & receive Influence (Shift: click to pick target)",
+    title: "Share Mutual Influence",
     icon: "fa-solid fa-arrows-left-right",
     button: true,
     onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
@@ -484,7 +484,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   controls.tokens.tools.influenceGiveThemOverYou = {
     layer: "tokens",
     name: "influenceGiveThemOverYou",
-    title: "Give them Influence over you (Shift: click to pick target)",
+    title: "Give Influence to target",
     icon: "fa-solid fa-down",
     button: true,
     onClick: (evt) => QuickInfluence.run("lt", evt), // target ⇒ you
@@ -494,7 +494,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   controls.tokens.tools.influenceClear = {
     layer: "tokens",
     name: "influenceClear",
-    title: "Remove Influence both ways (Shift: click to pick target)",
+    title: "Reset Influence between targets",
     icon: "fa-solid fa-square-xmark",
     button: true,
     onClick: (evt) => QuickInfluence.run("reset", evt), // clear
