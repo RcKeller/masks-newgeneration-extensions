@@ -184,16 +184,15 @@ async function pickTargetViaDialog(excludeTokenId = null) {
 
   return new Promise((resolve) => {
     const content = `
-      <form>
-        <p>Select a target token:</p>
+      <form style="margin-bottom:8px;">
         <div class="form-group">
-          <label>Target</label>
+          <label>Target:</label>
           <select name="tok">${options}</select>
         </div>
       </form>`;
     // eslint-disable-next-line no-new
     new Dialog({
-      title: "Choose Target",
+      title: "Select a Target",
       content,
       buttons: {
         ok: {
