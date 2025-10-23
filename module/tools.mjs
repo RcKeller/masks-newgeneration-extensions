@@ -164,7 +164,9 @@ async function pickTargetViaDialog(excludeTokenId = null) {
   if (toks.length === 0) return null;
 
   const options = toks.map(t => {
-    const lbl = `${t.document?.name || t.name} — [${t.actor?.type || "actor"}]`;
+    
+    const rn = foundry.utils.getProperty(t.actor, "system.attributes.realName.value");
+    const lbl = `${t.actor?.name || t.name} (${rn || t.document?.name})`;
     return `<option value="${t.id}">${foundry.utils.escapeHTML(lbl)}</option>`;
   }).join("");
 
