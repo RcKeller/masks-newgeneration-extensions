@@ -29,9 +29,9 @@ const KEY_ENABLED = "influenceLinesEnabled";
 const KEY_HALF_OPACITY = "influenceLinesHalfOpacity";
 
 // Colors
-const COLOR_OUT = 0x26b231; // green
-const COLOR_IN  = 0xce0707; // red
-const COLOR_MUT = 0xee9b3a; // yellow
+const COLOR_OUT = 0x4CAF50; // green
+const COLOR_IN  = 0x9C27B0; // red
+const COLOR_MUT = 0x2196F3; // yellow
 
 const InfluenceLines = {
   container: null,

@@ -450,46 +450,44 @@ const QuickInfluence = {
 // });
 
 Hooks.on("getSceneControlButtons", (controls) => {
-  
-  controls.tokens.tools.influenceGiveThemOverYou = {
-        layer: "tokens",
-    name: "influenceGiveThemOverYou",
-    title: "Give them Influence over you (Shift: click to pick target)",
-    icon: "fa-solid fa-user-shield",
-    button: true,
-    onClick: (evt) => QuickInfluence.run("lt", evt), // target ⇒ you
-    visible: true
-  }
   controls.tokens.tools.influenceGainOverThem = {
-        layer: "tokens",
-    
+    layer: "tokens",
     name: "influenceGainOverThem",
     title: "Gain Influence over them (Shift: click to pick target)",
-    icon: "fa-solid fa-user-tag",
+    icon: "fa-solid fa-up",
     button: true,
     onClick: (evt) => QuickInfluence.run("gt", evt), // you ⇒ target
     visible: true
   }
   controls.tokens.tools.influenceMutual = {
-        layer: "tokens",
+    layer: "tokens",
     name: "influenceMutual",
     title: "Give & receive Influence (Shift: click to pick target)",
-    icon: "fa-solid fa-link",
+    icon: "fa-solid fa-arrows-cross",
     button: true,
     onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
     visible: true
   }
+
+  controls.tokens.tools.influenceGiveThemOverYou = {
+    layer: "tokens",
+    name: "influenceGiveThemOverYou",
+    title: "Give them Influence over you (Shift: click to pick target)",
+    icon: "fa-solid fa-down",
+    button: true,
+    onClick: (evt) => QuickInfluence.run("lt", evt), // target ⇒ you
+    visible: true
+  }
+
   controls.tokens.tools.influenceClear = {
-        layer: "tokens",
-    
+    layer: "tokens",
     name: "influenceClear",
     title: "Remove Influence both ways (Shift: click to pick target)",
-    icon: "fa-solid fa-unlink",
+    icon: "fa-solid fa-square-xmark",
     button: true,
     onClick: (evt) => QuickInfluence.run("reset", evt), // clear
     visible: true
   }
-
 });
 
 /* ------------------------------- Hooks & Settings ------------------------- */

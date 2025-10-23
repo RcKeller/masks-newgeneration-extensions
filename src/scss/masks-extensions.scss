@@ -206,3 +206,32 @@
   white-space: nowrap;
   border: 0;
 }
+
+#scene-controls-tools {
+  [data-tool="influenceGainOverThem"] {
+    background-color: #4CAF50;
+  }
+  [data-tool="influenceMutual"] {
+    background-color: #2196F3;
+  }
+  [data-tool="influenceGiveThemOverYou"] {
+    background-color: #9C27B0;
+  }
+  [data-tool="influenceClear"] {
+    background-color: #F44336;
+  }
+}
+
+.sheet {
+  .influence-management {
+    img[data-influence-action="hasInfluenceOver"] {
+      filter: #9C27B0 !important;
+    }
+    img[data-influence-action="haveInfluenceOver"] {
+      filter: #4CAF50 !important;
+    }
+    [data-influence-action="delete"] {
+      color: #F44336;
+    }
+  }
+}
