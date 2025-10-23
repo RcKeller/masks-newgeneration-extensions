@@ -1,177 +1,90 @@
-/* global game, ui, Hooks, ChatMessage, CONST, canvas, foundry */
+/* global game, ui, Hooks, ChatMessage, CONST, canvas, foundry, Dialog */
 
 /**
- * tools.mjs — Quick Influence (Scene Controls)
+ * tools.mjs — Quick Influence (Scene Controls v2)
  * -----------------------------------------------------------------------------
- * A lightweight, toggleable control group in the Foundry Scene Controls bar
- * with two actions:
- *   • Create Influence (writes to both character sheets when applicable)
- *   • Remove Influence  (clears on both sides, prunes unlocked empties)
+ * Four one-click actions that do not require multi-select:
+ *   • Give them influence over you  (target ⇒ you)
+ *   • Gain influence over them      (you ⇒ target)
+ *   • Give & receive                (mutual)
+ *   • Remove both                   (clear both flags)
  *
- * Key points:
- * - No HUD, no multi-select templates; just Foundry's controls + a tiny dialog.
- * - Fuzzy name matching identical to the InfluenceIndex helpers.
- * - Writes are limited to the two involved actors (fast; no global scans).
- * - If a player can’t update the counterpart sheet, a GM socket hop is used.
- * - Symmetric updates honored whenever both sides are Characters.
+ * Source:
+ *   - If you have exactly one controlled token, that's your source.
+ *   - Otherwise we use your assigned user character (actor); a token is optional.
+ *
+ * Target:
+ *   - If you have exactly one targeted token, we use that.
+ *   - Else if you hold Shift while clicking a tool, we enter a temporary
+ *     "click a token" mode (works even if you can't control the token).
+ *   - Otherwise we prompt with a small picker dialog listing visible tokens.
+ *
+ * Permissions:
+ *   - We always write the side(s) you can edit.
+ *   - Optionally (setting) relay to GM over socket to apply the counterpart.
+ *   - If GM relay is disabled or unavailable, we rely on the symmetry sync
+ *     in helpers/influence.mjs to finish the other side shortly after.
+ *
+ * Performance:
+ *   - No global scans. Only reads/writes the two involved actors’ flags.
  */
 
 import {
-  normalize,                 // same fuzzy logic used by InfluenceIndex
-  candidateTokenNames,       // actor+token candidate display names
-  InfluenceIndex             // optional use; we rely mainly on direct writes
+  normalize,
+  candidateTokenNames,
+  InfluenceIndex
 } from "./helpers/influence.mjs";
 
-const NS          = "masks-newgeneration-extensions";   // our module namespace (settings)
-const FLAG_SCOPE  = "masks-newgeneration-unofficial";   // where Influence arrays are stored
-const FLAG_KEY    = "influences";
-const KEY_ANNOUNCE = "announceInfluenceChanges";        // world setting for chat announces
-const SOCKET_NS   = "module.masks-newgeneration-extensions"; // GM hop channel
-
-const OWNER = (CONST.DOCUMENT_OWNERSHIP_LEVELS?.OWNER ?? 3);
+const NS            = "masks-newgeneration-extensions";           // module namespace (settings)
+const FLAG_SCOPE    = "masks-newgeneration-unofficial";           // where Influence arrays live
+const FLAG_KEY      = "influences";
+const KEY_ANNOUNCE  = "announceInfluenceChanges";                  // world setting for chat announces
+const KEY_PREFER_TGT= "quickInfluencePreferTarget";                // client: use current target first
+const KEY_USE_GM    = "quickInfluenceUseGMRelay";                  // world: GM-hop for counterpart
+const SOCKET_NS     = "module.masks-newgeneration-extensions";     // GM relay channel
 
 /* -------------------------------- Utilities ------------------------------- */
 
-/** Read (deep-cloned) Influence array from an actor. */
 function readInfluences(actor) {
   return foundry.utils.deepClone(actor.getFlag(FLAG_SCOPE, FLAG_KEY) || []);
 }
 
-/** Return a best label to store for "counterparty" names (actor+token). */
 function pickStorageName(actor, token) {
-  // Prefer actor.name, then realName if provided, else token display name.
   const cands = candidateTokenNames(actor, token);
   return cands[0] || actor?.name || token?.document?.name || "Unknown";
 }
 
-/** Find (or create) an influence entry by fuzzy name in an array. */
 function ensureEntry(arr, nameToMatch) {
   const want = normalize(nameToMatch);
-  let idx = arr.findIndex(e => normalize(e?.name) === want);
+  const idx = arr.findIndex(e => normalize(e?.name) === want);
   if (idx >= 0) return { idx, obj: arr[idx] };
 
   const obj = {
     id: (foundry.utils.randomID?.(16) ?? Math.random().toString(36).slice(2)),
     name: nameToMatch,
-    hasInfluenceOver: false,
-    haveInfluenceOver: false,
+    hasInfluenceOver: false,   // "they → me"
+    haveInfluenceOver: false,  // "me → them"
     locked: false
   };
   arr.push(obj);
   return { idx: arr.length - 1, obj };
 }
 
-/** Convert flags to a compact symbol for chat. */
 function stateSymbol(e) {
-  const out = !!e?.haveInfluenceOver; // this actor has influence over other
-  const inn = !!e?.hasInfluenceOver;  // the other has influence over this actor
+  const out = !!e?.haveInfluenceOver; // me → them
+  const inn = !!e?.hasInfluenceOver;  // them → me
   if (out && inn) return "=";
   if (out) return ">";
   if (inn) return "<";
   return "—";
 }
 
-/** Permission check: can the current user update this actor? */
 function canEditActor(actor) {
   return game.user?.isGM || actor?.isOwner === true;
 }
 
-/** Compact announce helper. */
-async function announceChange(srcName, tgtName, beforeSym, afterSym) {
-  if (!game.settings.get(NS, KEY_ANNOUNCE)) return;
-  const who = game.user?.name ?? "Player";
-  const badge = (s) => {
-    const css = "display:inline-block;padding:0 .35rem;border-radius:.25rem;font-weight:700;";
-    if (s === ">") return `<span style="${css}background:#26b231;color:#fff">${s}</span>`;
-    if (s === "<") return `<span style="${css}background:#ce0707;color:#fff">${s}</span>`;
-    if (s === "=") return `<span style="${css}background:#ee9b3a;color:#000">${s}</span>`;
-    return `<span style="${css}background:#666;color:#fff">${s}</span>`;
-  };
-
-  await ChatMessage.create({
-    content: `<b>Influence</b>: <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em> → <em>${srcName}</em> ${badge(afterSym)} <em>${tgtName}</em> <span class="color-muted">— set by ${who}</span>`,
-    type: CONST.CHAT_MESSAGE_TYPES.OTHER
-  });
-}
-
-/** Small direction prompt using classic Dialog (stable across v13+). */
-async function promptDirection(srcLabel, tgtLabel) {
-  return new Promise((resolve) => {
-    const content = `
-      <form class="flexcol" style="gap:.5rem">
-        <p>Choose Influence direction between <b>${srcLabel}</b> and <b>${tgtLabel}</b>:</p>
-        <label><input type="radio" name="dir" value="gt" checked> ${srcLabel} has Influence over ${tgtLabel} (<b>&gt;</b>)</label>
-        <label><input type="radio" name="dir" value="lt"> ${tgtLabel} has Influence over ${srcLabel} (<b>&lt;</b>)</label>
-        <label><input type="radio" name="dir" value="eq"> Mutual Influence (<b>=</b>)</label>
-      </form>
-    `;
-    // eslint-disable-next-line no-new
-    new Dialog({
-      title: "Set Influence Direction",
-      content,
-      buttons: {
-        ok: {
-          label: "Apply",
-          callback: (html) => {
-            const val = html[0].querySelector("input[name='dir']:checked")?.value || "gt";
-            resolve(val);
-          }
-        },
-        cancel: { label: "Cancel", callback: () => resolve(null) }
-      },
-      default: "ok",
-      close: () => resolve(null)
-    }).render(true);
-  });
-}
-
-/** Apply one side of a pair: set or clear flags for (actorA vs counterpartyName). */
-function mutateSide(inflArr, counterpartyName, which) {
-  // which: "gt" => this.haveInfluenceOver=true
-  //        "lt" => this.hasInfluenceOver=true
-  //        "eq" => both true
-  //        "reset" => both false (then prune if not locked)
-  const { idx, obj } = ensureEntry(inflArr, counterpartyName);
-  const prev = { has: !!obj.hasInfluenceOver, have: !!obj.haveInfluenceOver };
-
-  if (obj.locked === true && which !== "reset") {
-    // Locked entries cannot be altered (other than clearing with reset if desired)
-    return { changed: false, prev, now: prev, pruned: false };
-  }
-
-  if (which === "gt") {
-    obj.haveInfluenceOver = true;
-  } else if (which === "lt") {
-    obj.hasInfluenceOver = true;
-  } else if (which === "eq") {
-    obj.hasInfluenceOver = true;
-    obj.haveInfluenceOver = true;
-  } else if (which === "reset") {
-    obj.hasInfluenceOver = false;
-    obj.haveInfluenceOver = false;
-  }
-
-  // Prune empty, unlocked rows
-  let pruned = false;
-  if (!obj.hasInfluenceOver && !obj.haveInfluenceOver && obj.locked !== true) {
-    inflArr.splice(idx, 1);
-    pruned = true;
-  }
-
-  const now = {
-    has: !!obj.hasInfluenceOver,
-    have: !!obj.haveInfluenceOver
-  };
-
-  return {
-    changed: prev.has !== now.has || prev.have !== now.have || pruned,
-    prev, now, pruned
-  };
-}
-
-/** Write influences safely (returns boolean changed). */
 async function writeInfluencesIfChanged(actor, beforeArr, afterArr) {
-  // Shallow compare lengths and key bits to avoid redundant writes
+  // Cheap structural compare to avoid redundant writes
   const sameLen = beforeArr.length === afterArr.length;
   let equal = sameLen;
   if (equal) {
@@ -190,105 +103,209 @@ async function writeInfluencesIfChanged(actor, beforeArr, afterArr) {
   return true;
 }
 
-/** Best‑effort GM hop for updates a non‑GM user lacks permission to perform. */
-function requestGMApply(payload) {
-  try {
-    game.socket?.emit(SOCKET_NS, payload);
-  } catch (_) {
-    // If socket fails, we'll rely on the local half only.
+function mutateSide(inflArr, counterpartyName, which) {
+  // which: "gt"|"lt"|"eq"|"reset"
+  const { idx, obj } = ensureEntry(inflArr, counterpartyName);
+  const prev = { has: !!obj.hasInfluenceOver, have: !!obj.haveInfluenceOver };
+
+  if (obj.locked === true && which !== "reset") {
+    return { changed: false, prev, now: prev, pruned: false };
   }
+
+  if (which === "gt") {
+    obj.haveInfluenceOver = true;      // me → them
+  } else if (which === "lt") {
+    obj.hasInfluenceOver = true;       // them → me
+  } else if (which === "eq") {
+    obj.haveInfluenceOver = true;
+    obj.hasInfluenceOver = true;
+  } else if (which === "reset") {
+    obj.haveInfluenceOver = false;
+    obj.hasInfluenceOver = false;
+  }
+
+  let pruned = false;
+  if (!obj.hasInfluenceOver && !obj.haveInfluenceOver && obj.locked !== true) {
+    inflArr.splice(idx, 1);
+    pruned = true;
+  }
+
+  const now = { has: !!obj.hasInfluenceOver, have: !!obj.haveInfluenceOver };
+  return { changed: prev.has !== now.has || prev.have !== now.have || pruned, prev, now, pruned };
+}
+
+async function announceChange(srcName, tgtName, beforeSym, afterSym) {
+  if (!game.settings.get(NS, KEY_ANNOUNCE)) return;
+  const who = game.user?.name ?? "Player";
+  const badge = (s) => {
+    const css = "display:inline-block;padding:0 .35rem;border-radius:.25rem;font-weight:700;";
+    if (s === ">") return `<span style="${css}background:#26b231;color:#fff">${s}</span>`;
+    if (s === "<") return `<span style="${css}background:#ce0707;color:#fff">${s}</span>`;
+    if (s === "=") return `<span style="${css}background:#ee9b3a;color:#000">${s}</span>`;
+    return `<span style="${css}background:#666;color:#fff">${s}</span>`;
+  };
+  await ChatMessage.create({
+    content: `<b>Influence</b>: <em>${srcName}</em> ${badge(beforeSym)} <em>${tgtName}</em> → <em>${srcName}</em> ${badge(afterSym)} <em>${tgtName}</em> <span class="color-muted">— set by ${who}</span>`,
+    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+  });
+}
+
+function requestGMApply(payload) {
+  try { game.socket?.emit(SOCKET_NS, payload); }
+  catch (_) { /* swallow; symmetry sync is a fallback */ }
+}
+
+/* ------------------------------- Targeting -------------------------------- */
+
+async function pickTargetViaDialog(excludeTokenId = null) {
+  const toks = (canvas.tokens?.placeables ?? [])
+    .filter(t => !!t.actor && t.visible && t.id !== excludeTokenId);
+
+  if (toks.length === 0) return null;
+
+  const options = toks.map(t => {
+    const lbl = `${t.document?.name || t.name} — [${t.actor?.type || "actor"}]`;
+    return `<option value="${t.id}">${foundry.utils.escapeHTML(lbl)}</option>`;
+  }).join("");
+
+  return new Promise((resolve) => {
+    const content = `
+      <form>
+        <p>Select a target token:</p>
+        <div class="form-group">
+          <label>Target</label>
+          <select name="tok">${options}</select>
+        </div>
+      </form>`;
+    // eslint-disable-next-line no-new
+    new Dialog({
+      title: "Choose Target",
+      content,
+      buttons: {
+        ok: {
+          label: "Use",
+          callback: html => {
+            const id = html[0].querySelector("select[name='tok']")?.value;
+            resolve(canvas.tokens?.get(id) || null);
+          }
+        },
+        cancel: { label: "Cancel", callback: () => resolve(null) }
+      },
+      default: "ok",
+      close: () => resolve(null)
+    }).render(true);
+  });
+}
+
+async function pickTargetByClick(timeoutMs = 10000, hint = "Click a token to choose it as target…") {
+  ui.notifications?.info?.(hint);
+  return new Promise((resolve) => {
+    let resolved = false;
+    const done = (tok) => {
+      if (resolved) return;
+      resolved = true;
+      try { Hooks.off("clickToken", handler); } catch (_) {}
+      resolve(tok);
+    };
+    const handler = (token /*, event */) => done(token);
+    Hooks.once("clickToken", handler);
+    // Timeout safeguard
+    setTimeout(() => done(null), Math.max(1000, timeoutMs));
+  });
 }
 
 /* ------------------------------- Core Object ------------------------------ */
 
 const QuickInfluence = {
   /**
-   * Validate selection; return [tokA, tokB] or null.
+   * Entry point for the four tools.
+   * directive ∈ {"lt","gt","eq","reset"}
+   * - lt   : Give them influence over you  (target ⇒ you)
+   * - gt   : Gain influence over them      (you ⇒ target)
+   * - eq   : Give & receive                (mutual)
+   * - reset: Remove both
    */
-  _pairFromSelection() {
-    const selected = canvas.tokens?.controlled ?? [];
-    if (selected.length !== 2) {
-      ui.notifications?.warn?.("Select exactly two tokens (source and target).");
-      return null;
+  async run(directive, evt) {
+    // 1) Resolve source (you)
+    const src = await this._resolveSource();
+    if (!src) return;
+
+    // 2) Resolve target
+    const preferTarget = game.settings.get(NS, KEY_PREFER_TGT) === true;
+    const shiftPick    = !!evt?.shiftKey; // force one-click pick this time
+
+    let targetToken = null;
+
+    // Prefer exactly one targeted token if enabled
+    if (preferTarget) {
+      const targets = Array.from(game.user?.targets ?? []);
+      if (targets.length === 1) targetToken = targets[0];
     }
-    // Stable order is not guaranteed; order only matters for the direction label text.
-    return [selected[0], selected[1]];
-  },
 
-  /**
-   * Create (set) Influence between two selected tokens.
-   * Prompts for direction; updates both character sheets when applicable.
-   */
-  async create() {
-    const pair = this._pairFromSelection();
-    if (!pair) return;
+    // If still none and Shift held, do a one-time click-pick
+    if (!targetToken && shiftPick) {
+      targetToken = await pickTargetByClick(10000);
+    }
 
-    const [tokA, tokB] = pair;
-    const actorA = tokA?.actor;
-    const actorB = tokB?.actor;
-    if (!actorA || !actorB) {
-      ui.notifications?.warn?.("Both tokens must have actors.");
+    // If still none, prompt a small picker dialog
+    if (!targetToken) {
+      targetToken = await pickTargetViaDialog(src.token?.id ?? null);
+    }
+
+    if (!targetToken?.actor) {
+      ui.notifications?.warn?.("No target chosen.");
       return;
     }
 
-    const aLabel = actorA.name ?? tokA.document?.name ?? "A";
-    const bLabel = actorB.name ?? tokB.document?.name ?? "B";
-
-    const dir = await promptDirection(aLabel, bLabel);
-    if (!dir) return; // cancelled
-
-    await this._applyPair(actorA, tokA, actorB, tokB, dir);
+    // 3) Apply
+    await this._applyPair(src.actor, src.token, targetToken.actor, targetToken, directive);
   },
 
-  /**
-   * Remove Influence between the two selected tokens (both directions).
-   */
-  async remove() {
-    const pair = this._pairFromSelection();
-    if (!pair) return;
-
-    const [tokA, tokB] = pair;
-    const actorA = tokA?.actor;
-    const actorB = tokB?.actor;
-    if (!actorA || !actorB) {
-      ui.notifications?.warn?.("Both tokens must have actors.");
-      return;
+  async _resolveSource() {
+    const controlled = canvas.tokens?.controlled ?? [];
+    if (controlled.length === 1 && controlled[0]?.actor) {
+      return { token: controlled[0], actor: controlled[0].actor };
     }
 
-    await this._applyPair(actorA, tokA, actorB, tokB, "reset");
+    // Use the user's assigned character as source (token optional)
+    const myActor = game.user?.character;
+    if (myActor) {
+      const tok = (canvas.tokens?.placeables ?? []).find(t => t?.actor?.id === myActor.id) || null;
+      return { token: tok ?? null, actor: myActor };
+    }
+
+    // As a last resort, try any owned token in the scene (first match)
+    const owned = (canvas.tokens?.placeables ?? []).find(t => t.actor && t.actor.isOwner);
+    if (owned) return { token: owned, actor: owned.actor };
+
+    ui.notifications?.warn?.("Select your character token or set your User Character first.");
+    return null;
   },
 
   /**
-   * Core apply for a pair with a chosen directive: "gt" | "lt" | "eq" | "reset".
-   * Writes only to Character actors; NPCs don’t store Influence nodes.
-   * If only one side is a Character, the single sheet is updated appropriately.
-   * When the current user lacks permission for a side, ask GM over socket.
+   * Core apply for a pair with a chosen directive.
+   * Writes to Character sheets only; NPCs don’t store influence arrays.
+   * Will GM-hop the counterpart write if configured and needed.
    */
   async _applyPair(actorA, tokA, actorB, tokB, directive) {
-    // Decide which sub-actions to apply to each sheet
-    // "gt"   => on A: have=true for B; on B (if Character): has=true for A
-    // "lt"   => on A: has=true for B;  on B (if Character): have=true for A
-    // "eq"   => both
-    // "reset"=> both false on both sides
+    const useGMRelay = game.settings.get(NS, KEY_USE_GM) === true;
 
     const aIsChar = actorA.type === "character";
     const bIsChar = actorB.type === "character";
-
     if (!aIsChar && !bIsChar) {
-      ui.notifications?.warn?.("At least one token must be a Character (PC).");
+      ui.notifications?.warn?.("At least one side must be a Character.");
       return;
     }
 
     const aBefore = aIsChar ? readInfluences(actorA) : null;
     const bBefore = bIsChar ? readInfluences(actorB) : null;
-
-    const aAfter = aBefore ? foundry.utils.deepClone(aBefore) : null;
-    const bAfter = bBefore ? foundry.utils.deepClone(bBefore) : null;
+    const aAfter  = aBefore ? foundry.utils.deepClone(aBefore) : null;
+    const bAfter  = bBefore ? foundry.utils.deepClone(bBefore) : null;
 
     const nameAforB = pickStorageName(actorA, tokA);
     const nameBforA = pickStorageName(actorB, tokB);
 
-    // Apply mutations
+    // Apply local mutations (mirror on B)
     let aPrevSym = "—", aNowSym = "—";
     let bPrevSym = "—", bNowSym = "—";
 
@@ -304,63 +321,59 @@ const QuickInfluence = {
 
     if (bIsChar) {
       let whichB = "reset";
-      if (directive === "gt") whichB = "lt";       // mirror
-      else if (directive === "lt") whichB = "gt";  // mirror
+      if (directive === "gt") whichB = "lt";
+      else if (directive === "lt") whichB = "gt";
       else if (directive === "eq") whichB = "eq";
       const st = mutateSide(bAfter, nameAforB, whichB);
       if (st.prev) bPrevSym = stateSymbol({ hasInfluenceOver: st.prev.has, haveInfluenceOver: st.prev.have });
       if (st.now)  bNowSym  = stateSymbol({ hasInfluenceOver: st.now.has,  haveInfluenceOver: st.now.have  });
     }
 
-    // Write, respecting permissions; GM-hop if needed.
+    // Attempt writes we’re allowed to do; optionally GM‑relay the rest
     const tasks = [];
     const gmPayload = { action: "applyPair", srcId: actorA.id, tgtId: actorB.id, directive };
 
     if (aIsChar) {
       if (canEditActor(actorA)) {
         tasks.push(writeInfluencesIfChanged(actorA, aBefore, aAfter));
-      } else {
-        gmPayload.aAfter = aAfter; // include full arr so GM doesn't recompute names
+      } else if (useGMRelay) {
+        gmPayload.aAfter = aAfter;
       }
     }
     if (bIsChar) {
       if (canEditActor(actorB)) {
         tasks.push(writeInfluencesIfChanged(actorB, bBefore, bAfter));
-      } else {
+      } else if (useGMRelay) {
         gmPayload.bAfter = bAfter;
       }
     }
 
-    // If there are sides we couldn't write, ask the GM to perform them.
-    if ((!canEditActor(actorA) && aIsChar) || (!canEditActor(actorB) && bIsChar)) {
+    if (useGMRelay && ((aIsChar && !canEditActor(actorA)) || (bIsChar && !canEditActor(actorB)))) {
       requestGMApply(gmPayload);
     }
 
     try {
       await Promise.all(tasks);
     } catch (err) {
-      console.error(`[${NS}] Failed to write Influence flags`, err);
+      console.error(`[${NS}] Failed to set Influence`, err);
       ui.notifications?.error?.("Couldn’t update Influence (see console).");
       return;
     }
 
-    // Kick the InfluenceIndex to rebuild lazily via hooks; optionally ask it
-    // to sync the pair immediately (harmless if one side was NPC).
+    // Proactively ask helpers to sync (harmless if one side is NPC)
     try { await InfluenceIndex?.syncCharacterPairFlags?.(actorA); } catch (_) { /* no-op */ }
 
-    // Announce – prefer the A-line as main text; include only if at least one side changed
+    // Announce (prefer the A line)
     if (aIsChar) {
-      const aLabel = actorA.name ?? tokA.document?.name ?? "A";
-      const bLabel = nameBforA ?? actorB.name ?? tokB.document?.name ?? "B";
-      await announceChange(aLabel, bLabel, aPrevSym, aNowSym);
+      const aLabel = actorA.name ?? tokA?.document?.name ?? "A";
+      await announceChange(aLabel, nameBforA, aPrevSym, aNowSym);
     } else if (bIsChar) {
-      const bLabel = actorB.name ?? tokB.document?.name ?? "B";
-      const aLabel = nameAforB ?? actorA.name ?? tokA.document?.name ?? "A";
-      await announceChange(bLabel, aLabel, bPrevSym, bNowSym);
+      const bLabel = actorB.name ?? tokB?.document?.name ?? "B";
+      await announceChange(bLabel, nameAforB, bPrevSym, bNowSym);
     }
   },
 
-  /** GM-side handler for socket operations. */
+  /** GM-side socket application for counterpart writes. */
   async _gmApplyFromSocket(data) {
     if (!game.user?.isGM) return;
     if (data?.action !== "applyPair") return;
@@ -374,81 +387,113 @@ const QuickInfluence = {
 
     const aBefore = aIsChar ? readInfluences(actorA) : null;
     const bBefore = bIsChar ? readInfluences(actorB) : null;
-
-    // If arrays were provided by the requester, trust them; else recompute.
-    const aAfter = aIsChar ? (data.aAfter ?? aBefore) : null;
-    const bAfter = bIsChar ? (data.bAfter ?? bBefore) : null;
+    const aAfter  = aIsChar ? (data.aAfter ?? aBefore) : null;
+    const bAfter  = bIsChar ? (data.bAfter ?? bBefore) : null;
 
     const tasks = [];
     if (aIsChar && aAfter) tasks.push(writeInfluencesIfChanged(actorA, aBefore, aAfter));
     if (bIsChar && bAfter) tasks.push(writeInfluencesIfChanged(actorB, bBefore, bAfter));
-    try {
-      await Promise.all(tasks);
-    } catch (err) {
-      console.error(`[${NS}] GM socket apply failed`, err);
-    }
+    try { await Promise.all(tasks); }
+    catch (err) { console.error(`[${NS}] GM relay failed`, err); }
   }
 };
 
 /* ------------------------------- Scene Controls --------------------------- */
 
 // Hooks.on("getSceneControlButtons", (controls) => {
-//   // Avoid duplicates if re-rendered
-//   if (controls.some(c => c.name === "masksQuickInfluence")) return;
+//   const tokenCtl =
+//     controls.find(c => c.name === "token") ||
+//     controls.find(c => c.title?.toString().toLowerCase().includes("token"));
+//   if (!tokenCtl) return;
 
-//   controls.push({
-//     name: "masksQuickInfluence",
-//     title: "Quick Influence",
-//     icon: "fa-solid fa-people-arrows",
-//     layer: "tokens",
-//     visible: true,
-//     tools: [
-//       {
-//         name: "createInfluence",
-//         title: "Create Influence (updates both sheets if applicable)",
-//         icon: "fa-solid fa-user-plus",
-//         button: true,
-//         onClick: () => QuickInfluence.create()
-//       },
-//       {
-//         name: "removeInfluence",
-//         title: "Remove Influence (clears both sides if applicable)",
-//         icon: "fa-solid fa-user-minus",
-//         button: true,
-//         onClick: () => QuickInfluence.remove()
-//       }
-//     ],
-//     activeTool: "createInfluence"
+//   const add = (tool) => {
+//     if (!tokenCtl.tools.some(t => t.name === tool.name)) tokenCtl.tools.push(tool);
+//   };
+
+//   add({
+//     name: "influenceGiveThemOverYou",
+//     title: "Give them Influence over you (Shift: click to pick target)",
+//     icon: "fa-solid fa-user-shield",
+//     button: true,
+//     onClick: (evt) => QuickInfluence.run("lt", evt), // target ⇒ you
+//     visible: true
+//   });
+
+//   add({
+//     name: "influenceGainOverThem",
+//     title: "Gain Influence over them (Shift: click to pick target)",
+//     icon: "fa-solid fa-user-tag",
+//     button: true,
+//     onClick: (evt) => QuickInfluence.run("gt", evt), // you ⇒ target
+//     visible: true
+//   });
+
+//   add({
+//     name: "influenceMutual",
+//     title: "Give & receive Influence (Shift: click to pick target)",
+//     icon: "fa-solid fa-link",
+//     button: true,
+//     onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
+//     visible: true
+//   });
+
+//   add({
+//     name: "influenceClear",
+//     title: "Remove Influence both ways (Shift: click to pick target)",
+//     icon: "fa-solid fa-unlink",
+//     button: true,
+//     onClick: (evt) => QuickInfluence.run("reset", evt), // clear
+//     visible: true
 //   });
 // });
+
 Hooks.on("getSceneControlButtons", (controls) => {
   
-  controls.tokens.tools.createInfluence = {
-    name: "masksQuickInfluence",
-    layer: "tokens",
-    visible: true,
-    name: "createInfluence",
-    title: "Create Influence (updates both sheets if applicable)",
-    icon: "fa-solid fa-user-plus",
-    button: true,
-    onClick: () => QuickInfluence.create()
-  }
-  controls.tokens.tools.removeInfluence = {
-        name: "removeInfluence",
-
+  controls.tokens.tools.influenceGiveThemOverYou = {
         layer: "tokens",
-        title: "Remove Influence (clears both sides if applicable)",
-        icon: "fa-solid fa-user-minus",
-        button: true,
-        onClick: () => QuickInfluence.remove()
-      }
+    name: "influenceGiveThemOverYou",
+    title: "Give them Influence over you (Shift: click to pick target)",
+    icon: "fa-solid fa-user-shield",
+    button: true,
+    onClick: (evt) => QuickInfluence.run("lt", evt), // target ⇒ you
+    visible: true
+  }
+  controls.tokens.tools.influenceGainOverThem = {
+        layer: "tokens",
+    
+    name: "influenceGainOverThem",
+    title: "Gain Influence over them (Shift: click to pick target)",
+    icon: "fa-solid fa-user-tag",
+    button: true,
+    onClick: (evt) => QuickInfluence.run("gt", evt), // you ⇒ target
+    visible: true
+  }
+  controls.tokens.tools.influenceMutual = {
+        layer: "tokens",
+    name: "influenceMutual",
+    title: "Give & receive Influence (Shift: click to pick target)",
+    icon: "fa-solid fa-link",
+    button: true,
+    onClick: (evt) => QuickInfluence.run("eq", evt), // mutual
+    visible: true
+  }
+  controls.tokens.tools.influenceClear = {
+        layer: "tokens",
+    
+    name: "influenceClear",
+    title: "Remove Influence both ways (Shift: click to pick target)",
+    icon: "fa-solid fa-unlink",
+    button: true,
+    onClick: (evt) => QuickInfluence.run("reset", evt), // clear
+    visible: true
+  }
 
 });
 
 /* ------------------------------- Hooks & Settings ------------------------- */
 
 Hooks.once("init", () => {
-  // World setting: announce to chat on changes
+  // Announce-to-chat toggle (world)
   if (!game.settings.settings.has(`${NS}.${KEY_ANNOUNCE}`)) {
     game.settings.register(NS, KEY_ANNOUNCE, {
       name: "Announce Influence changes to chat",
@@ -458,13 +503,37 @@ Hooks.once("init", () => {
       default: true
     });
   }
+
+  // Prefer target (client)
+  if (!game.settings.settings.has(`${NS}.${KEY_PREFER_TGT}`)) {
+    game.settings.register(NS, KEY_PREFER_TGT, {
+      name: "Quick Influence: Prefer current target",
+      hint: "If exactly one token is targeted, use it automatically as the target.",
+      scope: "client",
+      config: true,
+      type: Boolean,
+      default: true
+    });
+  }
+
+  // GM relay (world)
+  if (!game.settings.settings.has(`${NS}.${KEY_USE_GM}`)) {
+    game.settings.register(NS, KEY_USE_GM, {
+      name: "Quick Influence: Ask GM to apply counterpart",
+      hint: "If you lack permission to edit the other sheet, relay the counterpart update to the GM. Disable this to only write your side and rely on symmetry sync.",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: true
+    });
+  }
 });
 
 Hooks.once("ready", () => {
-  // GM socket listener for permission escalations
+  // GM-side socket: perform counterpart writes on behalf of players
   try {
     game.socket?.on(SOCKET_NS, (data) => QuickInfluence._gmApplyFromSocket(data));
   } catch (err) {
-    console.warn(`[${NS}] Socket unavailable; GM-hop disabled.`, err);
+    console.warn(`[${NS}] Socket unavailable; GM relay disabled.`, err);
   }
 });
