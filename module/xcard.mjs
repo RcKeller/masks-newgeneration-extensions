@@ -1,24 +1,48 @@
 /* global Hooks, game, foundry, ChatMessage, CONST, ui */
 
 /**
- * XCard — GM Whisper Button (+ anonymous GM alert)
+ * XCard — GM/Table Whisper Button (configurable)
  * ----------------------------------------------------------------------------
  * Inserts a Foundry-styled button between #roll-privacy and .control-buttons
  * in the chat controls. Clicking it will:
- *   1) (Optionally) send an anonymous whisper to all active GMs that the
- *      X‑Card has been clicked. This can be suppressed via a world setting.
- *   2) Proceed with the original behavior by focusing the chat textarea and
- *      ensuring it begins with "/w GM " so the player can explain if desired.
+ *   1) Perform a user-configurable trigger behavior (see setting below):
+ *        • (default) Anonymously inform the table
+ *        • Anonymously ping the GMs
+ *        • Directly inform the GMs (not anonymous)
+ *        • Only start composing a whisper to the GM (not anonymous)
+ *   2) Always proceed with the original behavior by focusing the chat textarea
+ *      and ensuring it begins with "/w GM " so the player can explain if desired.
  *
- * Setting (world):
- *   - masks-newgeneration-extensions.xcardNotifyGMOnClick (default: true)
- *     If enabled, step (1) is performed; if disabled, only step (2) runs.
+ * Settings:
+ *   - (client) masks-newgeneration-extensions.xcardTriggerMode
+ *       String select with the four behaviors above (per-user).
+ *
+ * Backward compatibility:
+ *   - (world) masks-newgeneration-extensions.xcardNotifyGMOnClick (Boolean)
+ *       Legacy toggle to send the anonymous GM ping. It is kept registered
+ *       (config: false) to avoid errors in existing worlds, but it is no longer
+ *       consulted — the new client select controls behavior now.
  */
 
 const NS = "masks-newgeneration-extensions";
-const TEMPLATE_PATH = `modules/${NS}/templates/xcard.hbs`; // keep if your file is at module root
-const KEY_NOTIFY_GM = "xcardNotifyGMOnClick";
+const TEMPLATE_PATH = `modules/${NS}/templates/xcard.hbs`;
+
+// --- Settings (new + legacy/deprecated) ---
+const KEY_XCARD_MODE = "xcardTriggerMode";         // client select: user-configurable mode
+const KEY_NOTIFY_GM  = "xcardNotifyGMOnClick";     // legacy (deprecated; config: false)
+
+// Socket channel for anonymous relays
 const SOCKET_NS = "module.masks-newgeneration-extensions";
+
+const XCARD_TITLE = "🛑 X‑Card has been played"
+
+// Enumerated modes (persisted as strings)
+const XMODES = Object.freeze({
+  TABLE_ANON:  "table-anon",   // Anonymously inform the table
+  GM_ANON:     "gm-anon",      // Anonymously ping the GMs
+  GM_DIRECT:   "gm-direct",    // Directly inform the GMs (not anonymous)
+  COMPOSE:     "compose"       // Only start composing a whisper to the GM
+});
 
 /** Normalize the message to start with "/w GM " */
 function ensureWhisperToGM(text) {
@@ -39,7 +63,7 @@ async function renderTpl(path, data) {
   return fn(path, data);
 }
 
-/* ----------------------------- GM Alert Helpers ---------------------------- */
+/* ----------------------------- GM & User Helpers --------------------------- */
 
 /** Return an array of active GM user IDs (falls back to all GMs if "active" is unavailable). */
 function getGMUserIds() {
@@ -64,13 +88,55 @@ function isPrimaryGM() {
   return gms[0]?.id === game.user?.id;
 }
 
-/** Default content used in the anonymous GM whisper. */
-function xcardDefaultContent() {
-  // Keep minimal, high‑signal message. No user info included for anonymity.
+/* ----------------------------- Content Builders ---------------------------- */
+
+function buildAnonContent(scope /* "gm" | "table" */) {
+  const target = scope === "gm" ? "GM" : "table";
   return `
-    <p><b>⚠ X‑Card</b> has been clicked.</p>
-    <p class="color-muted">This is an anonymous safety ping to the GM.</p>
+    <em class="color-muted">This is an anonymous safety ping to the ${target}.</em>
   `;
+}
+
+function buildDirectGMContent() {
+  return `
+    <p><b>${XCARD_TITLE}</b></p>
+    <em class="color-muted">The sender may optionally whisper the GM to provide details.</em>
+  `;
+}
+
+/* --------------------------- Dispatching / Delivery ------------------------ */
+
+/**
+ * Send a *public* anonymous X‑Card alert to the whole table.
+ * Implementation prefers GM-socket relay (to hide initiator), with a local fallback.
+ */
+async function notifyTableAnon() {
+  const content = buildAnonContent("table");
+
+  const canSocket = !!game.socket;
+  const hasActiveGM = (game.users?.some?.(u => u?.isGM && u?.active) === true);
+
+  // Prefer GM relay for anonymity
+  if (canSocket && hasActiveGM) {
+    try {
+      game.socket.emit(SOCKET_NS, { action: "xcardNotify", scope: "table", content });
+      return;
+    } catch (err) {
+      console.warn(`[${NS}] Socket emit failed; falling back to local table message.`, err);
+    }
+  }
+
+  // Fallback: create a public message locally (visible to everyone).
+  try {
+    await ChatMessage.create({
+      content,
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+      speaker: { alias: XCARD_TITLE }
+    });
+  } catch (err) {
+    console.error(`[${NS}] Failed to send X‑Card alert to the table.`, err);
+    ui.notifications?.error?.("Couldn’t send the X‑Card alert to the table (see console).");
+  }
 }
 
 /**
@@ -78,11 +144,8 @@ function xcardDefaultContent() {
  * Tries to route via socket so a GM client creates the message (hiding who clicked).
  * Falls back to creating a local GM‑whisper if sockets/GM are unavailable.
  */
-async function notifyGMXCardClicked() {
-  // Respect setting: suppress initial alert if disabled.
-  if (game.settings.get(NS, KEY_NOTIFY_GM) !== true) return;
-
-  const content = xcardDefaultContent();
+async function notifyGMAnon() {
+  const content = buildAnonContent("gm");
 
   // If any active GM exists and we have sockets, broadcast a relay request.
   const hasActiveGM = (game.users?.some?.(u => u?.isGM && u?.active) === true);
@@ -90,7 +153,7 @@ async function notifyGMXCardClicked() {
   if (hasActiveGM && canSocket) {
     try {
       // GM clients will receive and only the primary GM will create the message.
-      game.socket.emit(SOCKET_NS, { action: "xcardNotify", content });
+      game.socket.emit(SOCKET_NS, { action: "xcardNotify", scope: "gm", content });
       // Socket emit is fire‑and‑forget; we don't await a response here.
       return;
     } catch (err) {
@@ -108,13 +171,75 @@ async function notifyGMXCardClicked() {
       content,
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       whisper,
-      speaker: { alias: "X‑Card" }
+      speaker: { alias: XCARD_TITLE }
     });
   } catch (err) {
     console.error(`[${NS}] Failed to send X‑Card whisper to GMs.`, err);
     ui.notifications?.error?.("Couldn’t send the X‑Card alert to the GM (see console).");
   }
 }
+
+/**
+ * Send a *non‑anonymous* direct GM whisper immediately (from the clicking user).
+ */
+async function notifyGMDirect() {
+  const whisper = getGMUserIds();
+  if (!whisper.length) return;
+
+  try {
+    await ChatMessage.create({
+      content: buildDirectGMContent(),
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+      whisper
+      // DO NOT set speaker alias — let Foundry show the author normally (not anonymous).
+    });
+  } catch (err) {
+    console.error(`[${NS}] Failed to send direct X‑Card whisper to GMs.`, err);
+    ui.notifications?.error?.("Couldn’t send the X‑Card whisper to the GM (see console).");
+  }
+}
+
+/**
+ * Entry point for a click: evaluate configured mode and perform the appropriate action.
+ * Regardless of the mode, the chat input is then prefilled with "/w GM ".
+ */
+async function handleXCardClick(htmlRoot) {
+  const mode = String(game.settings.get(NS, KEY_XCARD_MODE) || XMODES.TABLE_ANON);
+
+  try {
+    if (mode === XMODES.TABLE_ANON) {
+      await notifyTableAnon();
+    } else if (mode === XMODES.GM_ANON) {
+      await notifyGMAnon();
+    } else if (mode === XMODES.GM_DIRECT) {
+      await notifyGMDirect();
+    } else if (mode === XMODES.COMPOSE) {
+      // Intentionally do nothing here — compose-only path
+    } else {
+      // Unknown mode? Fallback to table anon.
+      await notifyTableAnon();
+    }
+  } catch (err) {
+    console.error(`[${NS}] X‑Card dispatch failed`, err);
+  }
+
+  // Always proceed with the "prefill whisper to GM + focus" behavior.
+  const ta =
+    htmlRoot?.[0]?.querySelector?.("textarea#chat-message") ||
+    document.querySelector("textarea#chat-message");
+  if (!ta) return;
+
+  const updated = ensureWhisperToGM(ta.value || "");
+  if (updated !== (ta.value || "")) {
+    ta.value = updated;
+    ta.dispatchEvent(new Event("input", { bubbles: true }));
+    ta.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  ta.focus();
+  try { ta.selectionStart = ta.selectionEnd = ta.value.length; } catch (_) { /* no-op */ }
+}
+
+/* ----------------------------- GM Socket Handler --------------------------- */
 
 /** Register a GM‑side socket handler to create the anonymous chat message. */
 function registerGMSocketHandler() {
@@ -124,23 +249,32 @@ function registerGMSocketHandler() {
       if (!game.user?.isGM) return;
       if (!isPrimaryGM()) return; // only one GM should actually post
 
-      const whisper = getGMUserIds();
-      if (!whisper.length) return;
+      const scope = data.scope === "table" ? "table" : "gm";
+      const content = data.content || buildAnonContent(scope);
 
-      const content = data.content || xcardDefaultContent();
       try {
-        await ChatMessage.create({
-          content,
-          type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-          whisper,
-          speaker: { alias: "X‑Card" }
-        });
+        if (scope === "gm") {
+          const whisper = getGMUserIds();
+          if (!whisper.length) return;
+          await ChatMessage.create({
+            content,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            whisper,
+            speaker: { alias: XCARD_TITLE }
+          });
+        } else {
+          await ChatMessage.create({
+            content,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            speaker: { alias: XCARD_TITLE }
+          });
+        }
       } catch (err) {
         console.error(`[${NS}] Primary GM failed to deliver X‑Card alert.`, err);
       }
     });
   } catch (err) {
-    console.warn(`[${NS}] Socket unavailable; X‑Card GM alert will use local fallback only.`, err);
+    console.warn(`[${NS}] Socket unavailable; X‑Card anonymous relays will use local fallback only.`, err);
   }
 }
 
@@ -163,7 +297,7 @@ async function injectButton(htmlRoot) {
 
   // Render our tiny fragment
   const fragHtml = await renderTpl(TEMPLATE_PATH, {
-    title: "X‑Card: Alert GM & start whisper",
+    title: XCARD_TITLE,
     label: "GM"
   });
 
@@ -176,39 +310,28 @@ async function injectButton(htmlRoot) {
 
   // Wire up click (delegate to controls to survive minor reflows)
   $controls.off("click.xcard").on("click.xcard", "#xcard", async () => {
-    // 1) Anonymous ping to GM (if enabled)
-    try { await notifyGMXCardClicked(); }
-    catch (err) { console.error(`[${NS}] X‑Card GM alert failed.`, err); }
-
-    // 2) Proceed with original behavior: prep the whisper to GM
-    const ta =
-      htmlRoot[0]?.querySelector?.("textarea#chat-message") ||
-      document.querySelector("textarea#chat-message");
-    if (!ta) return;
-
-    const updated = ensureWhisperToGM(ta.value || "");
-    if (updated !== (ta.value || "")) {
-      ta.value = updated;
-      ta.dispatchEvent(new Event("input", { bubbles: true }));
-      ta.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-    ta.focus();
-    try { ta.selectionStart = ta.selectionEnd = ta.value.length; } catch (_) { /* no-op */ }
+    await handleXCardClick(htmlRoot);
   });
 }
 
 /* --------------------------------- Hooks ---------------------------------- */
 
 Hooks.once("init", () => {
-  // World setting to enable/disable the initial anonymous GM alert
-  if (!game.settings.settings.has(`${NS}.${KEY_NOTIFY_GM}`)) {
-    game.settings.register(NS, KEY_NOTIFY_GM, {
-      name: "X‑Card: Alert GM on Click",
-      hint: "If enabled, clicking the X‑Card button immediately sends an anonymous whisper to all active GMs before focusing the chat input.",
-      scope: "world",
+  // New per-user select setting controlling X‑Card trigger behavior
+  if (!game.settings.settings.has(`${NS}.${KEY_XCARD_MODE}`)) {
+    game.settings.register(NS, KEY_XCARD_MODE, {
+      name: "X‑Card: Trigger Mode",
+      hint: "Choose what happens when you click the X‑Card. After any case, an optional whisper to the GM is prefilled in case you'd like to share more specific details.",
+      scope: "client",
       config: true,
-      type: Boolean,
-      default: true
+      type: String,
+      choices: {
+        [XMODES.TABLE_ANON]:  "Anonymously inform the table (default)",
+        [XMODES.GM_ANON]:     "Anonymously ping the GMs",
+        [XMODES.GM_DIRECT]:   "Directly ping GMs (not anonymous)",
+        [XMODES.COMPOSE]:     "No ping, start a whisper to the GMs"
+      },
+      default: XMODES.TABLE_ANON
     });
   }
 });
