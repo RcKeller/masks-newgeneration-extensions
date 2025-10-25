@@ -1,0 +1,888 @@
+{
+  "name": "Auntie Social",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "stats": {},
+    "attributes": {
+      "conditions": {
+        "label": "Conditions",
+        "description": "Choose all that apply:",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "Afraid",
+            "value": false
+          },
+          "1": {
+            "label": "Angry",
+            "value": false
+          },
+          "2": {
+            "label": "Guilty",
+            "value": false
+          },
+          "3": {
+            "label": "Hopeless",
+            "value": false
+          },
+          "4": {
+            "label": "Insecure",
+            "value": false
+          }
+        }
+      },
+      "realName": {
+        "label": "Real Name",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Socha Prath",
+        "position": "Left"
+      },
+      "generation": {
+        "label": "Generation",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "",
+        "position": "Left"
+      }
+    },
+    "attrLeft": {},
+    "attrTop": {},
+    "details": {
+      "drive": {
+        "label": "Drive",
+        "value": "<p>To mold young minds into perfect, obedient agents.\nTo acquire power and secrets through her brainwashed students.\nTo punish those who lack discipline and manners.</p>"
+      },
+      "abilities": {
+        "label": "Abilities",
+        "value": "<p>A master of psychology, manipulation, and brainwashing, using advanced gadgets, serums, and subliminal messaging. She runs the Overton Academy as a front for her criminal enterprise. Auntie Social is deceptively spry and carries a concealed blaster pistol in her purse.</p>"
+      },
+      "biography": {
+        "label": "Notes",
+        "value": "<p>Socha Prath is the seemingly respectable headmistress of the prestigious Overton Academy. In reality, she is the criminal mastermind known as Auntie Social, who uses her school to brainwash students into sleeper agents. She turns them into thieves and spies to serve her nefarious agenda, all while maintaining a flawless public persona of a kindly matron. Her true nature is a mystery—she could be a demon, an alien, or simply a viciously cunning old woman.</p>"
+      }
+    },
+    "tags": "mastermind, manipulator, school headmistress, criminal"
+  },
+  "prototypeToken": {
+    "name": "Villain",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": null
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "Reveal a trusted ally as a brainwashed agent",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Turn a friend, family member, or respected figure against a hero, revealing they've been one of Auntie's 'students' all along.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "HOIOotLFS5ocLaBs",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "IvNyjeArosoeCudf"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!HOIOotLFS5ocLaBs"
+    },
+    {
+      "name": "Offer poisoned hospitality",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Present a hero with tea, cookies, or other treats laced with drugs, poisons, or mind-altering potions.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "daDYnj7isfBJrFn0",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 10,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "4k2sNFUX6TJ202kd"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!daDYnj7isfBJrFn0"
+    },
+    {
+      "name": "Activate a hidden subliminal command",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Trigger a hero's repressed desires or a pre-programmed compulsion, causing them to act out against their will.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "2CZh9YhQmvbKIFlO",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 20,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "YNd00PSYAtsN1wks"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!2CZh9YhQmvbKIFlO"
+    },
+    {
+      "name": "Use impeccable manners to disarm and condescend",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Critique a hero's methods, costume, or upbringing with a smile, making them feel small and foolish.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "HSI2HDdIfEGGYmSA",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/popcorn-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 30,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "oOBwhmGkhJNOb13X"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!HSI2HDdIfEGGYmSA"
+    },
+    {
+      "name": "Afraid — Lash out with surprising cruelty",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When her plans are threatened, she drops her composed demeanor to attack with unexpected speed and viciousness.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "v9hLJph7LN4Cradg",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 40,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "ueOBpAHJ8AFzpF1Q"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!v9hLJph7LN4Cradg"
+    },
+    {
+      "name": "Angry — Drop the facade",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When her authority is challenged, she reveals her true, monstrous nature and unleashes her full power.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "MBEBXU8sSZkbWDHn",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 50,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "ZHWjBaex3cgnw2H1"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!MBEBXU8sSZkbWDHn"
+    },
+    {
+      "name": "Guilty — Punish a subordinate",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When a plan fails, she publicly and cruelly blames one of her 'students' for the incompetence.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "eZLUKp88mKThQbF2",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 60,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "BLRJft4PjCYyfuvs"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!eZLUKp88mKThQbF2"
+    },
+    {
+      "name": "Hopeless — Activate a contingency plan",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When cornered, she will sacrifice her school, her students, and her entire operation to ensure her own escape.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Wj3dh3Fyr514w1ZI",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "e8Qsf3emVdeIYUyv"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!Wj3dh3Fyr514w1ZI"
+    },
+    {
+      "name": "Insecure — Become obsessed with a resistant hero",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When a hero resists her control, she focuses all her resources on breaking their will and proving her methods are flawless.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "fNmGnUHoMc8Z5942",
+      "img": "icons/svg/aura.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "c4dekcZ8L9qM61EY"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!fNmGnUHoMc8Z5942"
+    },
+    {
+      "name": "Inflict a Condition",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: have the villain’s actions cause a hero to <b>mark a condition</b> (fear, anger, guilt, hopelessness, insecurity) as appropriate.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "KmN0Et6MwztcBvec",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/convince-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 90,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "Oz5DfSKnWXu9Caxe"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!KmN0Et6MwztcBvec"
+    },
+    {
+      "name": "Take Influence",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: show the villain <b>seizing Influence</b> over a hero through awe, shame, or negotiation, shifting Labels or pressuring choices per Masks rules.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Zy86wTWtRJBkCOtb",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 100,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "pgbIGGajnn4e4GTH"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!Zy86wTWtRJBkCOtb"
+    },
+    {
+      "name": "Capture Someone",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: separate or restrain a target by the fiction (bindings, cages, wards, stone, tech restraints), consistent with the villain’s theme.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "6nqk6cY5EOt8a0ho",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 110,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "6A0hyDVX8NqRHftb"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!6nqk6cY5EOt8a0ho"
+    },
+    {
+      "name": "Put Innocents in Danger",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: endanger bystanders, forcing hard choices or splitting the team, per Masks GM guidance.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "VMIX6gTlaTqC0lsP",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 120,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "0IPWjuUs93vw721i"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!VMIX6gTlaTqC0lsP"
+    },
+    {
+      "name": "Show the Costs of Collateral Damage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: spotlight cracked streets, shattered windows, and endangered artifacts—escalating stakes in the environment.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "27carIbxV2cBTKuE",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 130,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "SoRQCLIC8eRqbzB3"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!27carIbxV2cBTKuE"
+    },
+    {
+      "name": "Tell Them Possible Consequences and Ask",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Baseline GM option: lay out what the villain’s next move will cost and ask what they do now, per GM principles.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "LzMPydJGDqp0pJ9H",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 140,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "LtESJCpIJiC3BB1A"
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!items!LzMPydJGDqp0pJ9H"
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": {
+      "worldId": "v1",
+      "uuid": "Actor.NbYpp0QUDKYt0RHn",
+      "coreVersion": "13.350",
+      "systemId": "pbta",
+      "systemVersion": "1.1.22"
+    },
+    "coreVersion": "13.350",
+    "systemId": "pbta",
+    "systemVersion": "1.1.22",
+    "createdTime": 1761352854029,
+    "modifiedTime": 1761352854029,
+    "lastModifiedBy": "r0BP5jKUdCSBerhD"
+  },
+  "baseType": "npc",
+  "ownership": {
+    "default": 0
+  },
+  "_id": "NbYpp0QUDKYt0RHn",
+  "_key": "!actors!NbYpp0QUDKYt0RHn"
+}
