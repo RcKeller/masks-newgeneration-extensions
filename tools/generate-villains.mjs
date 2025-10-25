@@ -744,7 +744,7 @@ Rules:
   • **Hand-write the {label} text** for the link so it is grammatically correct in context (e.g., "{Take Influence}", "{Taking Influence over her}", "{Show the costs of collateral damage}").
   • Do not add out-of-band link blocks or headers; links appear only inline in the prose.
 - Allowed GM moves (names): {{GM_TRIGGERS}}. Non-condition villain moves must not reference "Make a Villain Move".
-- **Icons:** Any move can use any icon. For each move, pick an "img" from ICON_CATALOG and also provide 2-3 alternate "img_options" from ICON_CATALOG that would fit thematically.
+- **Icons:** Any move can use any icon. For each move, pick an "img" from ICON_CATALOG that would fit thematically.
 - Check to make sure that the GM moves you reference make sense in context and follow the rules of the game.
 
 GM_LINK_CATALOG (choose targets from here; you may pick the variant that best fits):
@@ -1257,7 +1257,6 @@ function buildActorFromTemplate(template, npc, llm) {
   for (const vm of llm.villainMoves) {
     const chosenIcon = vm.img || chooseIconFromTriggers(vm.gm_triggers);
     console.log(`    • Icon for move "${vm.name}": ${chosenIcon}`);
-    if (vm.img_options?.length) console.log(`      icon options: ${vm.img_options.join(", ")}`);
 
     actor.items.push(
       buildMoveItem({
@@ -1266,7 +1265,7 @@ function buildActorFromTemplate(template, npc, llm) {
         description_html: vm.description_html,
         icon: chosenIcon,
         sort: (sort += 10),
-        flags: { ai: { chosenImg: chosenIcon, imgOptions: vm.img_options || [], gmTriggers: vm.gm_triggers } }
+        flags: {}
       })
     );
   }
@@ -1276,7 +1275,6 @@ function buildActorFromTemplate(template, npc, llm) {
     const cm = llm.conditionMoves[cname];
     const chosenIcon = cm.img || CONDITION_ICONS[cname] || ICONS.default;
     console.log(`    • Icon for condition "${cm.name}": ${chosenIcon}`);
-    if (cm.img_options?.length) console.log(`      icon options: ${cm.img_options.join(", ")}`);
 
     actor.items.push(
       buildMoveItem({
@@ -1285,7 +1283,7 @@ function buildActorFromTemplate(template, npc, llm) {
         description_html: cm.description_html,
         icon: chosenIcon,
         sort: (sort += 10),
-        flags: { ai: { chosenImg: chosenIcon, imgOptions: cm.img_options || [], gmTriggers: cm.gm_triggers } }
+        flags: { }
       })
     );
   }
