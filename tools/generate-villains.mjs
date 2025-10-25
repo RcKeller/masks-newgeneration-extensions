@@ -967,12 +967,14 @@ Rules:
 - Create 3–5 flavorful VILLAIN moves (GM-style narrative, no dice rolls) based on the source material.
 - Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure. Condition moves are how that villain reacts when inflicted with said condition, e.g. how they lash out in anger, how they take out their insecurities, assuage their guilt, etc.
 - Every move description must be at least **4–6 full sentences** (max 2 paragraphs).
-- Moves should be narrative focused but organized like:
-  [triggers if applicable - "When …" NOT "Triggers when …"]
+- Moves should be narrative focused and organized like so:
+  [if applicable: <p><b>Trigger:</b> [triggers if applicable - "When …" NOT "Triggers when …"]</p>
+  <p>
   [describe soft effects - fictional change that creates pressure]
-  [targets - who it's targetting]
   [describe hard effects - If ignored, escalate to an immediate, significant consequence]
-  [prompts, if any, for the team; short, specific]
+  </>
+  <p><b>Target:</b> [targets - who it's targetting]</p>
+  [if applicable: <p>[prompts for response, if any are present]</p>]
 - **Inline linking is mandatory:** Each move must incorporate **1–3** allowed GM moves by embedding the exact @UUID link **inline on the GM phrase**, wrapped in <b>…</b>.
   • Choose the UUID from the GM_LINK_CATALOG below.
   • **Hand-write the {label} text** so it reads like plain, compelling English *in the sentence*. You are encouraged to paraphrase: e.g. "{inflict a Condition}", "{take Influence}", "{show what the collateral will cost}", "{announce an off‑panel threat}", "{lay out the consequences—and ask}", "{make you pay to win}", "{turn your move back on you}".
@@ -988,14 +990,14 @@ GM_LINK_CATALOG (choose targets from here; you may pick the variant that best fi
 ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
 {{ICON_CATALOG}}
 
-### How to Write Custom Villain Moves
+### How to Write Custom Moves for Villains
 
 1. **Purpose:** Each move must **escalate the fiction** and **showcase the villain’s idiom** (their style, drive, methods, and humanity).
 2. **When They Fire:** Write moves the GM can use **whenever they’d make any GM move** and the villain is involved—**on a miss, during a lull, or when given a golden opportunity**.
 3. **Fiction‑First, No Villain Rolls:** Moves **state what happens in fiction**; they **don’t require dice rolls**.
 4. **Soft ↔ Hard Dial:** Phrase moves so they can be **soft (set‑up, telegraphed, interruptible)** or **hard (immediate, consequential, cannot be stopped)**. Include a natural **“if ignored, escalate to…”** clause when it helps; do **not** mention “soft/hard/miss/opportunity” in the final prose.
 5. **Address the Heroes as the intended reader:** Write in second person to the characters (not the players).
-6. **Stay on‑Agenda/Principled:** Describe like a comic; misdirect; make threats real; treat human life as meaningful; be a fan of the PCs; remind them of legacies; think between panels; let villains **give up to fight another day**; make supers look outlandish and cool; show adults as shortsighted; support conditionally; ask provocative questions.
+6. **Stay on‑Agenda/Principled:** Describe like a comic; misdirect; make threats real; treat human life as meaningful; be a fan of the PCs; remind them of legacies; think between panels; let villains **give up to fight another day**; make supers look outlandish and cool; show adults as shortsighted; support conditionally; ask provocative questions if applicable.
 7. **Use Core GM Vocabulary:** Express outcomes using or riffing on these GM move families (reflavored to the villain):
    * **Inflict a condition** (name it only when fiction is clear; otherwise “mark a fitting Condition”).
    * **Take Influence over someone** (if already held, **force an immediate Label shift**).
@@ -1024,7 +1026,8 @@ ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
 17. **No New Subsystems:** Do **not** invent mini‑games or numeric modifiers beyond core MASKS tools (Conditions, Influence, Labels, Team prompts).
 18. **Misdirect, Then Hit:** You can **telegraph** with imagery or taunts; if the heroes don’t act, **follow with a harder consequence**.
 19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama.
-20. **Tone Guardrails (IMPORTANT):** Use plain, vivid English. Avoid stiff constructions like “Triggers when…”, “If they resist… then…”, “with precision”, “to prove their point”. Vary your sentence openings. Never pad with designer slang; the final prose should read like a comic panel caption.
+20. **Tone Guardrails:** Use plain, vivid English. Avoid stiff constructions like “Triggers when…”, “If they resist… then…”, “with precision”, “to prove their point”. Vary your sentence openings. Never pad with designer slang; the final prose should read like a comic panel caption.
+21. **Leave room for roleplay**: Describe the scene and the villain's actions, but leave space for the GM and players to fill in the dialogue and finer details through roleplay.
 `;
 
 function defaultBuildUser(npc) {
@@ -1045,20 +1048,19 @@ Return strictly:
       "description_html": "<p>… embed 1–2 bold inline @UUID[...] links with hand-written {label} …</p>",
       "gm_triggers": ["One or two from the allowed list that are appropriate for the situation"],
       "img": "one string from ICON_CATALOG",
-      "img_options": ["other options from ICON_CATALOG"]
     }
   ],
   "conditionMoves": {
-    "Afraid":   { "name": "Afraid — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
-    "Angry":    { "name": "Angry — <verb phrase>",    "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
-    "Guilty":   { "name": "Guilty — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
-    "Hopeless": { "name": "Hopeless — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
-    "Insecure": { "name": "Insecure — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] }
+    "Afraid":   { "name": "Afraid — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…" },
+    "Angry":    { "name": "Angry — <verb phrase>",    "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…" },
+    "Guilty":   { "name": "Guilty — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…" },
+    "Hopeless": { "name": "Hopeless — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…" },
+    "Insecure": { "name": "Insecure — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…" }
   },
   "details": {
-    "drive": "1–4 short bullets or sentences",
+    "drive": "1–4 short bullets or sentences summarizing the villain's motives and goals",
     "abilities": "short HTML allowed, prefer bullet points",
-    "biography": "Minimum 3-4 sentences, and as much of the base material verbatim as possible"
+    "biography": "HARD MINIMUM 3-4 sentences, and as much of the base material verbatim as possible. MORE IS BETTER"
   }
 }
 `;
@@ -1221,35 +1223,9 @@ function countSentences(html) {
   return matches ? matches.length : (text.length > 0 ? 1 : 0);
 }
 
-// varied, non‑trite panel prompts to avoid repetitive "What do you do?"
-const PANEL_PROMPTS = [
-  "How do you respond?",
-  "Who do you protect first?",
-  "What do you leave behind to stop this?",
-  "Do you take the deal—or take the hit?",
-  "Whose voice do you hear in your head?",
-  "Where do you draw the line?",
-  "Do you stand your ground or give it?",
-  "What truth do you refuse to accept?",
-  "Do you split up or stay together?",
-  "What do you break to keep someone safe?"
-];
-
-function padToMinSentences(html, min = 4) {
-  let out = String(html || "");
-  let c = countSentences(out);
-  while (c < min) {
-    const prompt = PANEL_PROMPTS[(c - 1) % PANEL_PROMPTS.length];
-    out = ensureSingleParagraphHTML(out).replace(/<\/p>$/, ` ${prompt}</p>`);
-    c++;
-  }
-  return out;
-}
-
 function finalizeDescription(descHtml, gm_triggers) {
   // Ensure one paragraph, minimum sentences, embedded & naturalized UUIDs, then tone polish.
   let d = ensureSingleParagraphHTML(descHtml);
-  d = padToMinSentences(d, 4);
   d = embedUUIDLinksInline(d, gm_triggers);
   d = normalizeAndNaturalizeUUIDLabels(d);
   d = polishMasksTone(d);
@@ -1264,9 +1240,8 @@ function ensureVillainMoves(moves) {
     const description_html = finalizeDescription(rawDesc, gm_triggers);
 
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : chooseIconFromTriggers(gm_triggers);
-    const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : [];
 
-    return { name, gm_triggers, description_html, img, img_options };
+    return { name, gm_triggers, description_html, img };
   }).filter((m) => m.name && m.description_html);
 
   if (out.length < 3) {
@@ -1278,8 +1253,7 @@ function ensureVillainMoves(moves) {
         name: `Villain Gambit ${out.length + 1}`,
         gm_triggers,
         description_html,
-        img: chooseIconFromTriggers(gm_triggers),
-        img_options: pickRandom(ALL_MOVE_ICONS, 5)
+        img: chooseIconFromTriggers(gm_triggers)
       });
     }
   } else if (out.length > 5) {
@@ -1331,8 +1305,7 @@ function ensureConditionMoves(cond) {
     const rawDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
     const description_html = finalizeDescription(rawDesc, gm_triggers);
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : (defaults[k].img || chooseIconFromTriggers(gm_triggers));
-    const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : pickRandom(ALL_MOVE_ICONS, 5);
-    out[k] = { name, gm_triggers, description_html, img, img_options };
+    out[k] = { name, gm_triggers, description_html, img };
   }
   return out;
 }
@@ -1502,7 +1475,6 @@ function buildActorFromTemplate(template, npc, llm) {
   // Villain moves (LLM-supplied inline UUID links + LLM-chosen icons)
   for (const vm of llm.villainMoves) {
     const chosenIcon = vm.img || chooseIconFromTriggers(vm.gm_triggers);
-    console.log(`    • Icon for move "${vm.name}": ${chosenIcon}`);
 
     actor.items.push(
       buildMoveItem({
@@ -1520,7 +1492,6 @@ function buildActorFromTemplate(template, npc, llm) {
   for (const cname of ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"]) {
     const cm = llm.conditionMoves[cname];
     const chosenIcon = cm.img || CONDITION_ICONS[cname] || ICONS.default;
-    console.log(`    • Icon for condition "${cm.name}": ${chosenIcon}`);
 
     actor.items.push(
       buildMoveItem({
