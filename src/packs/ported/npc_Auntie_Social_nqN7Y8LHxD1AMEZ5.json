@@ -60,15 +60,15 @@
     "details": {
       "drive": {
         "label": "Drive",
-        "value": "Children Need Discipline!"
+        "value": "Children must be molded into obedient tools.,Discipline is the only path to success.,Her methods are for their own good.,Anyone who resists her authority is a threat to society."
       },
       "abilities": {
         "label": "Abilities",
-        "value": "<ul><li>Psychology Master: Expert manipulation and gaslighting.</li><li>Blaster Weapon: Fires serums that amplify emotions or suppress free will.</li><li>Mind Control Techniques: Subtle suggestions or outright domination.</li></ul>"
+        "value": "<ul><li>Expert Psychology: Manipulate emotions and perceptions.</li><li>Mind Control: Force obedience in those she has broken.</li><li>Blaster Proficiency: Wields a high-tech blaster with precision.</li></ul>"
       },
       "biography": {
         "label": "Notes",
-        "value": "Ms. Socha Prath runs the prestigious Overton Academy as a front for brainwashing students into doing her criminal bidding. Her true identity, 'Auntie Social,' conceals her alien, demonic, robotic, or sorcerous origins. She uses psychology, gadgets, and serums to manipulate young minds and even heroes into acting out their darkest impulses. Her students adore her—until they realize the strings attached."
+        "value": "Auntie Social, whose real name is Socha Prath, is the seemingly benevolent headmistress of Overton Academy, a prestigious school in Halcyon City. By day, she is a strict but respected educator, but by night, she uses her psychological expertise to brainwash students into carrying out her criminal schemes. Her true nature is shrouded in mystery—she could be an alien, a demon, a rogue AI, or simply a brilliant but vile old woman. Regardless of her origins, her drive to control and discipline the youth of Halcyon City makes her a formidable foe."
       }
     },
     "tags": ""
@@ -169,11 +169,11 @@
   },
   "items": [
     {
-      "name": "The Perfect Student",
+      "name": "Twist the Knife",
       "type": "npcMove",
       "system": {
         "moveType": "villain",
-        "description": "<p>Auntie Social singles out one of you, her voice dripping with honeyed praise. \"See how well they follow instructions? The rest of you could learn from their example.\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Taking Influence}</b> the target, or if she already has it, <b>force an immediate Label shift</b> toward Savior or Danger. The other students murmur, eyeing you with envy or resentment.</p>",
+        "description": "<p>When Auntie Social senses a hero’s doubt, she <b>{<b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Taking Influence}</b> them}</b>, forcing them to question their identity <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. She whispers insidious truths about their failures, amplifying their insecurities. If they resist, she <b>{Inflicts a Condition}</b>, leaving them vulnerable to her next move. The hero must decide: do they accept her words or push back against her manipulation?</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -194,12 +194,24 @@
         },
         "uses": 0
       },
-      "_id": "xl7860aduEyrrsiw",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+      "_id": "YHCgr6qIn6BZGiHE",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
       "sort": 10,
-      "flags": {},
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/brain-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Take Influence over",
+            "Inflict a Condition"
+          ]
+        }
+      },
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
@@ -208,20 +220,20 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155327,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.xl7860aduEyrrsiw"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.YHCgr6qIn6BZGiHE"
     },
     {
-      "name": "Behavioral Adjustment",
+      "name": "Brainwashed Brigade",
       "type": "npcMove",
       "system": {
         "moveType": "villain",
-        "description": "<p>Auntie Social raises her blaster, its eerie glow reflecting in her eyes. \"This will only hurt if you resist.\" She fires a serum-filled dart at one of you. If it hits, <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b> of her choice as your darkest impulses surge to the surface. The serum whispers in your mind, urging you to betray your friends.</p>",
+        "description": "<p>Auntie Social summons her brainwashed students to swarm the heroes, <b>{<b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Putting Innocents in Danger}</b>}</b>. The students, once friends or allies, now fight with eerie precision. The heroes must choose: fight back and risk harming the students, or find another way to stop them. If ignored, the students <b>{Show the Costs of <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Causing Collateral Damage}</b>}</b>, causing chaos in the surrounding area.</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -242,12 +254,24 @@
         },
         "uses": 0
       },
-      "_id": "CAG2nJNpYxlOByLz",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "_id": "Msyk5wRIk1WNQDRG",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/mesh-network-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
       "sort": 20,
-      "flags": {},
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/mesh-network-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/team-downgrade-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/three-friends-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Put Innocents in Danger",
+            "Collateral Damage"
+          ]
+        }
+      },
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
@@ -256,20 +280,20 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155327,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.CAG2nJNpYxlOByLz"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.Msyk5wRIk1WNQDRG"
     },
     {
-      "name": "Institutional Leverage",
+      "name": "Psychological Warfare",
       "type": "npcMove",
       "system": {
         "moveType": "villain",
-        "description": "<p>Auntie Social smirks as she taps a tablet, pulling up damning footage of one of you breaking rules or losing control <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"What would your mentors say if they saw this?\" She <b>makes them <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Exacting a Price for Victory}</b>, offering to delete the files—if you do her a small favor first.</p>",
+        "description": "<p>Auntie Social exploits the heroes’ past mistakes, <b>{<b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activating the Downsides of Abilities/Relationships}</b>}</b> <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capturing Someone}</b>. She dredges up old wounds, turning allies against each other or making powers backfire. The heroes must confront their failures or risk being torn apart. If they ignore her taunts, she <b>{Captures Someone}</b>, taking one of them hostage to further break their morale.</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -290,12 +314,24 @@
         },
         "uses": 0
       },
-      "_id": "GqEEZpHFF5d2ccN6",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "_id": "kHTmBOWfdB7oZmWA",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
       "sort": 30,
-      "flags": {},
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/broken-bone-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Activate the Downsides of their Abilities and Relationships",
+            "Capture Someone"
+          ]
+        }
+      },
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
@@ -304,68 +340,20 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155327,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.GqEEZpHFF5d2ccN6"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.kHTmBOWfdB7oZmWA"
     },
     {
-      "name": "The Headmistress's Gaze",
-      "type": "npcMove",
-      "system": {
-        "moveType": "villain",
-        "description": "<p>Auntie Social's eyes lock onto you, her voice a chilling whisper <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"I know what you're truly afraid of.\" She <b>tells them who they are or who they should be</b>, twisting your insecurities into a weapon. The other students shift uncomfortably, some nodding along as her words sink in.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "uEF2WbCeRWexy4Dg",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 40,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.uEF2WbCeRWexy4Dg"
-    },
-    {
-      "name": "Afraid — The Whispering Doubt",
+      "name": "Afraid — Retreat to Safety",
       "type": "npcMove",
       "system": {
         "moveType": "condition",
-        "description": "<p>Auntie Social's voice echoes in your mind, amplifying every fear. \"You'll never be good enough.\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b> or <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.voNk2PNNF7oNqnSn]{Making a Playbook Move}</b> that exploits your doubts. Your hands tremble as you second-guess every decision.</p>",
+        "description": "<p>When afraid, Auntie Social withdraws to a secure location, <b>{<b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{Giving Ground}</b>}</b>. She activates hidden defenses, forcing the heroes to navigate traps or barriers to reach her. If pressed, she <b>{Announces Between-Panel Threats}</b>, revealing that her students are preparing to act on her orders elsewhere. The heroes must decide: pursue her now or stop her plans before they unfold.</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -386,12 +374,83 @@
         },
         "uses": 0
       },
-      "_id": "KcDPq0OYBbI1a4qP",
+      "_id": "E0Pca9QKZTwjONia",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
+      "sort": 40,
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/surrounded-shield-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Giving Ground"
+          ]
+        }
+      },
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761410155327,
+        "modifiedTime": 1761410155328
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.E0Pca9QKZTwjONia"
+    },
+    {
+      "name": "Angry — Wield Cruel Authority",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>In her anger, Auntie Social unleashes her full psychological and physical arsenal, <b>{Lashing out verbally}</b> and blasting indiscriminately <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{Lash Out Verbally}</b> <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turning Their Move Back on Them}</b>. She targets the heroes’ weaknesses, forcing them to confront their insecurities or risk being overwhelmed. If they resist, she <b>{Turns Their Move Back on Them}</b>, using their own powers or tactics against them. The heroes must find a way to calm her rage or face the consequences.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Znyey89vNquJkQoP",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
       "sort": 50,
-      "flags": {},
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/fire-shield-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Lash Out Verbally",
+            "Turn Their Move Back on Them"
+          ]
+        }
+      },
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
@@ -400,20 +459,20 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155327,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.KcDPq0OYBbI1a4qP"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.Znyey89vNquJkQoP"
     },
     {
-      "name": "Angry — The Burning Rebellion",
+      "name": "Guilty — Shift the Blame",
       "type": "npcMove",
       "system": {
         "moveType": "condition",
-        "description": "<p>Auntie Social's smug smile ignites your fury <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"See how they lash out? Just as I predicted.\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{Lash Out Verbally}</b> or <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{Trade Blows}</b>, but her goads make you reckless. The other students shrink back, afraid of your outburst.</p>",
+        "description": "<p>When feeling guilty, Auntie Social deflects responsibility, <b>{Bringing an NPC to Rash Decisions and Hard Conclusions}</b> <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Driving an NPC to Rash Decisions}</b> <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. She manipulates others into taking the fall for her actions, turning allies against each other. If the heroes challenge her, she <b>{Inflicts a Condition}</b>, making them question their own culpability. The heroes must decide: expose her guilt or protect the innocent from her schemes.</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -434,156 +493,24 @@
         },
         "uses": 0
       },
-      "_id": "ASjYdtHCLo5azVAy",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 60,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.ASjYdtHCLo5azVAy"
-    },
-    {
-      "name": "Guilty — The Weight of Failure",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>Auntie Social tuts, shaking her head <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"Look what you've done.\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activating the Downsides of Abilities/Relationships}</b> as guilt paralyzes you. The damage you caused—or the trust you broke—haunts every step.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "2nXdkN8sVxDw020X",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/robber-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 70,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.2nXdkN8sVxDw020X"
-    },
-    {
-      "name": "Hopeless — The Crushing Truth",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>Auntie Social's words sink in like anchors <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"Why fight it? You'll only make things worse.\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Revealing the Future}</b> or <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announcing Between-Panel Threats}</b> that seem inevitable. You slump, wondering if she's right.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "AJa0MyQpJsMOTXbU",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 80,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.AJa0MyQpJsMOTXbU"
-    },
-    {
-      "name": "Insecure — The Mirror of Doubt",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>Auntie Social holds up a metaphorical mirror, distorting your reflection <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. \"Is this really who you want to be?\" <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Stating the Possible Consequences}</b> if you're willing to change to avoid them. Your voice wavers as you question everything.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "TVRyhdB9wWoPYkyt",
+      "_id": "BoeEqrYFJQ5Na1lj",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 90,
-      "flags": {},
+      "sort": 60,
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/chalk-outline-murder-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/duality-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Bring an NPC to Rash Decisions and Hard Conclusions",
+            "Inflict a Condition"
+          ]
+        }
+      },
       "_stats": {
         "compendiumSource": null,
         "duplicateSource": null,
@@ -592,13 +519,131 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.TVRyhdB9wWoPYkyt"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.BoeEqrYFJQ5Na1lj"
+    },
+    {
+      "name": "Hopeless — Crush Their Spirits",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>In her hopelessness, Auntie Social seeks to drag others down with her, <b>{Inflicting Conditions}</b> that mirror her despair <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflicting a Condition}</b>. She delivers crushing speeches about the futility of their efforts, making the heroes question their purpose. If they falter, she <b>{Makes Them <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Exacting a Price for Victory}</b>}</b>, ensuring even their success comes at a cost. The heroes must find a way to restore hope or risk succumbing to her darkness.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "85JtAuTQzkQZFq8p",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/falling-blob-%23ffffff-%233da7db.svg",
+            "modules/masks-newgeneration-unofficial/images/gameicons/sunrise-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Inflict a Condition",
+            "Make Them Pay a Price for Victory"
+          ]
+        }
+      },
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.85JtAuTQzkQZFq8p"
+    },
+    {
+      "name": "Insecure — Overcompensate with Control",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When feeling insecure, Auntie Social tightens her grip on those around her, <b>{Activate the Downsides of their Relationships}</b> <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capturing Someone}</b>. She micromanages her students and allies, making them resentful or fearful. If the heroes try to undermine her, she <b>{Captures Someone}</b>, using them as a shield or bargaining chip. The heroes must find a way to break her control or risk being ensnared in her desperate grasp.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "CpExEPUgt2t7nbD7",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {
+        "ai": {
+          "chosenImg": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+          "imgOptions": [
+            "modules/masks-newgeneration-unofficial/images/gameicons/prisoner-%23ffffff-%233da7db.svg"
+          ],
+          "gmTriggers": [
+            "Capture Someone"
+          ]
+        }
+      },
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.CpExEPUgt2t7nbD7"
     },
     {
       "name": "Inflict a Condition",
@@ -626,11 +671,11 @@
         },
         "uses": 0
       },
-      "_id": "T8KOpxm8WFXEQGv3",
+      "_id": "u43TG0B1N2AHyCdS",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 100,
+      "sort": 90,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -640,13 +685,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.T8KOpxm8WFXEQGv3"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.u43TG0B1N2AHyCdS"
     },
     {
       "name": "Take Influence",
@@ -674,11 +719,11 @@
         },
         "uses": 0
       },
-      "_id": "zOW8BvXzqTXoq4Th",
+      "_id": "Cn6oM69NFeJS3oeU",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 110,
+      "sort": 100,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -688,13 +733,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.zOW8BvXzqTXoq4Th"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.Cn6oM69NFeJS3oeU"
     },
     {
       "name": "Capture",
@@ -722,11 +767,11 @@
         },
         "uses": 0
       },
-      "_id": "I0ICt09qaOCP517Y",
+      "_id": "jMorswGlGGgkuuyb",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 120,
+      "sort": 110,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -736,13 +781,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.I0ICt09qaOCP517Y"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.jMorswGlGGgkuuyb"
     },
     {
       "name": "Put Innocents in Danger",
@@ -770,11 +815,11 @@
         },
         "uses": 0
       },
-      "_id": "BfqVK7CJ814s2USv",
+      "_id": "PlWVJ0x1aSIhqwOb",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 130,
+      "sort": 120,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -784,13 +829,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385017,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.BfqVK7CJ814s2USv"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.PlWVJ0x1aSIhqwOb"
     },
     {
       "name": "Collateral Damage",
@@ -818,11 +863,11 @@
         },
         "uses": 0
       },
-      "_id": "sRW9pY6HntiXihle",
+      "_id": "vv6ZOaC34QLRvDOx",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 140,
+      "sort": 130,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -832,13 +877,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385018,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.sRW9pY6HntiXihle"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.vv6ZOaC34QLRvDOx"
     },
     {
       "name": "Tell Them Possible Consequences and Ask",
@@ -866,11 +911,11 @@
         },
         "uses": 0
       },
-      "_id": "ffjHsYzd111xwrkN",
+      "_id": "SMD7SNlzp02SVH0F",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 150,
+      "sort": 140,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -880,13 +925,13 @@
         "systemId": "pbta",
         "systemVersion": "1.1.22",
         "lastModifiedBy": null,
-        "createdTime": 1761371385018,
-        "modifiedTime": 1761371385018
+        "createdTime": 1761410155328,
+        "modifiedTime": 1761410155328
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!cCY4Pba24GqBB7rE.ffjHsYzd111xwrkN"
+      "_key": "!actors.items!nqN7Y8LHxD1AMEZ5.SMD7SNlzp02SVH0F"
     }
   ],
   "effects": [],
@@ -903,11 +948,11 @@
     "coreVersion": "13.350",
     "systemId": "pbta",
     "systemVersion": "1.1.22",
-    "createdTime": 1761371385017,
-    "modifiedTime": 1761371385018,
+    "createdTime": 1761410155327,
+    "modifiedTime": 1761410155328,
     "lastModifiedBy": null
   },
-  "_id": "cCY4Pba24GqBB7rE",
+  "_id": "nqN7Y8LHxD1AMEZ5",
   "sort": 100000,
-  "_key": "!actors!cCY4Pba24GqBB7rE"
+  "_key": "!actors!nqN7Y8LHxD1AMEZ5"
 }

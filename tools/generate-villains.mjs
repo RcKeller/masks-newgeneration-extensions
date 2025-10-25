@@ -52,14 +52,16 @@
  *     {{NPC_NAME}}, {{NPC_REALNAME}}, {{NPC_IMG}}, {{NPC_CONCEPT}},
  *     {{NPC_DRIVE}}, {{NPC_ABILITIES}}, {{NPC_BIO}},
  *     {{GM_TRIGGERS}}  comma-separated allowed GM triggers
+ *     {{GM_LINK_CATALOG}} newline list of @UUID options grouped by trigger
+ *     {{ICON_CATALOG}}   JSON array of valid icon paths
  *
  * IMPORTANT MASKS CONSTRAINTS THIS SCRIPT ENFORCES
  * -----------------------------------------------------------------------------
  * • Moves are narrative GM-style; no villain dice. One <p>…</p> per description.
  * • Each custom Villain OR Condition move:
- *     - Must reference 1–2 allowed GM move names (wrapped in <b>…</b>), and
- *     - Must embed the @UUID[...] link **inline on the GM phrase** (no trailing “— …” block).
- *       (Foundry will replace that with a link; the {…} text is the link label.)
+ *     - Must reference 1–2 allowed GM move names and MUST embed the @UUID[…] link
+ *       **inline on the GM phrase** with the label text in {…} crafted by the LLM
+ *       for grammatical fit (no trailing “— …” block).
  * • Non-condition **villain** moves will NOT use “Make a Villain Move”.
  * • Exactly five condition moves (Afraid, Angry, Guilty, Hopeless, Insecure).
  * • Preserves a small baseline set of GM options (not removed).
@@ -70,7 +72,7 @@
  * node tools/port-npcs.mjs
  *   [--indir ./src/packs]         Input directory to scan for .txt/.md files
  *   [--outdir ./src/packs/ported] Output directory (auto-created)
- *   [--template ./example-npc.json] Path to the NPC template JSON
+ *   [--template ./example-villain.json] Path to the NPC template JSON
  *   [--model deepseek/deepseek-chat-v3-0324]  OpenRouter model id
  *   [--concurrency 2]             Max concurrent file jobs
  *   [--filePattern "*"]           Simple filename prefix glob (e.g. "chapter*")
@@ -147,7 +149,8 @@ const GM_TRIGGER_WHITELIST = [
   "Giving Ground"
 ];
 
-// (Kept as authoritatively provided; we parse the @UUID[…] target out)
+// (Kept as authoritatively provided; we pass these to the LLM so it can pick one variant
+// and HAND-WRITE the {label} text for grammar.)
 const GM_UUID_MAP = {
   "Activate the Downsides of their Abilities and Relationships": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of the heroes Abilities and Relationships}",
@@ -230,6 +233,7 @@ const GM_UUID_MAP = {
   ],
 };
 
+// Default legacy mapping (still used as fallback only)
 const ICONS = {
   default: "modules/masks-newgeneration-unofficial/images/gameicons/aura-%23ffffff-%233da7db.svg",
   "Inflict a Condition": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
@@ -261,6 +265,179 @@ const BASE_MOVE_RESULTS = {
   partial: { key: "system.moveResults.partial.value", label: "Partial success", value: "" },
   success: { key: "system.moveResults.success.value", label: "Success!", value: "" },
 };
+
+// Full icon catalog (user-supplied options)
+const ALL_MOVE_ICONS = [
+  "modules/masks-newgeneration-unofficial/images/gameicons/ages.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/love-letter-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/alien-stare-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/magic-portal-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/american-football-helmet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/magnifying-glass-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/american-shield-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/medal-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/android-mask-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/melting-metal-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/angry-eyes-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/mesh-network-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/armor-punch-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/metroid-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/mighty-force-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/astronaut-helmet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/atlas-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/misdirection-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/attached-shield-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/move-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/aura-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/mug-shot-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/awareness-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/muscle-up-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/barrier-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/newspaper-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bat-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/open-folder-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bat-mask-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/open-palm-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/big-gear-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ouroboros-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/book-pile-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/overdrive-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/booze-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bow-arrow-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/phone-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/brain-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/plant-roots-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/brainstorm-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/playbook.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/brodie-helmet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/pointing-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/broken-bone-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/police-badge-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/popcorn-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bubble-field-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/prisoner-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/processor-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/bullet-impacts-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/progression-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/burning-passion-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/punch-blast-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/candlebright-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/capitol-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/rail-road-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/captain-hat-profile-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ray-gun-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cavalry-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/red-carpet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cctv-camera-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/regeneration-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/centaur-heart-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/revolt-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/chalk-outline-murder-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ringed-planet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/character-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/charged-arrow-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/robber-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/charging-bull.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/rock-golem-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/checked-shield.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/save-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/chess-knight-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/school-bag-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cloud-download-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/screaming-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cold-heart-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/shadow-follower-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/shaking-hands-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/congress-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/shield-reflect-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/conqueror-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/sitting-dog-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/convince-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/six-eyes-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/crowned-heart-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/skull-crossed-bones-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cursed-star-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/slingshot-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/cyborg-face-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/smartphone-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/smoking-finger-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/discussion-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/snatch-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/snowflake-1-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/dna1-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spark-spirit-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/domino-mask-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spider-mask-%23ff0000-%23000000.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/duality-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spider-mask-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/dunce-cap-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spider-web-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/dutch-bike-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/earth-america-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spray-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/elevator-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/spy-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/encirclement-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/star-struck-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/energise-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/stigmata-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/sunrise-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/entangled-typhoon-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/supersonic-arrow-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/erlenmeyer-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/surprised-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/surrounded-shield-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/falling-blob-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/family-tree-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/talk-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/fire-shield-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/flying-flag-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/teacher-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/frankenstein-creature-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/team-downgrade-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/full-motorcycle-helmet-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/gemini-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/telepathy-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ghost-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/temple-gate-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/grand-piano-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/theater-curtains-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/three-friends-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/handcuffed-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/headphones-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/trash-can-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/hearts-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/treehouse-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/help-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/ufo-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/high-five-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/upgrade-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/white-book-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/law-star-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/wide-arrow-dunk-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/wisdom-%23ffffff-%233da7db.svg",
+  "modules/masks-newgeneration-unofficial/images/gameicons/lightning-flame-%23ffffff-%233da7db.svg"
+];
 
 const NOW = () => Date.now();
 
@@ -349,9 +526,17 @@ function deriveImagePathHint(text) {
   return m ? m[1] : null;
 }
 
-// ------------------------------ INLINE UUID LINKING (NEW) ------------------------------
+function buildGmLinkCatalogText() {
+  const lines = [];
+  for (const key of Object.keys(GM_UUID_MAP)) {
+    lines.push(`- ${key}:`);
+    for (const s of GM_UUID_MAP[key]) lines.push(`  • ${s}`);
+  }
+  return lines.join("\n");
+}
 
-// PROBLEM: This doesn't need to be a straight replacement. I want the GPT to actually have all the UUID options then pick which to use.
+// ------------------------------ INLINE UUID LINKING (FALLBACK-ONLY) ------------------------------
+
 const GM_ANCHOR_TEXT = {
   "Inflict a Condition": "Inflicting a Condition",
   "Take Influence over": "Taking Influence",
@@ -374,7 +559,6 @@ const GM_ANCHOR_TEXT = {
 function getUUIDTargetForTrigger(trigger) {
   const list = GM_UUID_MAP[trigger];
   if (!list || !list.length) return null;
-  // extract the [target] portion from the first entry
   const m = list[0].match(/^@UUID\[(.+?)\]\{.*\}$/);
   return m ? m[1] : null;
 }
@@ -427,24 +611,19 @@ function buildVariants(trigger, anchor) {
     default:
       break;
   }
-  // dedupe, preserve order
   return [...new Set(base.map((s) => String(s)))];
 }
 
 /**
- * Link **all** recognized GM phrases, not just those listed in gmTriggers.
- * - Scans prose for recognizable GM phrases (variants), combines with gmTriggers, then link all.
- * - Still avoids adding “Make a Villain Move” if it wasn’t already in gmTriggers (so villain moves don’t re‑gain it).
+ * Fallback linker: only used if the LLM failed to include any @UUID links.
+ * The LLM is now responsible for choosing the right UUID and hand-writing {label}.
  */
 function embedUUIDLinksInline(htmlWithP, gmTriggers) {
-  // Ensure single paragraph and sanitize bold
   let wrapped = ensureSingleParagraphHTML(htmlWithP);
   wrapped = sanitizeBold(wrapped);
-
   const matchP = wrapped.match(/^<p>([\s\S]*?)<\/p>$/i);
   let inner = matchP ? matchP[1] : wrapped;
 
-  // --- discover any GM phrases already present in the text (in reading order)
   const gmList = [...new Set((gmTriggers || []).filter(Boolean))];
   const disallowVillainMove = !gmList.includes("Make a Villain Move");
 
@@ -466,10 +645,8 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
     return occurrences.map(o => o.trig);
   })();
 
-  // Combine gmTriggers (priority) with discovered (reading order), then dedupe
   const toProcess = [...new Set([...gmList, ...discoveredOrdered])];
 
-  // Link each matched trigger once where it appears
   for (const trig of toProcess) {
     const target = getUUIDTargetForTrigger(trig);
     if (!target) continue;
@@ -477,7 +654,6 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
     const anchor = GM_ANCHOR_TEXT[trig] || trig;
     const link = `@UUID[${target}]{${anchor}}`;
 
-    // Try to replace an existing phrase (with or without <b>)
     const variants = buildVariants(trig, anchor);
     let replaced = false;
     for (const v of variants) {
@@ -489,7 +665,6 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
       }
     }
 
-    // If nothing matched, inject before sentence-ending punctuation
     if (!replaced) {
       const punctIdx = inner.search(/[.!?](\s|$)/);
       const insertion = `<b>${link}</b>`;
@@ -556,16 +731,27 @@ Return JSON ONLY. No explanations. No markdown.
 
 Rules:
 - Create 3–5 flavorful VILLAIN moves (GM-style narrative, no dice rolls) based on the source material.
-- Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure.
-- Each description should have a narrative that incorporates 1–2 allowed GM moves (wrapped in <b>…</b>).
-- Allowed GM moves: ${GM_TRIGGER_WHITELIST.join(", ")}. Use only these verbatim.
-- Moves must be at least 3-4 narrative sentences (max 2 paragraphs): It should be narrative focused but organized like:
+- Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure. Condition moves are how that villain reacts when inflicted with said condition, e.g. how they lash out in anger, how they take out their insecurities, assuage their guilt, etc.
+- Every move description must be at least **4–6 full sentences** (max 2 paragraphs).
+- Moves should be narrative focused but organized like:
   [triggers if applicable - "Triggers when/if …"]
   [describe soft effects - fictional change that creates pressure]
   [targets - who it's targetting]
   [describe hard effects - If ignored or on a miss/opportunity, [immediate, significant consequence]]
   [prompts, if any for, the team]
+- **Inline linking is mandatory:** Each move must incorporate **1–3** allowed GM moves by embedding the exact @UUID link **inline on the GM phrase**, wrapped in <b>…</b>.
+  • Choose the UUID from the GM_LINK_CATALOG below.
+  • **Hand-write the {label} text** for the link so it is grammatically correct in context (e.g., "{Take Influence}", "{Taking Influence over her}", "{Show the costs of collateral damage}").
+  • Do not add out-of-band link blocks or headers; links appear only inline in the prose.
+- Allowed GM moves (names): {{GM_TRIGGERS}}. Non-condition villain moves must not reference "Make a Villain Move".
+- **Icons:** Any move can use any icon. For each move, pick an "img" from ICON_CATALOG and also provide 2-3 alternate "img_options" from ICON_CATALOG that would fit thematically.
 - Check to make sure that the GM moves you reference make sense in context and follow the rules of the game.
+
+GM_LINK_CATALOG (choose targets from here; you may pick the variant that best fits):
+{{GM_LINK_CATALOG}}
+
+ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
+{{ICON_CATALOG}}
 
 ### How to Write Custom Villain Moves
 
@@ -576,7 +762,6 @@ Rules:
 5. **Address the Heroes as the intended reader:** Write in second person to the characters (not the players). If applicable, prompt a response from players.
 6. **Stay on‑Agenda/Principled:** Describe like a comic; misdirect; make threats real; treat human life as meaningful; be a fan of the PCs; remind them of legacies; think between panels; let villains **give up to fight another day**; make supers look outlandish and cool; show adults as shortsighted; support conditionally; ask provocative questions.
 7. **Use Core GM Vocabulary:** Express outcomes using or riffing on these GM move families (reflavored to the villain):
-
    * **Inflict a condition** (name it only when fiction is clear; otherwise “mark a fitting Condition”).
    * **Take Influence over someone** (if already held, **force an immediate Label shift**).
    * **Capture someone** / **separate** / **corner** a target.
@@ -605,8 +790,6 @@ Rules:
 18. **Misdirect, Then Hit:** You can **telegraph** with imagery or taunts; if the heroes don’t act, **follow with a harder consequence**.
 19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama: *“Do you accept their view of you?”* *“Whose safety do you prioritize?”*
 
----
-
 `;
 
 function defaultBuildUser(npc) {
@@ -624,16 +807,18 @@ Return strictly:
 {
   "villainMoves": [
     { "name": "string",
-      "description_html": "<p>… include 1–2 allowed GM Move names …</p>",
-      "gm_triggers": ["One or two from the allowed list that are appropriate for the situation"]
+      "description_html": "<p>… embed 1–2 bold inline @UUID[...] links with hand-written {label} …</p>",
+      "gm_triggers": ["One or two from the allowed list that are appropriate for the situation"],
+      "img": "one string from ICON_CATALOG",
+      "img_options": ["other options from ICON_CATALOG"]
     }
   ],
   "conditionMoves": {
-    "Afraid":   { "name": "Afraid — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"] },
-    "Angry":    { "name": "Angry — <verb phrase>",    "description_html": "<p>…</p>", "gm_triggers": ["…"] },
-    "Guilty":   { "name": "Guilty — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"] },
-    "Hopeless": { "name": "Hopeless — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"] },
-    "Insecure": { "name": "Insecure — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"] }
+    "Afraid":   { "name": "Afraid — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
+    "Angry":    { "name": "Angry — <verb phrase>",    "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
+    "Guilty":   { "name": "Guilty — <verb phrase>",   "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
+    "Hopeless": { "name": "Hopeless — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] },
+    "Insecure": { "name": "Insecure — <verb phrase>", "description_html": "<p>…</p>", "gm_triggers": ["…"], "img": "…", "img_options": ["…"] }
   },
   "details": {
     "drive": "1–4 short bullets or sentences",
@@ -672,6 +857,8 @@ async function getBuildPrompts(npc) {
     NPC_ABILITIES: npc.abilities ?? "",
     NPC_BIO: npc.biography ?? "",
     GM_TRIGGERS: GM_TRIGGER_WHITELIST.join(", "),
+    GM_LINK_CATALOG: buildGmLinkCatalogText(),
+    ICON_CATALOG: JSON.stringify(ALL_MOVE_ICONS, null, 2)
   });
   const user = renderTemplate(usrTpl, {
     NPC_NAME: npc.name ?? "",
@@ -788,25 +975,63 @@ function sanitizeVillainTriggers(arr) {
   return list;
 }
 
+function hasAnyUUIDLink(html) {
+  return /@UUID\[[^\]]+\]\{[^}]+\}/.test(String(html || ""));
+}
+
+function countSentences(html) {
+  const text = String(html || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return 0;
+  const matches = text.match(/[.!?](\s|$)/g);
+  return matches ? matches.length : (text.length > 0 ? 1 : 0);
+}
+
+function padToMinSentences(html, min = 4) {
+  let out = String(html || "");
+  let c = countSentences(out);
+  const fillers = [
+    "Between panels, the threat grows in ways you can feel but not entirely see.",
+    "If you hesitate, their leverage sharpens and the moment turns against you.",
+    "Step up with a cost, or watch the scene tilt toward disaster.",
+    "What do you do?"
+  ];
+  while (c < min) {
+    out = ensureSingleParagraphHTML(out).replace(/<\/p>$/, ` ${fillers[Math.min(c, fillers.length - 1)]}</p>`);
+    c++;
+  }
+  return out;
+}
+
 function ensureVillainMoves(moves) {
-  let out = (Array.isArray(moves) ? moves : []).map((m) => {
-    const name = String(m?.name ?? "").trim() || "Villain Gambit";
+  let out = (Array.isArray(moves) ? moves : []).map((m, idx) => {
+    const name = String(m?.name ?? "").trim() || `Villain Gambit ${idx + 1}`;
     const gm_triggers = sanitizeVillainTriggers(m?.gm_triggers);
     let desc = String(m?.description_html ?? "").trim();
     desc = ensureSingleParagraphHTML(desc);
-    // Inline-embed UUID links on the GM phrases (no trailing block, no redundant <b>)
-    const description_html = embedUUIDLinksInline(desc, gm_triggers);
-    return { name, gm_triggers, description_html };
+    // Enforce min length
+    desc = padToMinSentences(desc, 4);
+    // If the LLM failed to include any UUID links, fallback to auto-embed
+    if (!hasAnyUUIDLink(desc)) {
+      desc = embedUUIDLinksInline(desc, gm_triggers);
+    }
+    // Icon selection from LLM (fallback to trigger-based)
+    const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : chooseIconFromTriggers(gm_triggers);
+    const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : [];
+
+    return { name, gm_triggers, description_html: sanitizeBold(desc), img, img_options };
   }).filter((m) => m.name && m.description_html);
 
   if (out.length < 3) {
     while (out.length < 3) {
       const gm_triggers = ["Inflict a Condition"];
-      const desc = "<p>A ruthless push threatens the team unless they accept a hard cost. What do you do?</p>";
+      let desc = "<p>An ugly opportunity opens and the villain presses hard, daring you to accept a cost to keep anyone safe.</p>";
+      desc = padToMinSentences(desc, 4);
       out.push({
         name: `Villain Gambit ${out.length + 1}`,
         gm_triggers,
         description_html: embedUUIDLinksInline(desc, gm_triggers),
+        img: chooseIconFromTriggers(gm_triggers),
+        img_options: pickRandom(ALL_MOVE_ICONS, 5)
       });
     }
   } else if (out.length > 5) {
@@ -821,27 +1046,32 @@ function ensureConditionMoves(cond) {
     Afraid: {
       name: "Afraid — Flinch from the Blow",
       gm_triggers: ["Put Innocents in Danger"],
-      description_html: "<p>Hesitation opens a gap; bystanders are at risk unless someone steps in. What do you do?</p>",
+      description_html: "<p>You catch the danger a heartbeat too late and your guard slips. A civilian cries out as the threat veers toward them. Your fear writes the next panel unless you step in. If you turn away, the moment narrows into a cruel choice. What do you do?</p>",
+      img: CONDITION_ICONS.Afraid
     },
     Angry: {
       name: "Angry — Smash First, Ask Later",
       gm_triggers: ["Collateral Damage"],
-      description_html: "<p>Rage hits the wrong target; the scene fractures around you. What do you do?</p>",
+      description_html: "<p>Your temper leaps faster than your plan and the scene fractures around you. A signpost bends, a window bursts, and blame starts to find a target with your face on it. The villain grins as consequences gather like stormclouds. If you don't redirect, the fallout will land somewhere that matters. What do you do?</p>",
+      img: CONDITION_ICONS.Angry
     },
     Guilty: {
       name: "Guilty — Overcorrect in Public",
       gm_triggers: ["Take Influence over"],
-      description_html: "<p>Contrition hands the narrative to an adult or rival. What do you do?</p>",
+      description_html: "<p>You're already apologizing as you move, handing the narrative to an onlooker who wants to define you. Their words bite deeper than any jab, and your body follows that script. The opening they wanted appears between panels. If you don't push back, you'll carry their label out of this scene. What do you do?</p>",
+      img: CONDITION_ICONS.Guilty
     },
     Hopeless: {
       name: "Hopeless — Fade Between Panels",
       gm_triggers: ["Make Them Pay a Price for Victory"],
-      description_html: "<p>You can win, but only by accepting a cost right now. What do you do?</p>",
+      description_html: "<p>You can see the win from here, but it's laughably out of reach without shedding something now. The villain sets the stakes on the table with a practiced flick. Your hesitation gives them minutes you don't have. Refuse the cost and they'll set the terms of the next page. What do you do?</p>",
+      img: CONDITION_ICONS.Hopeless
     },
     Insecure: {
       name: "Insecure — Second‑Guess and Stall",
       gm_triggers: ["Tell Them the Possible Consequences—and Ask"],
-      description_html: "<p>Doubt stalls momentum; the costs are laid out plainly. What do you do?</p>",
+      description_html: "<p>Your doubts stack like panels, slowing everything you touch. The risks line up and glare back until they feel inevitable. The villain notices and starts framing the scene to their advantage. If you won't decide, someone else will decide for you. What do you do?</p>",
+      img: CONDITION_ICONS.Insecure
     },
   };
 
@@ -850,9 +1080,13 @@ function ensureConditionMoves(cond) {
     const m = cond?.[k] ?? {};
     const name = String(m?.name ?? "").trim() || defaults[k].name;
     const gm_triggers = coerceGMTriggers(m?.gm_triggers?.length ? m.gm_triggers : defaults[k].gm_triggers);
-    const baseDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
-    const description_html = embedUUIDLinksInline(baseDesc, gm_triggers);
-    out[k] = { name, gm_triggers, description_html };
+    let baseDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
+    baseDesc = ensureSingleParagraphHTML(baseDesc);
+    baseDesc = padToMinSentences(baseDesc, 4);
+    const description_html = hasAnyUUIDLink(baseDesc) ? sanitizeBold(baseDesc) : embedUUIDLinksInline(baseDesc, gm_triggers);
+    const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : (defaults[k].img || chooseIconFromTriggers(gm_triggers));
+    const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : pickRandom(ALL_MOVE_ICONS, 5);
+    out[k] = { name, gm_triggers, description_html, img, img_options };
   }
   return out;
 }
@@ -877,7 +1111,7 @@ async function loadTemplate() {
   return JSON.parse(raw);
 }
 
-function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
+function buildMoveItem({ name, moveType, description_html, icon, sort = 0, flags = {} }) {
   const id = generate16CharUUID();
   const t = NOW();
   return {
@@ -895,7 +1129,7 @@ function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
     effects: [],
     folder: null,
     sort,
-    flags: {},
+    flags,
     _stats: {
       compendiumSource: null,
       duplicateSource: null,
@@ -1019,29 +1253,39 @@ function buildActorFromTemplate(template, npc, llm) {
   actor.items = [];
   let sort = 0;
 
-  // Villain moves (with inline UUID links)
+  // Villain moves (LLM-supplied inline UUID links + LLM-chosen icons)
   for (const vm of llm.villainMoves) {
+    const chosenIcon = vm.img || chooseIconFromTriggers(vm.gm_triggers);
+    console.log(`    • Icon for move "${vm.name}": ${chosenIcon}`);
+    if (vm.img_options?.length) console.log(`      icon options: ${vm.img_options.join(", ")}`);
+
     actor.items.push(
       buildMoveItem({
         name: vm.name,
         moveType: "villain",
         description_html: vm.description_html,
-        icon: chooseIconFromTriggers(vm.gm_triggers),
+        icon: chosenIcon,
         sort: (sort += 10),
+        flags: { ai: { chosenImg: chosenIcon, imgOptions: vm.img_options || [], gmTriggers: vm.gm_triggers } }
       })
     );
   }
 
-  // Condition moves (with inline UUID links)
+  // Condition moves (LLM-supplied inline UUID links + LLM-chosen icons)
   for (const cname of ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"]) {
     const cm = llm.conditionMoves[cname];
+    const chosenIcon = cm.img || CONDITION_ICONS[cname] || ICONS.default;
+    console.log(`    • Icon for condition "${cm.name}": ${chosenIcon}`);
+    if (cm.img_options?.length) console.log(`      icon options: ${cm.img_options.join(", ")}`);
+
     actor.items.push(
       buildMoveItem({
         name: cm.name,
         moveType: "condition",
         description_html: cm.description_html,
-        icon: CONDITION_ICONS[cname] || ICONS.default,
+        icon: chosenIcon,
         sort: (sort += 10),
+        flags: { ai: { chosenImg: chosenIcon, imgOptions: cm.img_options || [], gmTriggers: cm.gm_triggers } }
       })
     );
   }
@@ -1059,7 +1303,7 @@ function buildActorFromTemplate(template, npc, llm) {
     );
   }
 
-  // ← NEW: stamp DB keys and final timestamps
+  // ← stamp DB keys and final timestamps
   finalizeFoundryKeys(actor);
   return actor;
 }
@@ -1086,29 +1330,33 @@ async function processFile(template, filePath) {
     return;
   }
 
-  for (const npc of npcs) {
-    try {
-      console.log(`  • Porting NPC: ${npc.name}`);
-      const llm = await generateNPCMoves(npc);
-      const actor = buildActorFromTemplate(template, npc, llm);
+  // ONE FILE = ONE VILLAIN (take the first only)
+  if (npcs.length > 1) {
+    console.warn(`WARN: Multiple NPCs detected in ${path.basename(filePath)}; only the first will be ported for this file.`);
+  }
+  const npc = npcs[0];
 
-      if (!isValid16CharUUID(actor._id)) {
-        const newId = generate16CharUUID();
-        console.warn(`    WARN: Actor ID invalid; reminting ${actor._id} → ${newId}`);
-        actor._id = newId;
-        finalizeFoundryKeys(actor); // re-stamp keys if id changed
-      }
+  try {
+    console.log(`  • Porting NPC: ${npc.name}`);
+    const llm = await generateNPCMoves(npc);
+    const actor = buildActorFromTemplate(template, npc, llm);
 
-      const fname = `npc_${toSafeFileStub(actor.name)}_${actor._id}.json`;
-      const outPath = path.join(OUT_DIR, fname);
-      if (!DRY_RUN) {
-        await fsp.mkdir(OUT_DIR, { recursive: true });
-        await fsp.writeFile(outPath, JSON.stringify(actor, null, 2), "utf8");
-      }
-      console.log(`    ✓ ${DRY_RUN ? "(dry) " : ""}${outPath}`);
-    } catch (e) {
-      console.warn(`  WARN: Failed to port "${npc?.name ?? "unknown"}" from ${path.basename(filePath)}: ${e.message}`);
+    if (!isValid16CharUUID(actor._id)) {
+      const newId = generate16CharUUID();
+      console.warn(`    WARN: Actor ID invalid; reminting ${actor._id} → ${newId}`);
+      actor._id = newId;
+      finalizeFoundryKeys(actor); // re-stamp keys if id changed
     }
+
+    const fname = `npc_${toSafeFileStub(actor.name)}_${actor._id}.json`;
+    const outPath = path.join(OUT_DIR, fname);
+    if (!DRY_RUN) {
+      await fsp.mkdir(OUT_DIR, { recursive: true });
+      await fsp.writeFile(outPath, JSON.stringify(actor, null, 2), "utf8");
+    }
+    console.log(`    ✓ ${DRY_RUN ? "(dry) " : ""}${outPath}`);
+  } catch (e) {
+    console.warn(`  WARN: Failed to port "${npc?.name ?? "unknown"}" from ${path.basename(filePath)}: ${e.message}`);
   }
 }
 
@@ -1139,6 +1387,7 @@ async function main() {
   console.log(`Concurrency:  ${CONCURRENCY}`);
   console.log(`File pattern: ${FILE_PATTERN}`);
   console.log("Note: Only .txt and .md files are processed.");
+  console.log("Note: One input file will produce exactly one villain JSON.");
 
   let template;
   try { template = await loadTemplate(); }
@@ -1168,3 +1417,4 @@ main().catch((e) => {
   console.error(`FATAL: ${e.message}`);
   process.exit(1);
 });
+
