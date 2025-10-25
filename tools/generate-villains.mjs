@@ -212,7 +212,6 @@ const GM_UUID_MAP = {
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Collateral Damage}"
   ],
   "Take Influence over": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Takes Influence Over}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}"
   ],
@@ -232,29 +231,29 @@ const GM_UUID_MAP = {
 };
 
 const ICONS = {
-  default: "modules/masks-newgeneration-unofficial/images/gameicons/aura-#ffffff-#3da7db.svg",
-  "Inflict a Condition": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-#ffffff-#3da7db.svg",
-  "Take Influence over": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
-  "Put Innocents in Danger": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-#ffffff-#3da7db.svg",
-  "Capture Someone": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
-  "Collateral Damage": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
-  "Tell Them the Possible Consequences—and Ask": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-#ffffff-#3da7db.svg",
-  "Make Them Pay a Price for Victory": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
-  "Bring Them Together": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-#ffffff-#3da7db.svg",
-  "Reveal the Future": "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-#ffffff-#3da7db.svg",
-  "Announce Between‑Panel Threats": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-#ffffff-#3da7db.svg",
-  "Activate the Downsides of their Abilities and Relationships": "modules/masks-newgeneration-unofficial/images/gameicons/liar-#ffffff-#3da7db.svg",
-  "Turn Their Move Back on Them": "modules/masks-newgeneration-unofficial/images/gameicons/shield-reflect-#ffffff-#3da7db.svg",
-  "Tell Them Who They Are or Who They Should Be": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-#ffffff-#3da7db.svg",
-  "Bring an NPC to Rash Decisions and Hard Conclusions": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-#ffffff-#3da7db.svg",
+  default: "modules/masks-newgeneration-unofficial/images/gameicons/aura-%23ffffff-%233da7db.svg",
+  "Inflict a Condition": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+  "Take Influence over": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+  "Put Innocents in Danger": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+  "Capture Someone": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+  "Collateral Damage": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+  "Tell Them the Possible Consequences—and Ask": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
+  "Make Them Pay a Price for Victory": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+  "Bring Them Together": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
+  "Reveal the Future": "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-%23ffffff-%233da7db.svg",
+  "Announce Between‑Panel Threats": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-%23ffffff-%233da7db.svg",
+  "Activate the Downsides of their Abilities and Relationships": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+  "Turn Their Move Back on Them": "modules/masks-newgeneration-unofficial/images/gameicons/shield-reflect-%23ffffff-%233da7db.svg",
+  "Tell Them Who They Are or Who They Should Be": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-%23ffffff-%233da7db.svg",
+  "Bring an NPC to Rash Decisions and Hard Conclusions": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-%23ffffff-%233da7db.svg",
 };
 
 const CONDITION_ICONS = {
-  Afraid: "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-#ffffff-#3da7db.svg",
-  Angry: "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-#ffffff-#3da7db.svg",
-  Guilty: "modules/masks-newgeneration-unofficial/images/gameicons/robber-#ffffff-#3da7db.svg",
-  Hopeless: "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-#ffffff-#3da7db.svg",
-  Insecure: "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
+  Afraid: "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+  Angry: "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-%23ffffff-%233da7db.svg",
+  Guilty: "modules/masks-newgeneration-unofficial/images/gameicons/robber-%23ffffff-%233da7db.svg",
+  Hopeless: "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
+  Insecure: "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
 };
 
 const BASE_MOVE_RESULTS = {
@@ -382,14 +381,14 @@ function getUUIDTargetForTrigger(trigger) {
 function buildVariants(trigger, anchor) {
   const base = [trigger, anchor];
   switch (trigger) {
-    case "Capture":
-      base.push("Capturing");
+    case "Capture Someone":
+      base.push("Capturing Someone");
       break;
     case "Collateral Damage":
       base.push("Showing the Costs of Collateral Damage", "Cause Collateral Damage", "Causing Collateral Damage");
       break;
     case "Take Influence over":
-      base.push("Taking Influence over", "Taking Influence", "Takes Influence");
+      base.push("Taking Influence over", "Taking Influence");
       break;
     case "Inflict a Condition":
       base.push("Inflicting a Condition");
@@ -432,9 +431,9 @@ function buildVariants(trigger, anchor) {
 }
 
 /**
- * FIXED: Link **all** recognized GM phrases, not just those listed in gmTriggers.
- * - We scan the prose for recognizable GM phrases (variants), combine with gmTriggers, then link all.
- * - We still avoid adding “Make a Villain Move” if it wasn’t already in gmTriggers (so villain moves don’t re‑gain it).
+ * Link **all** recognized GM phrases, not just those listed in gmTriggers.
+ * - Scans prose for recognizable GM phrases (variants), combines with gmTriggers, then link all.
+ * - Still avoids adding “Make a Villain Move” if it wasn’t already in gmTriggers (so villain moves don’t re‑gain it).
  */
 function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   // Ensure single paragraph and sanitize bold
@@ -444,7 +443,7 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   const matchP = wrapped.match(/^<p>([\s\S]*?)<\/p>$/i);
   let inner = matchP ? matchP[1] : wrapped;
 
-  // --- NEW: discover any GM phrases already present in the text (in reading order)
+  // --- discover any GM phrases already present in the text (in reading order)
   const gmList = [...new Set((gmTriggers || []).filter(Boolean))];
   const disallowVillainMove = !gmList.includes("Make a Villain Move");
 
@@ -469,7 +468,7 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   // Combine gmTriggers (priority) with discovered (reading order), then dedupe
   const toProcess = [...new Set([...gmList, ...discoveredOrdered])];
 
-  // Link each matched trigger once where it appears (no cap now)
+  // Link each matched trigger once where it appears
   for (const trig of toProcess) {
     const target = getUUIDTargetForTrigger(trig);
     if (!target) continue;
@@ -781,7 +780,7 @@ function coerceGMTriggers(arr) {
   return list.slice(0, 2);
 }
 
-// NEW: For non-condition villain moves, disallow “Make a Villain Move”
+// For non-condition villain moves, disallow “Make a Villain Move”
 function sanitizeVillainTriggers(arr) {
   let list = coerceGMTriggers(arr).filter((t) => t !== "Make a Villain Move");
   if (!list.length) list = ["Inflict a Condition"];
@@ -830,7 +829,7 @@ function ensureConditionMoves(cond) {
     },
     Guilty: {
       name: "Guilty — Overcorrect in Public",
-      gm_triggers: ["Takes Influence over"],
+      gm_triggers: ["Take Influence over"],
       description_html: "<p>Contrition hands the narrative to an adult or rival. What do you do?</p>",
     },
     Hopeless: {
@@ -879,6 +878,7 @@ async function loadTemplate() {
 
 function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
   const id = generate16CharUUID();
+  const t = NOW();
   return {
     name,
     type: "npcMove",
@@ -902,7 +902,9 @@ function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
       coreVersion: "13.350",
       systemId: "pbta",
       systemVersion: "1.1.22",
-      lastModifiedBy: generate16CharUUID()
+      lastModifiedBy: null,
+      createdTime: t,
+      modifiedTime: t
     },
     ownership: { default: 0 }
   };
@@ -918,8 +920,8 @@ function baselineGMMovesParaphrased() {
     },
     {
       name: "Take Influence",
-      text: "Frame the moment so a rival or adult can <b>Takes Influence over</b>, or the target marks a fitting Condition to resist.",
-      icon: ICONS["Takes Influence over"],
+      text: "Frame the moment so a rival or adult can <b>Take Influence over</b>, or the target marks a fitting Condition to resist.",
+      icon: ICONS["Take Influence over"],
     },
     {
       name: "Capture",
@@ -942,6 +944,41 @@ function baselineGMMovesParaphrased() {
       icon: ICONS["Tell Them the Possible Consequences—and Ask"],
     },
   ];
+}
+
+/**
+ * Ensure Foundry DB-required keys/timestamps exist.
+ */
+function finalizeFoundryKeys(actor) {
+  if (!actor || !actor._id) return actor;
+  const now = NOW();
+
+  // Actor DB key + timestamps
+  actor._key = `!actors!${actor._id}`;
+  if (!actor._stats) actor._stats = {};
+  if (actor._stats.createdTime == null) actor._stats.createdTime = now;
+  actor._stats.modifiedTime = now;
+  if (!("lastModifiedBy" in actor._stats)) actor._stats.lastModifiedBy = null;
+
+  // Ensure prototype token uses the actor image if we have one
+  if (actor.prototypeToken?.texture && actor.img) {
+    actor.prototypeToken.texture.src = actor.img;
+  }
+
+  // Items: DB keys + timestamps
+  for (const it of actor.items ?? []) {
+    if (!it._id || !isValid16CharUUID(it._id)) it._id = generate16CharUUID();
+    it._key = `!actors.items!${actor._id}.${it._id}`;
+    if (!it._stats) it._stats = {};
+    if (it._stats.createdTime == null) it._stats.createdTime = now;
+    it._stats.modifiedTime = now;
+    if (!("lastModifiedBy" in it._stats)) it._stats.lastModifiedBy = null;
+  }
+
+  // Default sort if absent
+  if (typeof actor.sort !== "number") actor.sort = 100000;
+
+  return actor;
 }
 
 function buildActorFromTemplate(template, npc, llm) {
@@ -974,10 +1011,7 @@ function buildActorFromTemplate(template, npc, llm) {
     actor._stats.systemVersion = "1.1.22";
     actor._stats.createdTime = NOW();
     actor._stats.modifiedTime = NOW();
-    actor._stats.lastModifiedBy = generate16CharUUID();
-  }
-  if (actor?.prototypeToken?.texture) {
-    actor.prototypeToken.texture.src = "icons/svg/mystery-man.svg";
+    actor._stats.lastModifiedBy = null;
   }
 
   // Rebuild items from scratch
@@ -1024,6 +1058,8 @@ function buildActorFromTemplate(template, npc, llm) {
     );
   }
 
+  // ← NEW: stamp DB keys and final timestamps
+  finalizeFoundryKeys(actor);
   return actor;
 }
 
@@ -1059,6 +1095,7 @@ async function processFile(template, filePath) {
         const newId = generate16CharUUID();
         console.warn(`    WARN: Actor ID invalid; reminting ${actor._id} → ${newId}`);
         actor._id = newId;
+        finalizeFoundryKeys(actor); // re-stamp keys if id changed
       }
 
       const fname = `npc_${toSafeFileStub(actor.name)}_${actor._id}.json`;
