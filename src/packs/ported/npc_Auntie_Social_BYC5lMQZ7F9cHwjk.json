@@ -1,0 +1,1393 @@
+{
+  "name": "Auntie Social",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "stats": {},
+    "attributes": {
+      "conditions": {
+        "label": "Conditions",
+        "description": "Choose all that apply:",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "Afraid",
+            "value": false
+          },
+          "1": {
+            "label": "Angry",
+            "value": false
+          },
+          "2": {
+            "label": "Guilty",
+            "value": false
+          },
+          "3": {
+            "label": "Hopeless",
+            "value": false
+          },
+          "4": {
+            "label": "Insecure",
+            "value": false
+          }
+        }
+      },
+      "realName": {
+        "label": "Real Name",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Socha Prath",
+        "position": "Left"
+      },
+      "generation": {
+        "label": "Generation",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Gold",
+        "position": "Left"
+      }
+    },
+    "attrLeft": {},
+    "attrTop": {},
+    "details": {
+      "drive": {
+        "label": "Drive",
+        "value": "Children must be molded into obedient tools for her vision of order.,She believes her methods are the only way to prevent chaos and rebellion.,Her ultimate goal is to reshape society by controlling its youngest members."
+      },
+      "abilities": {
+        "label": "Abilities",
+        "value": "<ul><li>Master of psychology and emotional manipulation</li><li>Advanced brainwashing techniques</li><li>Skilled with firearms and blasters</li><li>Expert actress, able to play any role to gain trust</li></ul>"
+      },
+      "biography": {
+        "label": "Notes",
+        "value": "Ms. Socha Prath, known as Auntie Social, runs the Overton Academy as a front for brainwashing young minds to carry out her criminal schemes. Her true nature and origins are a mystery, ranging from alien to sorceress. She uses her psychological mastery and advanced technology to manipulate students and others, turning them into tools for her nefarious purposes. Her methods are insidious, blending discipline with subtle mind control to ensure absolute loyalty. The students under her care are both her weapons and her shields, and she will stop at nothing to maintain her control over them."
+      }
+    },
+    "tags": ""
+  },
+  "prototypeToken": {
+    "name": "Aquaria",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": null
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "The Perfect Student",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>When Auntie Social spots a hero faltering, she activates one of her brainwashed students to step in flawlessly, showing up the hero's mistakes. The student performs the task with eerie precision, making the hero's efforts look clumsy by comparison. This undermines the hero's confidence, and Auntie Social seizes the moment to <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{tell them who they are}</b>. If ignored, the hero's reputation among their peers takes a hit, and Auntie Social gains more influence over the school's student body.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "a5Fjr4yc21xQCk0k",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/teacher-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 10,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.a5Fjr4yc21xQCk0k"
+    },
+    {
+      "name": "Emotional Leverage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Auntie Social digs into a hero's past, dredging up a painful memory or insecurity. She twists it into a weapon, using her mastery of psychology to <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{inflict a Condition}</b> that fits the moment. The hero is left reeling, their focus shattered, while Auntie Social calmly observes the damage. If ignored, the hero's emotional turmoil escalates, making them vulnerable to further manipulation.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "2TEsCbYcsvqnz2SQ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/brain-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 20,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.2TEsCbYcsvqnz2SQ"
+    },
+    {
+      "name": "Disciplinary Action",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Auntie Social calls upon her loyal students to enforce her will, surrounding a hero and cutting off their escape. The students move with military precision, their faces blank, as they <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{capture someone}</b> or block the hero's path. The hero must fight their way through or find another way to avoid being taken in. If ignored, the hero is dragged away, leaving the team one member short.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "pLkHXmhINcxbbXUw",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/handcuffed-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 30,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.pLkHXmhINcxbbXUw"
+    },
+    {
+      "name": "Afraid — Retreat to Safety",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Auntie Social's confidence wavers, and she falls back on her students for protection. She orders them to form a barrier around her, while she <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{gives ground}</b>, retreating to a more secure location. Her voice shakes as she barks commands, revealing her fear. If the heroes press the attack, she may abandon her plans for the day, but her students will fight fiercely to cover her escape.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "e9B6nLX5Ss1syEaM",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/surrounded-shield-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 40,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.e9B6nLX5Ss1syEaM"
+    },
+    {
+      "name": "Angry — Lash Out",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Auntie Social's composure cracks, and she <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{lashes out verbally}</b>, hurling insults and threats at the heroes. Her voice rises to a shrill pitch as she accuses them of undermining her authority and corrupting her students. She may even physically strike out, though her blows are more symbolic than effective. If ignored, her rage escalates, and she may order her students to attack with lethal force.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "I5PErn4X7iNvxygt",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/angry-eyes-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 50,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.I5PErn4X7iNvxygt"
+    },
+    {
+      "name": "Guilty — Overcompensate",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Auntie Social's guilt manifests as an obsessive need to prove her methods are justified. She doubles down on her brainwashing techniques, <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{bringing an NPC to rash decisions}</b> by pushing a student too far. The student may break down or rebel, creating a new problem for the heroes to handle. If ignored, the student's mental state deteriorates further, potentially leading to a tragic outcome.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "ND8FL4HAg2WO8D5F",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 60,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.ND8FL4HAg2WO8D5F"
+    },
+    {
+      "name": "Hopeless — Despair",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Auntie Social's resolve crumbles, and she questions her entire mission. She <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{reveals the future}</b> she fears—a world where her methods fail and chaos reigns. Her voice is hollow as she describes her vision, and her students waver, sensing her doubt. If ignored, she may abandon her current plan, but her despair could drive her to more extreme measures later.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "5SsXMEr6mFDWIeEd",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/cold-heart-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.5SsXMEr6mFDWIeEd"
+    },
+    {
+      "name": "Insecure — Seek Validation",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Auntie Social's insecurity drives her to seek reassurance from her students. She demands displays of loyalty, putting them in harm's way to <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{endanger innocents}</b> and prove their devotion. Her voice is desperate as she orders them to perform risky acts, and her students obey without question. If ignored, the students may suffer needlessly, and Auntie Social's grip on them tightens.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "pw0uZNQtIrNeJqFH",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927952,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.pw0uZNQtIrNeJqFH"
+    },
+    {
+      "name": "Make a Playbook Move",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.voNk2PNNF7oNqnSn]{Make a Playbook Move}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "ASsnWslJoAOTQSLZ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/playbook.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 90,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.ASsnWslJoAOTQSLZ"
+    },
+    {
+      "name": "Activate Downsides of Abilities and Relationships",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of their Abilities and Relationships}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Xzs2Dm3kAk8E4WIZ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 100,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.Xzs2Dm3kAk8E4WIZ"
+    },
+    {
+      "name": "Inflict Condition",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflict a Condition}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "YLGkjKlITYs6HdTV",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 110,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.YLGkjKlITYs6HdTV"
+    },
+    {
+      "name": "Take Influence",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "luZc38QWFik10YPH",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 120,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.luZc38QWFik10YPH"
+    },
+    {
+      "name": "Bring Team Together",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "b1n6Ma16om5HKOfU",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 130,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.b1n6Ma16om5HKOfU"
+    },
+    {
+      "name": "Capture Someone",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "U99S2xzVbNvKpAXE",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 140,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.U99S2xzVbNvKpAXE"
+    },
+    {
+      "name": "Put Innocents in Danger",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "chVPGLXMtgVf4NeA",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 150,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.chVPGLXMtgVf4NeA"
+    },
+    {
+      "name": "Villain Move",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Baafa0xZBhOgGlY5",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/armor-punch-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 160,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.Baafa0xZBhOgGlY5"
+    },
+    {
+      "name": "Show Collateral Damage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "VwskGx7BE6Gcb7ox",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 170,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.VwskGx7BE6Gcb7ox"
+    },
+    {
+      "name": "Reveal Future",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "sDr0drNdZL0M0eC5",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 180,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.sDr0drNdZL0M0eC5"
+    },
+    {
+      "name": "Announce Between-Panel Threats",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "7L6DfRwteFXY13DF",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 190,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.7L6DfRwteFXY13DF"
+    },
+    {
+      "name": "Price of Victory",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "5i2xY2hucXkJC9Wv",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 200,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.5i2xY2hucXkJC9Wv"
+    },
+    {
+      "name": "Counter",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "uLwfxZCyYR7YkoKe",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 210,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.uLwfxZCyYR7YkoKe"
+    },
+    {
+      "name": "Reverse",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "d4YChSwQYFsPEJcl",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 220,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.d4YChSwQYFsPEJcl"
+    },
+    {
+      "name": "Possible Consequence...",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask @ GM Moves}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "RQqGnTbKrZNRloGf",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 230,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.RQqGnTbKrZNRloGf"
+    },
+    {
+      "name": "Tell Them Who They Are or Should Be",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "tvYj592C1Aviwr65",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 240,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.tvYj592C1Aviwr65"
+    },
+    {
+      "name": "Rash Decision",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Bring an NPC to Rash Decisions and Hard Conclusions}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "ViBCKaNWzqp6Rxik",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 250,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761422927953,
+        "modifiedTime": 1761422927953
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!BYC5lMQZ7F9cHwjk.ViBCKaNWzqp6Rxik"
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "ownership": {
+    "default": 0,
+    "huLnHNA8To2T4B8h": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.350",
+    "systemId": "pbta",
+    "systemVersion": "1.1.22",
+    "createdTime": 1761422927952,
+    "modifiedTime": 1761422927953,
+    "lastModifiedBy": null
+  },
+  "_id": "BYC5lMQZ7F9cHwjk",
+  "sort": 100000,
+  "_key": "!actors!BYC5lMQZ7F9cHwjk"
+}

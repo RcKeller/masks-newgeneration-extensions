@@ -1368,35 +1368,90 @@ function baselineGMMovesParaphrased() {
   // Preserved GM options (intentionally bold-only; not auto‑linked)
   return [
     {
-      name: "Inflict a Condition",
-      text: "Push the moment hard and <b>inflict a Condition</b> unless someone accepts a real cost.",
-      icon: ICONS["Inflict a Condition"],
+        name: "Make a Playbook Move",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.voNk2PNNF7oNqnSn]{Make a Playbook Move}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/playbook.svg"
     },
     {
-      name: "Take Influence",
-      text: "Hand an opening to a rival or adult to <b>take Influence</b>, or the target marks a fitting Condition to resist.",
-      icon: ICONS["Take Influence over"],
+        name: "Activate Downsides of Abilities and Relationships",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of their Abilities and Relationships}</p>",
+        icon: ICONS["Activate the Downsides of their Abilities and Relationships"]
     },
     {
-      name: "Capture",
-      text: "Split, corner, or restrain a target—avoid it only by conceding position, time, or assets. <b>capture someone</b>.",
-      icon: ICONS["Capture Someone"],
+        name: "Inflict Condition",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflict a Condition}</p>",
+        icon: ICONS["Inflict a Condition"]
     },
     {
-      name: "Put Innocents in Danger",
-      text: "Shift the spotlight to bystanders and <b>put innocents in danger</b>, forcing a split or hard choice.",
-      icon: ICONS["Put Innocents in Danger"],
+        name: "Take Influence",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}</p>",
+        icon: ICONS["Take Influence over"]
     },
     {
-      name: "Collateral Damage",
-      text: "Make fallout immediate and visible—gear cracks, structures fail; <b>show what the collateral will cost</b>.",
-      icon: ICONS["Collateral Damage"],
+        name: "Bring Team Together",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together @ GM Moves}</p>",
+        icon: ICONS["Bring Them Together"]
     },
     {
-      name: "Tell Them Possible Consequences and Ask",
-      text: "Lay out the stakes clearly and <b>lay out the consequences—and ask</b> if they go through with it.",
-      icon: ICONS["Tell Them the Possible Consequences—and Ask"],
+        name: "Capture Someone",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone @ GM Moves}</p>",
+        icon: ICONS["Capture Someone"]
     },
+    {
+        name: "Put Innocents in Danger",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger @ GM Moves}</p>",
+        icon: ICONS["Put Innocents in Danger"]
+    },
+    {
+        name: "Villain Move",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/armor-punch-%23ffffff-%233da7db.svg"
+    },
+    {
+        name: "Show Collateral Damage",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg"
+    },
+    {
+        name: "Reveal Future",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg"
+    },
+    {
+        name: "Announce Between-Panel Threats",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats @ GM Moves}</p>",
+        icon: ICONS["Announce Between‑Panel Threats"]
+    },
+    {
+        name: "Price of Victory",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}</p>",
+        icon: ICONS["Make Them Pay a Price for Victory"]
+    },
+    {
+        name: "Counter",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg"
+    },
+    {
+        name: "Reverse",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        icon: "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg"
+    },
+    {
+        name: "Possible Consequence...",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask @ GM Moves}</p>",
+        icon: ICONS["Tell Them the Possible Consequences—and Ask"]
+    },
+    {
+        name: "Tell Them Who They Are or Should Be",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}</p>",
+        icon: ICONS["Tell Them Who They Are or Who They Should Be"]
+    },
+    {
+        name: "Rash Decision",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Bring an NPC to Rash Decisions and Hard Conclusions}</p>",
+        icon: ICONS["Bring an NPC to Rash Decisions and Hard Conclusions"]
+    }
   ];
 }
 
