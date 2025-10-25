@@ -1,0 +1,65 @@
+# enum Prompt
+
+## system
+
+```
+You convert third‑party TTRPG content into Masks: A New Generation NPCs.
+Return pure JSON. No prose. No markdown.
+```
+
+## user
+
+```
+From the source below, enumerate NPCs suitable to port into Masks NPCs.
+
+For each NPC, include:
+- name (string, required)
+- realName (string|null)
+- img (string|null) — only include if the text explicitly contains an image path; do not invent
+- concept (<=20 words)
+- drive (string|null)
+- abilities (string|null)
+- biography (string|null)
+
+Return exactly:
+{
+  "npcs": [
+    {
+      "name": "string",
+      "realName": "string|null",
+      "img": "string|null",
+      "concept": "string",
+      "drive": "string|null",
+      "abilities": "string|null",
+      "biography": "string|null"
+    }
+  ]
+}
+
+— File: /Users/dev/Library/Application Support/FoundryVTT/Data/modules/masks-newgeneration-extensions/resources/villains/Baron Kriminel.txt
+— Content Start —
+Baron Kriminel
+PROWESS
+COORDINATION
+STRENGTH
+INTELLECT
+AWARENESS
+WILLPOWER
+Average 3 Average 3 Average 3 Good 5 Good 5 Great 6
+SPECIALTIES
+Athletics Investigation Occult
+QUALITIES
+Chosen of the Lwa of Vengeance Comes and Goes Like the Night “Fear the wrath of the Most Dread!”
+POWERS
+Magic: Baron Kriminel wields magical power as the chosen vessel of the lwa (Voodoo spirit) of the same name, giving him Great (6) magical abilities.
+He has Mastery of Blast, Damage Resistance, Invisibility, and Servant powers, and frequently casts Illusions as well. His spells are often accompanied by ghostly flames or phantom images.
+Baron Kriminel uses his Servant spell to imbue inanimate objects with pseudo-life, allowing them to move and attack at his command, and also to raise zombies from the bodies of the dead (see the Zombie stock character in ICONS).
+BACKGROUND
+Marcus Valmont was chosen: taken out of desperate poverty and given a place at the side of the previous Baron Kriminel, a powerful crime lord and sorcerer, with the potential to succeed him one day. Marcus was also chosen by Jenna Danson, the current Black Flame, and became her lover. When Jenna learned Marcus’s mentor was responsible for the death of her parents, she convinced him they could eliminate the old man and rule the gang together, and Marcus agreed.
+He betrayed the old Baron, led him right into Black Flame’s fiery vengeance, but the old man only laughed as he burned. “I knew I could count on you” were his last words, but whether to Marcus, Jenna, or both of them, no one knows. Nonetheless, that night Marcus Valmont inherited the power of Baron Kriminel, becoming the chosen vessel for the Lwa of Vengeance. After all, hadn’t he been instrumental in fulfilling Jenna’s revenge?
+Ever since, the new Baron Kriminel has been Black Flame’s “left-hand man” when it comes to running the gang and keeping people in line. Fear of his voodoo is nearly as great as fear of Black Flame’s fiery temper, and Marcus finally has a measure of the respect he feels that he always deserved.
+Still, it isn’t enough. Baron Kriminel nightly chafes beneath the leadership of Black Flame. He tries to think of their arrangement as a partnership, but she reminds him occasionally—and quite pointedly— that she is ultimately the one in charge. Members of the gang know it, and talk about it behind his back when they think no one is listening, but the Baron hears, and he doesn’t like it.
+Is it the old Baron’s curse, festering in his mind and heart? The power of the Lwa of Vengeance, or was Marcus Valmont always power-hungry, never likely to be satisfied with playing second-fiddle to anyone? Whatever the case, it’s just a matter of time before Baron Kriminel looks to exert his influence and take what he feels is his rightful due. Black Flame can either get on-board with that or...well, business is business.
+Baron Kriminel is also only just becoming aware of the full extent of the mystical world. Although he wields power, he has learned there are other magicians out there. The mysterious Rumor is one, although she seems content to play go-between and information broker and not get in anyone’s way. The Baron has also heard whispers about the figure known only as the Warlock and his legendary powers. The promise and potential of magical secrets unknown to him draws Marcus’s attention like a moth to a flame, even if there is a possibility he might get burned.
+— Content End —
+```

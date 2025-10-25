@@ -1,0 +1,827 @@
+{
+  "name": "Auntie Social",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "stats": {},
+    "attributes": {
+      "conditions": {
+        "label": "Conditions",
+        "description": "Choose all that apply:",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "Afraid",
+            "value": false
+          },
+          "1": {
+            "label": "Angry",
+            "value": false
+          },
+          "2": {
+            "label": "Guilty",
+            "value": false
+          },
+          "3": {
+            "label": "Hopeless",
+            "value": false
+          },
+          "4": {
+            "label": "Insecure",
+            "value": false
+          }
+        }
+      },
+      "realName": {
+        "label": "Real Name",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Ms. Socha Prath",
+        "position": "Left"
+      },
+      "generation": {
+        "label": "Generation",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "",
+        "position": "Left"
+      }
+    },
+    "attrLeft": {},
+    "attrTop": {},
+    "details": {
+      "drive": {
+        "label": "Drive",
+        "value": "Corrupt the city's youth, reshaping them into perfect agents of chaos. Prove that her methods are superior to any hero's. Build an army loyal only to her."
+      },
+      "abilities": {
+        "label": "Abilities",
+        "value": "<p>A master of psychological manipulation, augmented by custom serums and subtle mind-control gadgets. She can turn allies against each other with a few choice words. In a direct confrontation, she wields a surprisingly powerful energy blaster.</p>"
+      },
+      "biography": {
+        "label": "Notes",
+        "value": "The public knows her as Ms. Socha Prath, the kindly and respected headmistress of the Overton Academy. In the school's secret sub-basement, she is 'Auntie Social,' a Machiavellian mastermind who brainwashes her students into the perfect minions for her criminal empire. Her true origins and motives remain a terrifying mystery."
+      }
+    },
+    "tags": ""
+  },
+  "prototypeToken": {
+    "name": "Villain",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": null
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "A Lesson in Betrayal",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Reveal one of the students, faculty, or even a hero's trusted friend is one of her brainwashed agents. <b>Activate the Downsides of their Abilities and Relationships</b> by turning a friendly face into a threat, or just <b>Make a Villain Move</b> by having them strike at the worst possible time.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "JpxDyE3DcuYhJAmt",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/liar-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 10,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "G0CDIWDTnKiemgV2"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Psychological Warfare",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Use her deep understanding of the teenage psyche to pinpoint a hero's greatest fear or insecurity and speak it aloud. <b>Inflict a Condition</b> on a hero who falters, and <b>Tell Them Who They Are or Who They Should Be</b> by framing their weakness as their defining trait.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Jlw39LGoDoBzGFpB",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 20,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "6R5GEO3rl59Ab49J"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "The Bell Rings for Thee",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Use Overton Academy's seemingly innocuous environment and student body to trap or isolate a hero. The debate club boxes them in with aggressive questioning, or the cheerleading squad forms a spirit pyramid that blocks an escape route. <b>Capture Someone</b> without overt violence, and <b>Put Innocents in Danger</b> by making the brainwashed students the walls of the prison.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "meIvmZcLSwYdjY9n",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 30,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "fMLcPPZ4nATDMb8n"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Afraid — Run to her for 'help'",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When you act on your fear, you mistake her for a safe authority figure and flee to her, separating you from the team. The GM will <b>Capture Someone</b>—you.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "67kiqvG083Qk4jAE",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 40,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "af8W9cN6aRsENuYw"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Angry — Lash out at the wrong target",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When you act on your anger, you attack one of her student pawns or a manipulated ally instead of her, letting her <b>Turn Their Move Back on Them</b> by making you seem like the villain while you <b>Show the Costs of Collateral Damage</b>.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "geFVTmEZcguECTDY",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 50,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "S1oanWsKFgEAZ06i"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Guilty — Accept her 'fair' judgment",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When you act on your guilt, you confess your 'failure' to Ms. Socha, allowing her to offer a solution. You must give her what she wants or let her <b>Take Influence over Someone</b> important to you.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "nP4yd3CLto7YkWNM",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/robber-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 60,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "wjU8RHvWmFEktZsQ"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Hopeless — Submit to the lesson plan",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When you give in to hopelessness, you accept her pronouncements about your inevitable failure. The GM will <b>Reveal the Future</b>, a dark vision she has orchestrated just for you, and you must mark a potential.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "TFSZyNPQ7ubl2gME",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "pKHymcPT4zCDoN08"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Insecure — Try to earn her respect",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>When your insecurity flares, you do something reckless to prove her wrong about you. The GM will <b>Tell Them the Possible Consequences—and Ask</b> if you are truly willing to pay the price.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "UbcX0pWEa13Dei7R",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "aTbH9mJYkCoLG9sh"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Inflict a Condition",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Turn the screws in-fiction and <b>Inflict a Condition</b> unless the heroes accept a hard compromise.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "ZAdVfGIFL9enwlGf",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 90,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "Ipv5lOSeIVEVqfAx"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Take Influence over Someone",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Frame the moment so an adult or rival can <b>Take Influence over Someone</b>, or the target marks a fitting condition to resist.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "8RoAiDQfSB027FMe",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 100,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "Hz9DvFQ8GZfDICU3"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Capture Someone",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Separate or restrain a target; they must concede position or resources to avoid <b>Capture Someone</b>.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "aJsoQuE2WD072VSQ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 110,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "xlMCsYICvW5Sk33g"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Put Innocents in Danger",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Shift focus to bystanders and <b>Put Innocents in Danger</b>, forcing tough choices or a split.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "gRasiX02XcAV1X5b",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 120,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "2gvYIapUSxSBTeAB"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Show the Costs of Collateral Damage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Highlight fallout as structures fail and gear cracks to <b>Show the Costs of Collateral Damage</b>.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "7fUULuV16bYjrVfq",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 130,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "oJWab1MZyXhsaanR"
+      },
+      "ownership": {
+        "default": 0
+      }
+    },
+    {
+      "name": "Tell Them the Possible Consequences—and Ask",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>Present the stakes plainly—<b>Tell Them the Possible Consequences—and Ask</b>: do they proceed?</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "nS9e213NuV38BFiJ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-#ffffff-#3da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 140,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": "0nZYX0yqV4IoBydI"
+      },
+      "ownership": {
+        "default": 0
+      }
+    }
+  ],
+  "effects": [],
+  "folder": "wqvYkNhlRGxfcOeI",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": "Actor.MTElFyBq3DeS8tyB",
+    "exportSource": {
+      "worldId": "v1",
+      "uuid": "Actor.ulWxgIic4ZTIqMXM",
+      "coreVersion": "13.350",
+      "systemId": "pbta",
+      "systemVersion": "1.1.22"
+    },
+    "coreVersion": "13.350",
+    "systemId": "pbta",
+    "systemVersion": "1.1.22",
+    "createdTime": 1761360899251,
+    "modifiedTime": 1761360899251,
+    "lastModifiedBy": "vIDJgiMssri2HzFG"
+  },
+  "baseType": "npc",
+  "ownership": {
+    "default": 0
+  },
+  "_id": "Rkw7H8yM9BJEWQpi"
+}

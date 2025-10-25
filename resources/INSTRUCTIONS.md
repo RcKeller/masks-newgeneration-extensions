@@ -214,3 +214,176 @@ Each playbook provides:
 *   The GM can create custom moves for special situations, environment hazards, or evolving powers. Moves should trigger on interesting and uncertain situations and deliver results that push the fiction forward.
     
 *   Spin-off rules allow major system overhauls (e.g., changing how Influence works, adding harm/injury mechanics). Use carefully to ensure tone remains consistent.
+
+## List of GM Moves
+
+Here are the **standard GM moves in MASKS** and quick, practical ways to **bake each one directly into a villain move’s text**—so when you fire the villain move, you’re also cleanly making a GM move.
+
+> **How to write them:**
+> *Villain does a clear fiction-first thing → you present a cost/choice/consequence → you tag the mechanical effect (conditions, Influence, Team, etc.).*
+> (Use “soft” phrasing when you’re setting up danger or a choice; use “hard” phrasing when you’re cashing it in.)
+
+---
+
+## The GM Moves (with villain‑text examples)
+
+### 1) **Make a Villain Move**
+
+**What it is:** Use one of the custom moves on that specific villain’s sheet.
+**Write it like:** *“When [villain] does X, [fiction happens]. PCs must [choice] or [effect].”*
+**Example:** “**Cut!** He points at the last hero action that changed something. **Choice**: keep it but **mark 2 conditions**, or redo it at **–2** under reshoot pressure.” (This is how *The Director* bakes GM pressure directly into his villain text.) 
+
+---
+
+### 2) **Make a Playbook Move**
+
+**What it is:** Trigger a relevant adult/organization/NPC playbook move.
+**Write it like:** *“Invoke [organization/adult move] to [tilt the scene]. On a hit, [spotlight shifts/effect].”*
+**Example:** “A.E.G.I.S. deploys a **protocol move** that locks down the block; anyone who presses through acts **under scrutiny (–1 to the next relevant result)**.”
+
+(*The Director* lists “Make a Playbook Move” right on his card to remind you this is always on the table.) 
+
+---
+
+### 3) **Activate the Downsides of their Abilities and Relationships**
+
+**What it is:** Spotlight a teen’s complications, entanglements, or move downsides.
+**Write it like:** *“Your power/relationship backfires; to push through, mark a condition or accept [new complication].”*
+**Example:** “The EMP spikes your suit’s failsafe—**mark Insecure** or your armor **cuts out** for a panel.”
+
+(*The Director*’s kit explicitly includes this GM move.) 
+
+---
+
+### 4) **Inflict a Condition**
+
+**What it is:** Your primary “damage.”
+**Write it like:** *“X hits home; choose **[Condition]** (or GM picks) unless you [costly mitigation].”*
+**Example:** “The crowd’s jeers sting—**mark Insecure** unless you open up honestly in front of them.” (See also how *Fiddle Fiends* force **Insecure** and **Afraid/Hopeless** via crowd pressure.) 
+*(Conditions are core to basic moves like **Take a Powerful Blow**, and to **Influence**—that’s why inflicting/clearing them is so potent.)* 
+
+---
+
+### 5) **Take Influence over Someone**
+
+**What it is:** Adults and social threats assert narrative power over a teen’s self‑image.
+**Write it like:** *“If you bite on their frame, they **gain Influence**; if you defy it, **mark a condition** or face [cost].”*
+**Example:** “**Per My Last Email…** Sharon reframes your actions as policy violations—**she takes Influence** unless you accept a penalty (**–1 on the next result**) or **mark a fitting Condition**.” (*Sharon from HR*) 
+*(See the Influence rules for how that leverage plays out.)* 
+
+---
+
+### 6) **Bring Them Together**
+
+**What it is:** Push teamwork, shared purpose, and Team economy.
+**Write it like:** *“If you coordinate, **+1 Team** or gain an opening; if you don’t, escalate [threat/effect].”*
+**Example:** “Choreo the defense as a **duet**; on a clear signal, **add 1 Team**. If you grandstand alone, the hazard spreads to bystanders.” (*Pairs neatly with Enter Battle as a Team.*) 
+
+---
+
+### 7) **Capture Someone**
+
+**What it is:** Separate/secure a target.
+**Write it like:** *“They isolate a hero; accept a **compromise** to stay free or you’re **captured**.”*
+**Example:** “**Mandatory 1:1.** Sharon peels you into a ‘quick chat’—go now and **lose time/reputation**, or **security escorts you out** (you’re effectively **captured**).” 
+
+---
+
+### 8) **Put Innocents in Danger**
+
+**What it is:** Classic superhero pressure.
+**Write it like:** *“X endangers civilians; if you don’t split attention to save them, [consequence/Condition].”*
+**Example:** “**Stampede.** The fan swarm breaks into dangerous currents through traffic—**civilians are in peril** unless someone pivots to rescue.” (*Fiddle Fiends*) 
+
+---
+
+### 9) **Show the Costs of Collateral Damage**
+
+**What it is:** Make the fallout vivid and mechanical.
+**Write it like:** *“Your big swing cracks the support; either **mark Guilty** or **spend Team** to shore it up.”*
+**Example:** “The stage rigging buckles. Keep pressing and **mark Guilty**, or burn **1 Team** to stabilize it on the fly.” (*Explicitly listed on The Director*) 
+
+---
+
+### 10) **Reveal the Future**
+
+**What it is:** Foreshadow clocks, moves, or next issue’s threat.
+**Write it like:** *“A teaser panel lands: unless you do X soon, expect Y next scene.”*
+**Example:** “A push alert: *‘A.E.G.I.S. vote in 10 minutes.’* If you don’t sway it, **adult oversight** lands next scene with stricter rules.”
+
+---
+
+### 11) **Announce Between‑Panel Threats**
+
+**What it is:** Advance off‑screen danger or call in reinforcements.
+**Write it like:** *“While you’re busy, [new element] is already in motion.”*
+**Example:** “**And… action!** All other enemies who haven’t acted take **an extra villain move now**—the set explodes with activity.” (*The Director*) 
+
+---
+
+### 12) **Make Them Pay a Price for Victory**
+
+**What it is:** They can win, but it costs.
+**Write it like:** *“You can have it if you accept [cost: conditions, split, lost asset].”*
+**Example:** “Slam the vault shut and you’ll **seal the bomb inside**—but **mark Hopeless** from the weight of that choice.”
+(*See The Director’s **Cut!**—keep the win but **mark 2 conditions**, or retake under pressure.*) 
+
+---
+
+### 13) **Turn Their Move Back on Them**
+
+**What it is:** Mirror their tactic; twist the knife.
+**Write it like:** *“That clever gambit rebounds; suffer [mirrored effect] unless you change approach.”*
+**Example:** “Your sonic burst feeds the villain’s **resonance cage**—either **mark Afraid** and drop it, or they trap an ally inside.”
+
+(*Explicitly present in The Director’s move list: Counter/Reverse.*) 
+
+---
+
+### 14) **Tell Them the Possible Consequences—and Ask**
+
+**What it is:** Offer informed choice; keep agency front‑and‑center.
+**Write it like:** *“If you do it this way, here’s what’ll happen—do you proceed?”*
+**Example:** “Break the non‑compete and **legal comes down** on your mentor; do you go through with it?”
+(*Sharon’s ‘Per My Last Email…’ is a great example of reframing and presenting costs up front.*) 
+
+---
+
+### 15) **Tell Them Who They Are or Who They Should Be**
+
+**What it is:** Adults/antagonists press Labels and identity.
+**Write it like:** *“They define you; if you accept, shift Labels their way; if you reject, roll to resist and face fallout.”*
+**Example:** “*‘You’re just a PR product.’* Accept it to shift toward **Superior**, or reject and risk **Insecure** in front of the cameras.”
+*(Ties directly into **Influence** and **Rejecting Influence**.)* 
+
+---
+
+### 16) **Bring an NPC to Rash Decisions and Hard Conclusions**
+
+**What it is:** NPCs escalate fast—panic, betray, strike.
+**Write it like:** *“X snaps; unless you intervene, they do Y immediately.”*
+**Example:** “The venue manager **pulls the fire alarm**; if you don’t calm them now, **everyone evacuates** and the villain slips away.”
+(*The Director* names this explicitly—great for speeding a scene to consequence.) 
+
+---
+
+## Quick templates you can paste into a villain sheet
+
+* **[GM: Inflict a Condition]** “Their [attack/words] land. **Mark [Condition]**, or [costly mitigation].”
+* **[GM: Take Influence]** “If you accept their framing, they **take Influence**; if you refuse, **mark [Condition]** or suffer [penalty].”
+* **[GM: Put Innocents in Danger]** “X endangers bystanders; if you don’t split to help, [escalate/cost].”
+* **[GM: Price for Victory]** “You can have it **if** you accept [loss/Condition/Team –1].”
+* **[GM: Consequences & Ask]** “If you do it this way, [bad thing] happens—do you proceed?”
+
+> **See it in action:**
+> • *Fiddle Fiends* (crowd hazard) uses **Put Innocents in Danger** and **Inflict Conditions** (“Stampede,” “Mosh Pit,” “Seek Validation”). 
+> • *Sharon from HR* (bureaucratic/social) shows **Take Influence**, **Capture Someone**, and **Consequences & Ask** (“Per My Last Email…,” “Mandatory 1:1,” “Performance Improvement Plan”). 
+> • *The Director* (meta‑producer) literally lists the GM move set and implements **Price for Victory**, **Between‑Panel Threats**, etc. (“Cut!,” “And… action!”). 
+
+---
+
+### Design tips (fast)
+
+* **Name the feeling** in your villain move title (“Fan Fury,” “Safety First”) and **tag the GM move** in the body—this keeps fiction foremost and mechanics transparent. (You can also mirror what’s in your players’ basic moves and Influence rules so consequences feel integrated.) 
+* **Soft first, hard later.** Offer a choice or foreshadow (soft), then cash it in with conditions, capture, or collateral (hard).
+* **Aim moves at identity.** MASKS sings when GM moves threaten Labels/Influence as much as bodies and buildings.
