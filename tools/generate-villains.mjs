@@ -1499,7 +1499,7 @@ function buildActorFromTemplate(template, npc, llm) {
 
   // Image
   const derived = deriveImagePathHint(npc._sourceText || "");
-  actor.img = npc.img || derived || "icons/svg/mystery-man.svg";
+  actor.img = npc.name ? `modules/masks-newgeneration-extensions/images/adversaries/${npc.name.toLowerCase()}.png` : "icons/svg/mystery-man.svg"
 
   // Real name
   if (actor?.system?.attributes?.realName) {
