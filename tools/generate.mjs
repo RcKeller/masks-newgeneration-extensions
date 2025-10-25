@@ -1,1099 +1,1004 @@
 #!/usr/bin/env node
 /**
- * masks-npc-porter.mjs
- * ---------------------------------------------------------------------------
- * Batch-port NPCs from PDFs (or plaintext) into Masks: A New Generation NPC
- * JSON files for Foundry VTT v13+, using OpenRouter (Gemini 2.5 Pro) to help
- * with parsing and drafting moves. Each NPC gets:
- *   - Fresh 16‑char alphanumeric Actor _id (and _key)
- *   - 3–5 brand-new VILLAIN moves (type: "npcMove", moveType: "villain")
- *   - 5 custom CONDITION moves (one each: Afraid, Angry, Guilty, Hopeless, Insecure)
- *   - Baseline GM moves preserved (unchanged) to match the example schema
- *   - A file named: npc_<VILLAIN_NAME>_<UUID>.json
+ * tools/port-npcs.mjs
+ * -----------------------------------------------------------------------------
+ * PORT NPCs FROM SOURCE FILES (PDF/TXT/MD/JSON) TO FOUNDARY PBTA/MASKS NPC JSON
+ * Provider: OpenRouter (model: google/gemini-2.5-pro)
  *
- * INPUTS
- *   - A directory of source files (PDF, .txt, .md). One or more NPCs may be
- *     present per file. By default we assume one NPC per file; use --multi to
- *     attempt multi-NPC discovery and do one model request per NPC for consistency.
+ * READ THIS FIRST — WHAT THIS SCRIPT DOES
+ * -----------------------------------------------------------------------------
+ * • Scans an input directory for content files (.pdf, .txt, .md, .json).
+ * • Extracts text (uses pdf-parse or system `pdftotext` for PDFs; reads text/JSON directly).
+ * • Calls the OpenRouter Chat Completions API (Gemini 2.5 Pro) to:
+ *    (1) Identify NPCs present in each file (names, real names, image hints, short concept).
+ *    (2) For each NPC, generate:
+ *        - 3–5 custom "Villain" moves (type: npcMove, moveType: "villain"),
+ *        - 5 custom "Condition" moves (Afraid, Angry, Guilty, Hopeless, Insecure) with character‑appropriate flavor,
+ *        - optional drive/abilities/biography snippets.
+ * • Builds a full Foundry VTT Actor document (type: npc) that strictly mirrors the
+ *   structure of ./example-npc.json while replacing the allowed fields:
+ *   - Name
+ *   - _id (new 16‑character alphanumeric UUID)
+ *   - img (tries to retain source path; falls back to default icon)
+ *   - system.attributes.realName.value
+ *   - Items array:
+ *        → BRAND‑NEW 3–5 villain moves,
+ *        → BRAND‑NEW 5 condition moves (one for each Condition),
+ *        → A preserved set of baseline GM moves (not removed; lightly paraphrased),
+ *      All items are minted with fresh 16‑char UUIDs and proper pbta move structure.
+ * • Writes one file per NPC to an output directory:
+ *      npc_<VILLAIN_NAME>_<UUID>.json
+ *   The default outdir is: src/packs/ported
  *
- * OUTPUTS
- *   - Foundry-ready actor JSON files in a configurable output directory.
- *     Defaults to: src/packs/ported
+ * SAFETY & ROBUSTNESS
+ * -----------------------------------------------------------------------------
+ * • Continues processing even if any single NPC fails (prints a warning).
+ * • Strong post‑parse validation of LLM output and auto‑synthesizes missing data.
+ * • Bounded retries with exponential backoff on 429/5xx responses (no infinite loops).
+ * • Ensures every Actor & Item owns a valid 16‑char alphanumeric UUID (A–Z, a–z, 0–9).
  *
- * OPENROUTER / GEMINI 2.5 PRO
- *   - Provider: OpenRouter (model "google/gemini-2.5-pro")
- *   - Env var: OPENROUTER_API_KEY must be set
- *   - Uses the OpenAI-compatible Chat Completions endpoint
- *   - JSON-only responses via response_format: { type: "json_object" }
- *   - IMPORTANT: we DO NOT set max_tokens (per instructions)
- *   - Robust handling for 429/5xx with backoff and bounded retries
+ * IMPORTANT MASKS / PBTA MODELING RULES THIS SCRIPT ENFORCES
+ * -----------------------------------------------------------------------------
+ * • Items (moves) use the exact structure found in example-npc.json:
+ *   - type: "npcMove"
+ *   - system.moveType: "villain" | "condition" | "" (for generic GM options)
+ *   - system.description: HTML with a single <p>…</p> body
+ *     * The specific GM move names cited are wrapped in <b>…</b> (e.g., <b>Inflict a Condition</b>)
+ *   - system.moveResults: { failure, partial, success } scaffold present
+ *   - rollFormula: "" and uses: 0
+ * • Condition moves: exactly 5, one for each: Afraid, Angry, Guilty, Hopeless, Insecure.
+ * • Villain moves: 3–5 per NPC, flavored to that character.
+ * • The baseline GM options are preserved (not removed). They are slightly paraphrased
+ *   to avoid verbatim duplication of the example’s text.
  *
- * VALIDATION & AUTO-SYNTHESIS
- *   - Strong post-parse validation ensures:
- *       * Name exists
- *       * 3–5 villain moves
- *       * All 5 condition moves (Afraid, Angry, Guilty, Hopeless, Insecure)
- *     If the model under-fills anything, the script auto-synthesizes missing content.
+ * CLI USAGE
+ * -----------------------------------------------------------------------------
+ *   node tools/port-npcs.mjs [--indir ./src/packs] [--outdir ./src/packs/ported]
+ *                            [--template ./example-npc.json]
+ *                            [--model google/gemini-2.5-pro]
+ *                            [--concurrency 2]
+ *                            [--filePattern "*.pdf"]
+ *                            [--dry]
  *
- * ICONS
- *   - Villain/Condition/GM moves get icons from the allowed list
- *   - We pick appropriate icons by keyword; otherwise fall back to a default
+ * ENVIRONMENT
+ * -----------------------------------------------------------------------------
+ *   OPENROUTER_API_KEY   (required)
+ *   OPENROUTER_SITE_URL  (optional, leaderboard attribution)
+ *   OPENROUTER_SITE_NAME (optional, leaderboard attribution)
  *
- * SAFETY / CONTINUATION
- *   - The script logs a warning and continues if porting one entity fails.
+ * DEPENDENCIES (optional but recommended)
+ * -----------------------------------------------------------------------------
+ *   • pdf-parse (NPM). If unavailable, script will try `pdftotext` CLI. If both
+ *     unavailable, PDF files are skipped with a warning.
+ *     Install:  npm i -D pdf-parse
  *
- * USAGE
- *   node masks-npc-porter.mjs \
- *     --indir ./raw-pdfs \
- *     --outdir ./src/packs/ported \
- *     [--multi] \
- *     [--image-root ./modules/te-core-rules/images] \
- *     [--dry-run]
+ * MODEL CONTRACT TO THE LLM (EXCERPT)
+ * -----------------------------------------------------------------------------
+ *   We make a first request per file to enumerate NPCs (names, realName, optional image).
+ *   Then, a separate request per NPC to generate:
+ *     { villainMoves: 3–5, conditionMoves: Afraid/Angry/Guilty/Hopeless/Insecure }.
+ *   Responses must be JSON only; script validates & repairs as needed.
  *
- * FLAGS
- *   --indir        Source directory containing PDFs or text files. Default: ./src/packs
- *   --outdir       Output directory. Default: ./src/packs/ported
- *   --multi        Attempt to detect multiple NPCs per file; separate request per NPC
- *   --image-root   Prefix for relative image references (retain te-core-rules paths)
- *   --dry-run      Do not write files, just log what would be created
+ * NOTE ON IMAGES
+ * -----------------------------------------------------------------------------
+ *   The script attempts to “retain the path from te-core-rules” if present in source
+ *   text (e.g., modules/te-core-rules/...); otherwise it falls back to
+ *   "icons/svg/mystery-man.svg". You can post‑process outputs to swap images in bulk.
  *
- * DEPENDENCIES
- *   - Node 18+ (global fetch support)
- *   - pdf-parse (optional; install with: npm i pdf-parse)
- *     If unavailable, the script falls back to a very basic text extractor using
- *     the 'pdftotext' CLI if present; otherwise throws a helpful error.
+ * OUTPUT DIRECTORY
+ * -----------------------------------------------------------------------------
+ *   Default: src/packs/ported (created if missing)
+ *   Naming:  npc_<VillainName>_<UUID>.json
  *
- * CLARIFIED INSTRUCTIONS (for the model & this pipeline)
- *   1) Extract NPCs from each source file. If --multi is set, detect them and
- *      run a separate OpenRouter request per NPC; otherwise treat the whole file
- *      as one NPC.
- *   2) For each NPC, produce:
- *      - name (the villain’s moniker)
- *      - realName (civilian identity if present; empty string if unknown)
- *      - img (use path from te-core-rules if found; otherwise leave default)
- *      - details.drive (short motivation paragraph)
- *      - details.abilities (HTML: <p> or <ul> describing powers)
- *      - details.biography (HTML: flavor notes; copy text verbatim is allowed)
- *      - 3–5 custom villain moves:
- *          * type "npcMove", system.moveType "villain"
- *          * fiction-first descriptions that leverage Masks GM move logic
- *          * e.g., "mark a condition (player chooses)", shift Labels, split the team,
- *            introduce obstacles, capture someone, endanger innocents, etc.
- *      - 5 condition moves (Afraid, Angry, Guilty, Hopeless, Insecure):
- *          * system.moveType "condition"
- *          * name MUST start with condition name + " — "
- *          * tailor to the NPC’s theme; one line each is fine, using GM-style outcomes
- *   3) DO NOT remove the baseline GM moves (we append them unmodified).
- *   4) Every document (Actor + each Item) gets a fresh 16‑char alphanumeric _id
- *      and matching _key ("!actors!<id>" or "!items!<id>").
- *   5) File naming: npc_<NameWithSpacesAsUnderscores>_<ActorUUID>.json in --outdir.
- *
- * ---------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
+ * © You own the IP for your villains; this script can copy their text.
+ * This file is MIT‑licensed like the repository.
+ * -----------------------------------------------------------------------------
  */
 
-import { readFile, writeFile, readdir, stat, mkdir } from "fs/promises";
-import { exec as _exec } from "child_process";
-import { createHash, randomBytes } from "crypto";
+import fs from "fs";
+import fsp from "fs/promises";
 import path from "path";
-import process from "process";
-import { promisify } from "util";
+import { fileURLToPath } from "url";
+import { exec as execCb } from "child_process";
+import { setTimeout as sleep } from "timers/promises";
+const exec = (cmd) =>
+  new Promise((resolve, reject) => {
+    execCb(cmd, { maxBuffer: 1024 * 1024 * 50 }, (err, stdout, stderr) => {
+      if (err) return reject(Object.assign(err, { stdout, stderr }));
+      resolve({ stdout, stderr });
+    });
+  });
 
-const exec = promisify(_exec);
+// ------------------------------ CLI ARGS ------------------------------
 
-/* ----------------------------- Configuration ------------------------------ */
+const argv = process.argv.slice(2);
+const getFlag = (name, def = undefined) => {
+  const idx = argv.indexOf(`--${name}`);
+  if (idx === -1) return def;
+  const next = argv[idx + 1];
+  if (!next || next.startsWith("--")) return true; // boolean flag
+  return next;
+};
 
-const MODEL = "google/gemini-2.5-pro";
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+const IN_DIR = path.resolve(getFlag("indir", "./src/packs"));
+const OUT_DIR = path.resolve(getFlag("outdir", "./src/packs/ported"));
+const TEMPLATE_PATH = path.resolve(getFlag("template", "./example-npc.json"));
+const MODEL = getFlag("model", "deepseek/deepseek-chat-v3-0324");
+const CONCURRENCY = Math.max(1, parseInt(getFlag("concurrency", "2"), 10) || 2);
+const FILE_PATTERN = getFlag("filePattern", "*"); // simple include pattern
+const DRY_RUN = !!getFlag("dry", false);
+
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-
-// Defaults & CLI args
-const argv = parseArgs(process.argv.slice(2));
-const IN_DIR = path.resolve(argv.indir ?? "./src/packs");
-const OUT_DIR = path.resolve(argv.outdir ?? "./src/packs/ported");
-const MULTI = Boolean(argv.multi ?? false);
-const IMAGE_ROOT = argv["image-root"] ? String(argv["image-root"]) : "";
-const DRY_RUN = Boolean(argv["dry-run"] ?? false);
-
-// Foundry / System versions to embed in _stats
-const CORE_VERSION = "13.350";
-const SYSTEM_ID = "pbta";
-const SYSTEM_VERSION = "1.1.22";
-
-// Safety guards
 if (!OPENROUTER_API_KEY) {
-  console.error("ERROR: OPENROUTER_API_KEY env var is required.");
+  console.error("ERROR: OPENROUTER_API_KEY environment variable is required.");
   process.exit(1);
 }
 
-/* ------------------------------- Utilities -------------------------------- */
+// ------------------------------ CONSTANTS ------------------------------
 
-function parseArgs(args) {
-  const out = {};
-  for (let i = 0; i < args.length; i++) {
-    const a = args[i];
-    if (a.startsWith("--")) {
-      const key = a.slice(2);
-      const next = args[i + 1];
-      if (!next || next.startsWith("--")) out[key] = true;
-      else {
-        out[key] = next;
-        i++;
-      }
-    }
+const ALLOWED_EXTENSIONS = new Set([".pdf", ".txt", ".md", ".json"]);
+
+const GM_TRIGGER_WHITELIST = [
+  "Make a Villain Move",
+  "Make a Playbook Move",
+  "Activate the Downsides of their Abilities and Relationships",
+  "Inflict a Condition",
+  "Take Influence over Someone",
+  "Bring Them Together",
+  "Capture Someone",
+  "Put Innocents in Danger",
+  "Show the Costs of Collateral Damage",
+  "Reveal the Future",
+  "Announce Between‑Panel Threats",
+  "Make Them Pay a Price for Victory",
+  "Turn Their Move Back on Them",
+  "Tell Them the Possible Consequences—and Ask",
+  "Tell Them Who They Are or Who They Should Be",
+  "Bring an NPC to Rash Decisions and Hard Conclusions"
+];
+
+// Icons for flavor; mapped by common triggers. Falls back to auras if not matched.
+const ICONS = {
+  default: "modules/masks-newgeneration-unofficial/images/gameicons/aura-#ffffff-#3da7db.svg",
+  "Inflict a Condition": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-#ffffff-#3da7db.svg",
+  "Take Influence over Someone": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
+  "Put Innocents in Danger": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-#ffffff-#3da7db.svg",
+  "Capture Someone": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
+  "Show the Costs of Collateral Damage": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
+  "Tell Them the Possible Consequences—and Ask": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-#ffffff-#3da7db.svg",
+  "Make Them Pay a Price for Victory": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
+  "Bring Them Together": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-#ffffff-#3da7db.svg",
+  "Reveal the Future": "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-#ffffff-#3da7db.svg",
+  "Announce Between‑Panel Threats": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-#ffffff-#3da7db.svg",
+  "Activate the Downsides of their Abilities and Relationships": "modules/masks-newgeneration-unofficial/images/gameicons/liar-#ffffff-#3da7db.svg",
+  "Turn Their Move Back on Them": "modules/masks-newgeneration-unofficial/images/gameicons/shield-reflect-#ffffff-#3da7db.svg",
+  "Tell Them Who They Are or Who They Should Be": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-#ffffff-#3da7db.svg",
+  "Bring an NPC to Rash Decisions and Hard Conclusions": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-#ffffff-#3da7db.svg",
+};
+
+const CONDITION_ICONS = {
+  Afraid: "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-#ffffff-#3da7db.svg",
+  Angry: "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-#ffffff-#3da7db.svg",
+  Guilty: "modules/masks-newgeneration-unofficial/images/gameicons/robber-#ffffff-#3da7db.svg",
+  Hopeless: "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-#ffffff-#3da7db.svg",
+  Insecure: "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
+};
+
+const NOW = () => Date.now();
+
+// ------------------------------ UTILS ------------------------------
+
+function generate16CharUUID() {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let out = "";
+  // crypto.randomBytes replacement without import: use Node's webcrypto
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  for (let i = 0; i < 16; i++) out += chars[bytes[i] % chars.length];
+  return out;
+}
+const crypto =
+  globalThis.crypto ??
+  (await import("node:crypto")).webcrypto; // ensure webcrypto for random
+
+function isValid16CharUUID(id) {
+  return typeof id === "string" && /^[A-Za-z0-9]{16}$/.test(id);
+}
+
+function toSafeFileStub(name) {
+  return (name || "NPC")
+    .replace(/[^A-Za-z0-9 _-]/g, "_")
+    .trim()
+    .replace(/\s+/g, "_")
+    .slice(0, 80);
+}
+
+function chooseIconFromTriggers(triggers = []) {
+  for (const t of triggers) {
+    if (ICONS[t]) return ICONS[t];
+  }
+  return ICONS.default;
+}
+
+function ensureSingleParagraphHTML(htmlOrText) {
+  if (!htmlOrText) return "<p></p>";
+  const s = String(htmlOrText).trim();
+  if (s.startsWith("<p>") && s.endsWith("</p>")) return s;
+  // Strip any newlines and wrap in <p>
+  const stripped = s.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+  return `<p>${stripped}</p>`;
+}
+
+function wrapGMTriggersBold(text, triggers = []) {
+  // For each known trigger, wrap exact substring if present.
+  let out = text;
+  for (const t of triggers) {
+    const safe = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b${safe}\\b`, "g");
+    out = out.replace(re, `<b>${t}</b>`);
   }
   return out;
 }
 
-function cleanText(s) {
-  return (s || "")
-    .replace(/\u0000/g, " ")
-    .replace(/\r/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function stripCodeFences(s) {
+  if (typeof s !== "string") return s;
+  return s
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/```$/i, "")
     .trim();
 }
 
-function limitChars(s, max = 65000) {
-  if (s.length <= max) return s;
-  return s.slice(0, max);
-}
-
-function safeFileBase(name) {
-  return String(name || "Unknown")
-    .replace(/[^a-zA-Z0-9_-]+/g, "_")
-    .replace(/_+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
-
-const ALNUM =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-function generate16CharUUID() {
-  const bytes = randomBytes(16);
-  let s = "";
-  for (let i = 0; i < 16; i++) {
-    s += ALNUM[bytes[i] % ALNUM.length];
+function pick(arr, count) {
+  const clone = [...arr];
+  const out = [];
+  while (clone.length && out.length < count) {
+    const idx = Math.floor(Math.random() * clone.length);
+    out.push(clone.splice(idx, 1)[0]);
   }
-  return s;
+  return out;
 }
 
-function isValid16(id) {
-  return typeof id === "string" && /^[A-Za-z0-9]{16}$/.test(id);
+// ------------------------------ PDF / TEXT EXTRACTION ------------------------------
+
+async function extractTextFromPDF(filePath) {
+  // Try pdf-parse
+  try {
+    const pdfParse = (await import("pdf-parse")).default;
+    const data = await fsp.readFile(filePath);
+    const res = await pdfParse(data);
+    if (res && res.text && res.text.trim()) {
+      return res.text;
+    }
+  } catch (err) {
+    // ignore; try pdftotext
+  }
+
+  // Try pdftotext CLI
+  try {
+    const cmd = `pdftotext -layout -nopgbrk "${filePath}" -`;
+    const { stdout } = await exec(cmd);
+    if (stdout && stdout.trim()) return stdout;
+  } catch (err) {
+    // skip
+  }
+
+  console.warn(
+    `WARN: Could not extract text from PDF (no pdf-parse or pdftotext): ${filePath}`
+  );
+  return "";
 }
 
-function nowMs() {
-  return Date.now();
-}
-
-async function ensureDir(p) {
-  await mkdir(p, { recursive: true });
-}
-
-async function* walkFiles(dir) {
-  const entries = await readdir(dir, { withFileTypes: true });
-  for (const ent of entries) {
-    const full = path.join(dir, ent.name);
-    if (ent.isDirectory()) {
-      yield* walkFiles(full);
-    } else if (ent.isFile()) {
-      yield full;
+async function extractTextFromFile(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === ".pdf") {
+    return extractTextFromPDF(filePath);
+  }
+  if (ext === ".txt" || ext === ".md") {
+    return await fsp.readFile(filePath, "utf8");
+  }
+  if (ext === ".json") {
+    try {
+      const raw = await fsp.readFile(filePath, "utf8");
+      // Pass through either prettified JSON or raw if huge:
+      if (raw.length > 500_000) return raw.slice(0, 500_000);
+      return raw;
+    } catch (e) {
+      return "";
     }
   }
+  return "";
 }
 
-function extOf(p) {
-  return path.extname(p).toLowerCase();
-}
+// ------------------------------ FILE DISCOVERY ------------------------------
 
-/* ------------------------------- PDF/Text --------------------------------- */
-
-let pdfParse = null;
-async function loadPdfParse() {
-  if (pdfParse) return pdfParse;
-  try {
-    pdfParse = (await import("pdf-parse")).default;
-    return pdfParse;
-  } catch {
-    // Try the CLI fallback: pdftotext
-    return null;
+async function listFilesRecursively(dir, pattern = "*") {
+  const results = [];
+  const entries = await fsp.readdir(dir, { withFileTypes: true });
+  for (const d of entries) {
+    const full = path.join(dir, d.name);
+    if (d.isDirectory()) {
+      const child = await listFilesRecursively(full, pattern);
+      results.push(...child);
+    } else {
+      const ext = path.extname(d.name).toLowerCase();
+      if (ALLOWED_EXTENSIONS.has(ext)) {
+        if (pattern && pattern !== "*" && !minimatch(d.name, pattern)) continue;
+        results.push(full);
+      }
+    }
   }
+  return results;
 }
 
-async function extractTextFromPdf(filePath) {
-  const lib = await loadPdfParse();
-  if (lib) {
-    const buf = await readFile(filePath);
-    const data = await lib(buf);
-    return cleanText(data.text || "");
+function minimatch(filename, glob) {
+  // ultra-light glob: only supports single trailing "*"
+  if (glob === "*" || !glob) return true;
+  if (glob.endsWith("*")) {
+    const base = glob.slice(0, -1);
+    return filename.startsWith(base);
   }
-  // Fallback: pdftotext CLI
-  try {
-    const { stdout } = await exec(
-      `pdftotext -layout "${filePath}" - | sed 's/\\x0//g'`
-    );
-    return cleanText(stdout || "");
-  } catch (e) {
-    throw new Error(
-      `pdf-parse not installed and 'pdftotext' not available for: ${filePath}\n` +
-        `Install pdf-parse: npm i pdf-parse`
-    );
-  }
+  return filename === glob;
 }
 
-async function readSourceFileAsText(filePath) {
-  const ext = extOf(filePath);
-  if (ext === ".pdf") return await extractTextFromPdf(filePath);
-  if (ext === ".txt" || ext === ".md") {
-    const text = await readFile(filePath, "utf-8");
-    return cleanText(text);
-  }
-  // Unknown filetype: attempt to read as text
-  const text = await readFile(filePath, "utf-8").catch(() => "");
-  return cleanText(text);
-}
+// ------------------------------ OPENROUTER CALLS ------------------------------
 
-/* --------------------------- OpenRouter Client ----------------------------- */
-
-async function openrouterChatJSON(messages, { temperature = 0.2 } = {}) {
-  const body = {
-    model: MODEL,
-    response_format: { type: "json_object" },
-    messages,
-    temperature, // Do NOT set max_tokens per instruction
+async function callOpenRouterJSON({ system, user }) {
+  const headers = {
+    Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+    "Content-Type": "application/json",
   };
-  return await fetchWithRetry(OPENROUTER_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": process.env.OPENROUTER_HTTP_REFERRER || "https://localhost",
-      "X-Title": process.env.OPENROUTER_TITLE || "Masks NPC Porter",
-    },
-    body: JSON.stringify(body),
-  });
-}
+  if (process.env.OPENROUTER_SITE_URL) {
+    headers["HTTP-Referer"] = process.env.OPENROUTER_SITE_URL;
+  }
+  if (process.env.OPENROUTER_SITE_NAME) {
+    headers["X-Title"] = process.env.OPENROUTER_SITE_NAME;
+  }
 
-async function fetchWithRetry(url, init, maxAttempts = 5) {
+  // bounded retries with exponential backoff + jitter
+  const maxAttempts = 5;
   let attempt = 0;
-  let lastErr = null;
+  let lastErr;
 
   while (attempt < maxAttempts) {
+    attempt++;
     try {
-      const res = await fetch(url, init);
+      const body = {
+        model: MODEL,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
+      };
+
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+
       if (res.status === 429 || (res.status >= 500 && res.status <= 599)) {
-        const retryAfter = Number(res.headers.get("retry-after")) || 0;
-        const delayMs =
-          (retryAfter ? retryAfter * 1000 : 1000 * Math.pow(2, attempt)) +
-          Math.floor(Math.random() * 250);
+        const retryAfter =
+          parseInt(res.headers.get("retry-after") || "0", 10) || 0;
+        const base = Math.min(2 ** attempt * 500, 15_000); // cap base at 15s
+        const delay = retryAfter
+          ? retryAfter * 1000
+          : base + Math.floor(Math.random() * 500);
         console.warn(
-          `OpenRouter HTTP ${res.status}; retrying in ${delayMs}ms (attempt ${
-            attempt + 1
-          }/${maxAttempts})`
+          `WARN: OpenRouter ${res.status}. Retrying in ${Math.round(
+            delay / 1000
+          )}s... (attempt ${attempt}/${maxAttempts})`
         );
-        await sleep(delayMs);
-        attempt++;
+        await sleep(delay);
         continue;
       }
 
       if (!res.ok) {
-        const txt = await res.text().catch(() => "");
+        const text = await res.text().catch(() => "");
         throw new Error(
-          `OpenRouter error ${res.status}: ${txt || res.statusText}`
+          `OpenRouter error ${res.status}: ${text?.slice(0, 400)}`
         );
       }
 
       const json = await res.json();
       const content =
-        json?.choices?.[0]?.message?.content ||
-        json?.choices?.[0]?.message?.[0]?.content ||
-        json?.choices?.[0]?.message ||
-        json;
-      const text =
-        typeof content === "string"
-          ? content
-          : Array.isArray(content)
-          ? content.map((c) => c?.text).join("\n")
-          : content?.text;
-      if (!text || typeof text !== "string") {
-        throw new Error("OpenRouter returned an unexpected/non-text response.");
+        json?.choices?.[0]?.message?.content ??
+        json?.choices?.[0]?.content ??
+        "";
+
+      const raw = Array.isArray(content)
+        ? content.map((x) => (typeof x === "string" ? x : x?.text || "")).join("\n")
+        : String(content);
+
+      const clean = stripCodeFences(raw);
+      if (!clean) throw new Error("Empty JSON response from model.");
+      let parsed;
+      try {
+        parsed = JSON.parse(clean);
+      } catch (e) {
+        // Sometimes models wrap single JSON object in text. Try to find a JSON object.
+        const start = clean.indexOf("{");
+        const end = clean.lastIndexOf("}");
+        if (start >= 0 && end > start) {
+          const sub = clean.slice(start, end + 1);
+          parsed = JSON.parse(sub);
+        } else {
+          throw e;
+        }
       }
-      // Ensure JSON
-      return JSON.parse(text);
+      return parsed;
     } catch (err) {
       lastErr = err;
-      if (attempt < maxAttempts - 1) {
-        const delayMs = 1000 * Math.pow(2, attempt) + Math.floor(Math.random() * 250);
-        console.warn(
-          `OpenRouter fetch error: ${err?.message || err}. Retrying in ${delayMs}ms (attempt ${
-            attempt + 1
-          }/${maxAttempts})`
-        );
-        await sleep(delayMs);
-        attempt++;
-      } else {
-        break;
-      }
+      if (attempt >= maxAttempts) break;
+      const backoff = Math.min(2 ** attempt * 400, 10_000);
+      await sleep(backoff + Math.floor(Math.random() * 400));
     }
   }
-  throw lastErr || new Error("OpenRouter fetch failed.");
+
+  throw lastErr ?? new Error("Unknown OpenRouter failure.");
 }
 
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
+// ------------------------------ LLM PROMPTS ------------------------------
 
-/* --------------------------- Model Prompting ------------------------------ */
+const SYSTEM_ENUMERATE = `
+You are an expert at converting third‑party tabletop RPG content into NPCs for "Masks: A New Generation" (PbtA).
+You MUST respond with pure JSON (no prose, no code fences).
+`;
 
-const DISCOVER_SYS = `
-You are helping port tabletop RPG villains (NPCs) into a Masks: A New Generation content pack.
-Your job in this step is ONLY to list the NPCs found in the provided text.
+function USER_ENUMERATE(filePath, content) {
+  // Keep prompt lean; the raw content can be large. We trust the model to skim.
+  return `
+From the following source text, enumerate NPCs suitable to port into Masks NPCs.
+For each NPC, return: name (string), realName (string or null), img (string path if given), concept (<=20 words), 
+and optional fields drive, abilities, biography (short strings). Do not invent image paths if none are present.
 
-Rules:
-- Return JSON with a top-level key "npcs".
-- Each item must include:
-  { "name": string, "realName": string (or ""), "img": string (or ""), "notes": string (short) }
-- Do NOT invent NPCs not in the text. If you are unsure, return a single best guess derived from the file's first clear heading.
-- Keep names as they appear (title case).`.trim();
-
-const SYNTH_SYS = `
-You convert ONE villain (NPC) into a Masks: A New Generation NPC spec.
-
-Return a JSON object with this shape:
-
+Return strictly:
 {
-  "npc": {
-    "name": "Villain Name",
-    "realName": "Civilian name or empty string",
-    "img": "te-core-rules path if present, otherwise empty or placeholder",
-    "tags": "comma-separated short tags",
-    "drive": "1 short paragraph (plain text)",
-    "abilitiesHtml": "<p>HTML explaining powers and edges/limits.</p>",
-    "biographyHtml": "<p>HTML short notes/biography.</p>",
-    "villainMoves": [
-      {
-        "name": "Move name",
-        "description": "1–3 sentences, fiction-first. Use Masks GM-move language where useful (e.g., mark a condition (player chooses), separate them, capture someone, escalate stakes)."
-      }
-      // 3–5 total
-    ],
-    "conditionMoves": {
-      "Afraid": "Line tailored to NPC theme; what they do when Afraid.",
-      "Angry": "—",
-      "Guilty": "—",
-      "Hopeless": "—",
-      "Insecure": "—"
+  "npcs": [
+    {
+      "name": "string",
+      "realName": "string|null",
+      "img": "string|null",
+      "concept": "string",
+      "drive": "string|null",
+      "abilities": "string|null",
+      "biography": "string|null"
     }
-  }
+  ]
 }
 
-Hard requirements:
-- Exactly 3–5 villainMoves.
-- Exactly 5 condition moves using keys: Afraid, Angry, Guilty, Hopeless, Insecure.
-- No dice mechanics (no target numbers). Use Masks-style narrative effects and conditions.
-- Keep content self-contained; no references to other systems.`.trim();
+-- File: ${filePath}
+-- Content Start --
+${content.slice(0, 180000)}
+-- Content End --
+`;
+}
 
-/**
- * Attempt to discover multiple NPCs from file text.
- */
-async function discoverNPCsFromText(text, fallbackName = "Unknown") {
-  const prompt = [
+const SYSTEM_BUILD = `
+You are a senior content designer for "Masks: A New Generation" (PbtA).
+Return JSON ONLY. No explanations. No markdown.
+Rules:
+- Create 3–5 flavorful villain moves (these are GM-style narrative moves, not dice moves).
+- Create 5 condition moves, exactly one for each: Afraid, Angry, Guilty, Hopeless, Insecure.
+- Each move MUST wrap the referenced GM move names in <b>…</b> inside a single <p>…</p> string.
+- Use only these GM move names verbatim: ${GM_TRIGGER_WHITELIST.join(", ")}.
+- Do not include any other keys.
+`;
+
+function USER_BUILD(npc) {
+  return `
+NPC context (from source):
+Name: ${npc.name}
+Real Name: ${npc.realName ?? ""}
+Image Hint: ${npc.img ?? ""}
+Concept: ${npc.concept ?? ""}
+Drive: ${npc.drive ?? ""}
+Abilities: ${npc.abilities ?? ""}
+Bio: ${npc.biography ?? ""}
+
+Return strictly:
+{
+  "villainMoves": [
     {
-      role: "system",
-      content: DISCOVER_SYS,
+      "name": "string",
+      "description_html": "<p>... include 1–2 <b>GM Move</b> tags ...</p>",
+      "gm_triggers": ["One or two from the allowed list"]
+    }
+  ],
+  "conditionMoves": {
+    "Afraid": { "name": "Afraid — <short_verb_phrase>", "description_html": "<p>...</p>", "gm_triggers": ["..."] },
+    "Angry": { "name": "Angry — <short_verb_phrase>", "description_html": "<p>...</p>", "gm_triggers": ["..."] },
+    "Guilty": { "name": "Guilty — <short_verb_phrase>", "description_html": "<p>...</p>", "gm_triggers": ["..."] },
+    "Hopeless": { "name": "Hopeless — <short_verb_phrase>", "description_html": "<p>...</p>", "gm_triggers": ["..."] },
+    "Insecure": { "name": "Insecure — <short_verb_phrase>", "description_html": "<p>...</p>", "gm_triggers": ["..."] }
+  },
+  "details": {
+    "drive": "1–4 short bullets or sentences",
+    "abilities": "short HTML allowed",
+    "biography": "1–3 sentences"
+  }
+}
+`;
+}
+
+// ------------------------------ VALIDATION & SYNTHESIS ------------------------------
+
+function coerceGMTriggers(trigs) {
+  const arr = Array.isArray(trigs) ? trigs : [];
+  const filtered = arr.filter((t) => GM_TRIGGER_WHITELIST.includes(t));
+  if (filtered.length === 0) {
+    // sensible defaults
+    return ["Inflict a Condition"];
+  }
+  if (filtered.length > 2) return filtered.slice(0, 2);
+  return filtered;
+}
+
+function ensureVillainMoves(moves) {
+  const v = Array.isArray(moves) ? moves : [];
+  let out = v
+    .map((m) => ({
+      name: String(m?.name ?? "").trim() || "Villain Tactic",
+      gm_triggers: coerceGMTriggers(m?.gm_triggers),
+      description_html: ensureSingleParagraphHTML(
+        wrapGMTriggersBold(String(m?.description_html ?? "").trim(), coerceGMTriggers(m?.gm_triggers))
+      ),
+    }))
+    .filter((m) => m.name && m.description_html);
+
+  // Ensure 3–5 entries
+  if (out.length < 3) {
+    while (out.length < 3) {
+      out.push({
+        name: `Villain Gambit ${out.length + 1}`,
+        gm_triggers: ["Inflict a Condition"],
+        description_html: "<p>A ruthless push that <b>Inflict a Condition</b> unless the heroes accept a hard cost.</p>",
+      });
+    }
+  } else if (out.length > 5) {
+    out = out.slice(0, 5);
+  }
+  return out;
+}
+
+function ensureConditionMoves(cond) {
+  const defaults = {
+    Afraid: {
+      name: "Afraid — Flinch from the Blow",
+      gm_triggers: ["Put Innocents in Danger"],
+      description_html:
+        "<p>Hesitation opens a gap; the scene shifts to <b>Put Innocents in Danger</b> unless someone steps up and owns the risk.</p>",
     },
-    {
-      role: "user",
-      content: [
-        {
-          type: "text",
-          text:
-            "Source text snippet (the model may only see the first ~65k chars):\n\n" +
-            limitChars(text, 65000),
-        },
-      ],
+    Angry: {
+      name: "Angry — Smash First, Ask Later",
+      gm_triggers: ["Show the Costs of Collateral Damage"],
+      description_html:
+        "<p>Rage hits the wrong target; highlight fallout to <b>Show the Costs of Collateral Damage</b> in the environment.</p>",
     },
+    Guilty: {
+      name: "Guilty — Overcorrect in Public",
+      gm_triggers: ["Take Influence over Someone"],
+      description_html:
+        "<p>Contrition plays on‑camera; an adult or rival seizes the narrative to <b>Take Influence over Someone</b>.</p>",
+    },
+    Hopeless: {
+      name: "Hopeless — Fade Between Panels",
+      gm_triggers: ["Make Them Pay a Price for Victory"],
+      description_html:
+        "<p>They consider bowing out; offer success but <b>Make Them Pay a Price for Victory</b> to stay engaged.</p>",
+    },
+    Insecure: {
+      name: "Insecure — Second‑Guess and Stall",
+      gm_triggers: ["Tell Them the Possible Consequences—and Ask"],
+      description_html:
+        "<p>Self‑doubt stalls momentum; lay it out with <b>Tell Them the Possible Consequences—and Ask</b>.</p>",
+    },
+  };
+
+  const out = {};
+  for (const key of ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"]) {
+    const m = cond?.[key] ?? {};
+    const name =
+      String(m?.name ?? "").trim() ||
+      defaults[key].name;
+    const gm_triggers = coerceGMTriggers(m?.gm_triggers);
+    const desc =
+      String(m?.description_html ?? "").trim() ||
+      defaults[key].description_html;
+    out[key] = {
+      name,
+      gm_triggers,
+      description_html: ensureSingleParagraphHTML(
+        wrapGMTriggersBold(desc, gm_triggers)
+      ),
+    };
+  }
+  return out;
+}
+
+function paraphrasedBaselineGMMoves() {
+  // Slightly reworded to avoid verbatim copying the example text.
+  const scaffold = (name, text, iconKey = name) => ({
+    name,
+    moveType: "",
+    description_html: ensureSingleParagraphHTML(wrapGMTriggersBold(text, [name])),
+    icon: ICONS[iconKey] || ICONS.default,
+  });
+
+  return [
+    scaffold(
+      "Inflict a Condition",
+      "Lean on the fiction: push emotions to the surface and <b>Inflict a Condition</b> unless the heroes accept a costly compromise."
+    ),
+    scaffold(
+      "Take Influence over Someone",
+      "Frame the moment so an adult or rival can <b>Take Influence over Someone</b>—or the target marks a fitting Condition to resist."
+    ),
+    scaffold(
+      "Capture Someone",
+      "Separate or restrain a target; they must concede position or resources to avoid <b>Capture Someone</b>."
+    ),
+    scaffold(
+      "Put Innocents in Danger",
+      "Turn the spotlight toward bystanders and <b>Put Innocents in Danger</b>, forcing tough choices or a split focus."
+    ),
+    scaffold(
+      "Show the Costs of Collateral Damage",
+      "Make the fallout vivid; structures crack and gear fails to <b>Show the Costs of Collateral Damage</b> right now."
+    ),
+    scaffold(
+      "Tell Them the Possible Consequences—and Ask",
+      "Present the stakes plainly—<b>Tell Them the Possible Consequences—and Ask</b>: do they still go through with it?"
+    ),
   ];
+}
+
+// ------------------------------ TEMPLATE LOAD ------------------------------
+
+async function loadTemplate() {
   try {
-    const json = await openrouterChatJSON(prompt);
-    if (json && Array.isArray(json.npcs) && json.npcs.length) {
-      return json.npcs.map((n) => ({
-        name: (n?.name || fallbackName).toString().trim(),
-        realName: (n?.realName || "").toString(),
-        img: (n?.img || "").toString(),
-        notes: (n?.notes || "").toString(),
-      }));
-    }
+    const raw = await fsp.readFile(TEMPLATE_PATH, "utf8");
+    const tpl = JSON.parse(raw);
+    return tpl;
   } catch (e) {
-    console.warn(
-      "NPC discovery via OpenRouter failed; will fallback to single-NPC mode.",
-      e.message || e
+    console.error(
+      `ERROR: Could not read template at ${TEMPLATE_PATH}. Place ./example-npc.json at repo root.`
     );
+    process.exit(1);
   }
-  // Fallback: single NPC, name from file
-  return [{ name: fallbackName, realName: "", img: "", notes: "" }];
 }
 
-/**
- * Synthesize one NPC spec for a single target NPC name.
- */
-async function synthesizeNpcSpec(fullText, targetName, hints = {}) {
-  const prompt = [
-    { role: "system", content: SYNTH_SYS },
-    {
-      role: "user",
-      content: [
-        {
-          type: "text",
-          text:
-            `Target NPC Name: ${targetName}\n` +
-            `Any hints (may be empty): ${JSON.stringify(hints)}\n\n` +
-            `Source text (truncated if large):\n\n` +
-            limitChars(fullText, 65000),
-        },
-      ],
-    },
-  ];
-  const json = await openrouterChatJSON(prompt, { temperature: 0.35 });
-  return json?.npc;
-}
+// ------------------------------ ACTOR BUILD ------------------------------
 
-/* ----------------------- Foundry JSON Construction ------------------------ */
-
-/** MoveResult block per schema */
-function buildMoveResults() {
-  return {
-    failure: {
-      key: "system.moveResults.failure.value",
-      label: "Complications...",
-      value: "",
-    },
-    partial: {
-      key: "system.moveResults.partial.value",
-      label: "Partial success",
-      value: "",
-    },
-    success: {
-      key: "system.moveResults.success.value",
-      label: "Success!",
-      value: "",
-    },
-  };
-}
-
-/** Minimal _stats block for Items */
-function itemStats() {
-  return {
-    compendiumSource: null,
-    duplicateSource: null,
-    exportSource: null,
-    coreVersion: CORE_VERSION,
-    systemId: SYSTEM_ID,
-    systemVersion: SYSTEM_VERSION,
-    lastModifiedBy: generate16CharUUID(), // harmless placeholder
-  };
-}
-
-/** Minimal _stats block for Actor */
-function actorStats(actorId) {
-  const now = nowMs();
-  return {
-    compendiumSource: null,
-    duplicateSource: null,
-    exportSource: {
-      worldId: "v1",
-      uuid: `Actor.${actorId}`,
-      coreVersion: CORE_VERSION,
-      systemId: SYSTEM_ID,
-      systemVersion: SYSTEM_VERSION,
-    },
-    coreVersion: CORE_VERSION,
-    systemId: SYSTEM_ID,
-    systemVersion: SYSTEM_VERSION,
-    createdTime: now,
-    modifiedTime: now,
-    lastModifiedBy: generate16CharUUID(),
-  };
-}
-
-/** Baseline GM moves we must always include (unchanged) */
-const BASELINE_GM_MOVES = [
-  {
-    name: "Inflict a Condition",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/convince-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: have the villain’s actions cause a hero to <b>mark a condition</b> in the fiction (fear, anger, guilt, hopelessness, insecurity) as appropriate.</p>",
+const BASE_MOVE_RESULTS = {
+  failure: {
+    key: "system.moveResults.failure.value",
+    label: "Complications...",
+    value: ""
   },
-  {
-    name: "Take Influence",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: show the villain <b>seizing Influence</b> over a hero through awe, shame, or negotiation, shifting Labels or pressuring choices per Masks rules.</p>",
+  partial: {
+    key: "system.moveResults.partial.value",
+    label: "Partial success",
+    value: ""
   },
-  {
-    name: "Capture Someone",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: separate or restrain a target via the villain’s tools, powers, or environment, per the scene’s fiction.</p>",
-  },
-  {
-    name: "Put Innocents in Danger",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: the chase or assault endangers bystanders, forcing hard choices or splitting the team, per Masks GM guidance.</p>",
-  },
-  {
-    name: "Show the Costs of Collateral Damage",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: spotlight cracked walls, failing structures, and endangered exhibits—escalating stakes in the environment.</p>",
-  },
-  {
-    name: "Tell Them Possible Consequences and Ask",
-    img: "modules/masks-newgeneration-unofficial/images/gameicons/death-note-#ffffff-#3da7db.svg",
-    description:
-      "<p>Baseline GM option: lay out what choosing to press on or to retreat will cost, and ask what they do now, per GM principles.</p>",
-  },
-];
-
-/** Icon chooser by keywords */
-function chooseIconForMove(name = "", description = "") {
-  const s = `${name} ${description}`.toLowerCase();
-
-  const map = [
-    { k: ["scream", "shriek", "shout"], i: "screaming-#ffffff-#3da7db.svg" },
-    { k: ["gaze", "stare", "eye"], i: "eye-target-#ffffff-#3da7db.svg" },
-    { k: ["illusion", "invisible", "stealth"], i: "suspicious-#ffffff-#3da7db.svg" },
-    { k: ["shield", "block", "reflect"], i: "shield-reflect-#ffffff-#3da7db.svg" },
-    { k: ["chain", "bind", "trap", "capture"], i: "arrest-#ffffff-#3da7db.svg" },
-    { k: ["portal", "gate", "rift"], i: "magic-portal-#ffffff-#3da7db.svg" },
-    { k: ["hex", "curse", "spell", "witch"], i: "aura-#ffffff-#3da7db.svg" },
-    { k: ["rock", "stone", "golem", "petrify"], i: "rock-golem-#ffffff-#3da7db.svg" },
-    { k: ["speed", "rush", "charge"], i: "wide-arrow-dunk-#ffffff-#3da7db.svg" },
-    { k: ["network", "signal", "surveil"], i: "cctv-camera-#ffffff-#3da7db.svg" },
-  ];
-
-  for (const { k, i } of map) {
-    if (k.some((w) => s.includes(w))) {
-      return `modules/masks-newgeneration-unofficial/images/gameicons/${i}`;
-    }
+  success: {
+    key: "system.moveResults.success.value",
+    label: "Success!",
+    value: ""
   }
-  // Default
-  return "modules/masks-newgeneration-unofficial/images/gameicons/convince-#ffffff-#3da7db.svg";
-}
+};
 
-function toHtmlParagraph(s) {
-  const t = (s || "").trim();
-  if (!t) return "";
-  if (/^<p>/i.test(t)) return t;
-  return `<p>${escapeHtml(t)}</p>`;
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-/** Build one Item (move) */
-function buildMoveItem({ name, moveType, description, img, sort }) {
-  const _id = generate16CharUUID();
-  const item = {
+function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
+  const id = generate16CharUUID();
+  return {
     name,
     type: "npcMove",
     system: {
-      moveType,
-      description,
+      moveType: moveType ?? "",
+      description: description_html,
       rollFormula: "",
-      moveResults: buildMoveResults(),
-      uses: 0,
+      moveResults: deepClone(BASE_MOVE_RESULTS),
+      uses: 0
     },
-    _id,
-    img,
+    _id: id,
+    img: icon || ICONS.default,
     effects: [],
     folder: null,
     sort,
     flags: {},
-    _stats: itemStats(),
-    ownership: { default: 0 },
-    _key: `!items!${_id}`,
+    _stats: {
+      compendiumSource: null,
+      duplicateSource: null,
+      exportSource: null,
+      coreVersion: "13.350",
+      systemId: "pbta",
+      systemVersion: "1.1.22",
+      lastModifiedBy: generate16CharUUID()
+    },
+    ownership: { default: 0 }
   };
-  return item;
 }
 
-/** Build all Items for this NPC: villain moves, condition moves, + baseline GM moves */
-function buildItemsForNpc(villainMoves, conditionMoves) {
-  let sort = 0;
-  const items = [];
+function deriveImagePathHint(text) {
+  // Try to retain te-core-rules like paths in source.
+  const m =
+    text.match(/(modules\/te-core-rules\/[^\s"')]+?\.(?:png|jpg|jpeg|webp|svg))/i) ||
+    text.match(/(modules\/[^\s"')]+?\.(?:png|jpg|jpeg|webp|svg))/i);
+  return m ? m[1] : null;
+}
 
-  // Villain moves
+function buildActorFromTemplate(template, npc, llm) {
+  const actor = deepClone(template);
+
+  // Required changes
+  const actorId = generate16CharUUID();
+  actor._id = actorId;
+  actor.name = npc.name || "Unnamed Villain";
+
+  // IMG: prefer npc.img; else try to derive; else default
+  const img =
+    npc.img ||
+    deriveImagePathHint(npc._sourceText || "") ||
+    "icons/svg/mystery-man.svg";
+  actor.img = img;
+
+  // Real name
+  if (
+    actor?.system?.attributes?.realName &&
+    typeof actor.system.attributes.realName === "object"
+  ) {
+    actor.system.attributes.realName.value = npc.realName || npc.name || "";
+  }
+
+  // Optional details from llm.details
+  const details = llm?.details || {};
+  if (actor?.system?.details) {
+    if (actor.system.details.drive)
+      actor.system.details.drive.value = details.drive || npc.drive || "";
+    if (actor.system.details.abilities)
+      actor.system.details.abilities.value =
+        details.abilities || npc.abilities || "";
+    if (actor.system.details.biography)
+      actor.system.details.biography.value =
+        details.biography || npc.biography || "";
+  }
+
+  // Stats metadata
+  if (actor?._stats) {
+    actor._stats.coreVersion = "13.350";
+    actor._stats.systemId = "pbta";
+    actor._stats.systemVersion = "1.1.22";
+    actor._stats.createdTime = NOW();
+    actor._stats.modifiedTime = NOW();
+    actor._stats.lastModifiedBy = generate16CharUUID();
+  }
+
+  // Prototype token (leave structure; keep its image generic)
+  if (actor?.prototypeToken?.texture) {
+    // keep default icon here; sheet image is from actor.img above
+    actor.prototypeToken.texture.src = "icons/svg/mystery-man.svg";
+  }
+
+  // --- ITEMS: rebuild from scratch ---
+  actor.items = [];
+  let sort = 0;
+
+  // Villain moves 3–5
+  const villainMoves = ensureVillainMoves(llm?.villainMoves);
   for (const vm of villainMoves) {
-    const img = chooseIconForMove(vm.name, vm.description);
-    items.push(
+    const icon = chooseIconFromTriggers(vm.gm_triggers);
+    actor.items.push(
       buildMoveItem({
         name: vm.name,
         moveType: "villain",
-        description: toHtmlParagraph(vm.description),
-        img,
-        sort,
+        description_html: vm.description_html,
+        icon,
+        sort: (sort += 10)
       })
     );
-    sort += 10;
   }
 
-  // Condition moves: order Afraid, Angry, Guilty, Hopeless, Insecure
-  const condOrder = ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"];
-  for (const key of condOrder) {
-    const line = conditionMoves[key] || defaultConditionLine(key);
-    const name = `${key} — ${synthesizeConditionNameTail(key, line)}`;
-    const img = conditionIcon(key);
-    items.push(
+  // Condition moves (exactly 5)
+  const conditions = ensureConditionMoves(llm?.conditionMoves);
+  for (const cname of ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"]) {
+    const m = conditions[cname];
+    actor.items.push(
       buildMoveItem({
-        name,
+        name: m.name,
         moveType: "condition",
-        description: toHtmlParagraph(line),
-        img,
-        sort,
+        description_html: m.description_html,
+        icon: CONDITION_ICONS[cname] || ICONS.default,
+        sort: (sort += 10)
       })
     );
-    sort += 10;
   }
 
-  // Baseline GM moves (unchanged)
-  for (const gm of BASELINE_GM_MOVES) {
-    items.push(
+  // Baseline GM options (preserved, paraphrased)
+  for (const gm of paraphrasedBaselineGMMoves()) {
+    actor.items.push(
       buildMoveItem({
         name: gm.name,
         moveType: "",
-        description: gm.description,
-        img: gm.img,
-        sort,
+        description_html: gm.description_html,
+        icon: gm.icon,
+        sort: (sort += 10)
       })
     );
-    sort += 10;
   }
 
-  return items;
+  return actor;
 }
 
-function conditionIcon(cond) {
-  const map = {
-    Afraid:
-      "modules/masks-newgeneration-unofficial/images/gameicons/surprised-#ffffff-#3da7db.svg",
-    Angry:
-      "modules/masks-newgeneration-unofficial/images/gameicons/enrage-#ffffff-#3da7db.svg",
-    Guilty:
-      "modules/masks-newgeneration-unofficial/images/gameicons/robber-#ffffff-#3da7db.svg",
-    Hopeless:
-      "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-#ffffff-#3da7db.svg",
-    Insecure:
-      "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
-  };
-  return map[cond] || chooseIconForMove(cond, "");
-}
+// ------------------------------ PIPELINE ------------------------------
 
-function defaultConditionLine(cond) {
-  // Short, system-friendly defaults (will be replaced if model provided content)
-  const defaults = {
-    Afraid:
-      "They retreat behind tricks or misdirection. To reach them, heroes brave confusion or speak a vulnerable truth; otherwise they buy time to reposition.",
-    Angry:
-      "They lash out at symbols of the team’s pride. Someone must defuse them with honesty or a daring action, or mark a condition from public humiliation.",
-    Guilty:
-      "They mend a harm they caused and offer a vulnerable apology. If accepted, clear one of their conditions and give that hero a chance to use Influence.",
-    Hopeless:
-      "They try to remove themselves—or a foe—from the scene entirely. Unless interrupted within a beat, the target exits; if intercepted, they mark a condition.",
-    Insecure:
-      "Overcompensating, they reignite a resolved complication. A hazard or rival returns, now angrier and more immediate.",
-  };
-  return defaults[cond] || "They act accordingly to the condition in a way that escalates stakes.";
-}
+async function enumerateNPCsFromText(filePath, text) {
+  if (!text || text.trim().length < 30) return [];
 
-function synthesizeConditionNameTail(cond, line) {
-  const quick = {
-    Afraid: "Fade Into Misdirection",
-    Angry: "Smash and Shame",
-    Guilty: "Atoning Gesture",
-    Hopeless: "Slip Through the Gutters",
-    Insecure: "Relight Old Fires",
-  };
-  return quick[cond] || "Embody the Condition";
-}
+  const payload = await callOpenRouterJSON({
+    system: SYSTEM_ENUMERATE,
+    user: USER_ENUMERATE(filePath, text)
+  });
 
-function buildPrototypeToken(actorImg) {
-  return {
-    name: "Villain",
-    displayName: 0,
-    actorLink: false,
-    width: 1,
-    height: 1,
-    texture: {
-      src: actorImg || "icons/svg/mystery-man.svg",
-      anchorX: 0.5,
-      anchorY: 0.5,
-      offsetX: 0,
-      offsetY: 0,
-      fit: "contain",
-      scaleX: 1,
-      scaleY: 1,
-      rotation: 0,
-      tint: "#ffffff",
-      alphaThreshold: 0.75,
-    },
-    lockRotation: false,
-    rotation: 0,
-    alpha: 1,
-    disposition: -1,
-    displayBars: 0,
-    bar1: { attribute: null },
-    bar2: { attribute: null },
-    light: {
-      negative: false,
-      priority: 0,
-      alpha: 0.5,
-      angle: 360,
-      bright: 0,
-      color: null,
-      coloration: 1,
-      dim: 0,
-      attenuation: 0.5,
-      luminosity: 0.5,
-      saturation: 0,
-      contrast: 0,
-      shadows: 0,
-      animation: { type: null, speed: 5, intensity: 5, reverse: false },
-      darkness: { min: 0, max: 1 },
-    },
-    sight: {
-      enabled: false,
-      range: 0,
-      angle: 360,
-      visionMode: "basic",
-      color: null,
-      attenuation: 0.1,
-      brightness: 0,
-      saturation: 0,
-      contrast: 0,
-    },
-    detectionModes: [],
-    occludable: { radius: 0 },
-    ring: {
-      enabled: false,
-      colors: { ring: null, background: null },
-      effects: 1,
-      subject: { scale: 1, texture: null },
-    },
-    turnMarker: { mode: 1, animation: null, src: null, disposition: false },
-    movementAction: null,
-    flags: {},
-    randomImg: false,
-    appendNumber: false,
-    prependAdjective: false,
-  };
-}
+  const npcs = Array.isArray(payload?.npcs) ? payload.npcs : [];
 
-function buildActorDocument({
-  name,
-  realName,
-  img,
-  drive,
-  abilitiesHtml,
-  biographyHtml,
-  tags,
-  villainMoves,
-  conditionMoves,
-}) {
-  const actorId = generate16CharUUID();
-  const actorImg = img?.trim() || "icons/svg/mystery-man.svg";
-  const doc = {
-    _id: actorId,
-    _key: `!actors!${actorId}`,
-    name,
-    type: "npc",
-    img: actorImg,
-    system: {
-      stats: {},
-      attributes: {
-        conditions: {
-          label: "Conditions",
-          description: "Choose all that apply:",
-          customLabel: false,
-          userLabel: false,
-          type: "ListMany",
-          condition: false,
-          position: "Left",
-          options: {
-            0: { label: "Afraid", value: false },
-            1: { label: "Angry", value: false },
-            2: { label: "Guilty", value: false },
-            3: { label: "Hopeless", value: false },
-            4: { label: "Insecure", value: false },
-          },
-        },
-        realName: {
-          label: "Real Name",
-          description: null,
-          customLabel: false,
-          userLabel: false,
-          type: "Text",
-          value: realName || "",
-          position: "Left",
-        },
-        generation: {
-          label: "Generation",
-          description: null,
-          customLabel: false,
-          userLabel: false,
-          type: "Text",
-          value: "",
-          position: "Left",
-        },
-      },
-      attrLeft: {},
-      attrTop: {},
-      details: {
-        drive: { label: "Drive", value: drive || "" },
-        abilities: {
-          label: "Abilities",
-          value:
-            abilitiesHtml?.trim() ||
-            "<p>Powers, edges, and limits described here.</p>",
-        },
-        biography: {
-          label: "Notes",
-          value: biographyHtml?.trim() || "",
-        },
-      },
-      tags: (tags || "").toString(),
-    },
-    prototypeToken: buildPrototypeToken(actorImg),
-    items: buildItemsForNpc(villainMoves, conditionMoves),
-    effects: [],
-    folder: null,
-    flags: {},
-    _stats: actorStats(actorId),
-    baseType: "npc",
-    ownership: { default: 0 },
-  };
-  return doc;
-}
-
-/* --------------------------- Validation & Fixups -------------------------- */
-
-function validateAndFixNpcSpec(npc, fallbackName) {
-  const out = { ...npc };
-
-  // Name
-  if (!out.name || typeof out.name !== "string") {
-    out.name = fallbackName || "Unknown";
-  }
-  out.name = out.name.trim();
-
-  // realName
-  if (typeof out.realName !== "string") out.realName = "";
-
-  // img retention (te-core-rules path if present)
-  if (typeof out.img !== "string") out.img = "";
-  if (IMAGE_ROOT && out.img && !out.img.startsWith("http") && !out.img.startsWith("/")) {
-    // prefix relative refs
-    out.img = path.posix.join(IMAGE_ROOT.replace(/\\/g, "/"), out.img);
-  }
-
-  // drive
-  if (typeof out.drive !== "string" || !out.drive.trim()) {
-    out.drive = `Pursue their goals in a way that challenges the team’s values and escalates stakes until confronted.`;
-  }
-
-  // abilitiesHtml / biographyHtml
-  out.abilitiesHtml =
-    typeof out.abilitiesHtml === "string" && out.abilitiesHtml.trim()
-      ? out.abilitiesHtml
-      : "<p>Unique powers and methods that pressure the heroes and the setting.</p>";
-
-  out.biographyHtml =
-    typeof out.biographyHtml === "string" ? out.biographyHtml : "";
-
-  // Villain moves: ensure 3–5; synthesize if needed
-  if (!Array.isArray(out.villainMoves)) out.villainMoves = [];
-  out.villainMoves = out.villainMoves
-    .map((m) => ({
-      name: (m?.name || "").toString().trim(),
-      description: (m?.description || "").toString().trim(),
+  // Light validation & clipping if a model returns too many.
+  const clean = npcs
+    .map((n) => ({
+      name: String(n?.name ?? "").trim(),
+      realName: n?.realName ? String(n.realName).trim() : null,
+      img: n?.img ? String(n.img).trim() : null,
+      concept: n?.concept ? String(n.concept).trim() : "",
+      drive: n?.drive ? String(n.drive).trim() : "",
+      abilities: n?.abilities ? String(n.abilities).trim() : "",
+      biography: n?.biography ? String(n.biography).trim() : "",
+      _sourceText: text.slice(0, 200000) // hold for potential image path derivation
     }))
-    .filter((m) => m.name && m.description);
+    .filter((n) => n.name);
 
-  const need = clamp(3 - out.villainMoves.length, 0, 3);
-  for (let i = 0; i < need; i++) {
-    out.villainMoves.push(synthesizeGenericVillainMove(out.name, i));
-  }
-  if (out.villainMoves.length > 5) {
-    out.villainMoves = out.villainMoves.slice(0, 5);
+  // If none found, return empty.
+  return clean.slice(0, 50);
+}
+
+async function generateNPCMoves(npc) {
+  const payload = await callOpenRouterJSON({
+    system: SYSTEM_BUILD,
+    user: USER_BUILD(npc)
+  });
+
+  // Validate & coerce
+  const villainMoves = ensureVillainMoves(payload?.villainMoves);
+  const conditionMoves = ensureConditionMoves(payload?.conditionMoves);
+  const details = {
+    drive: String(payload?.details?.drive ?? "").trim(),
+    abilities: String(payload?.details?.abilities ?? "").trim(),
+    biography: String(payload?.details?.biography ?? "").trim()
+  };
+  return { villainMoves, conditionMoves, details };
+}
+
+async function processFile(template, filePath) {
+  console.log(`\n— Processing file: ${filePath}`);
+  const text = await extractTextFromFile(filePath);
+  if (!text) {
+    console.warn(`WARN: No readable content: ${filePath}`);
+    return;
   }
 
-  // Condition moves: ensure 5 keys
-  out.conditionMoves = out.conditionMoves || {};
-  const conds = ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"];
-  for (const c of conds) {
-    if (!out.conditionMoves[c] || typeof out.conditionMoves[c] !== "string") {
-      out.conditionMoves[c] = defaultConditionLine(c);
+  // 1) Enumerate NPCs for this file
+  let npcs = [];
+  try {
+    npcs = await enumerateNPCsFromText(filePath, text);
+  } catch (e) {
+    console.warn(`WARN: Failed to enumerate NPCs in ${filePath}: ${e.message}`);
+    return;
+  }
+
+  if (!npcs.length) {
+    console.warn(`WARN: No NPCs found in ${filePath}.`);
+    return;
+  }
+
+  // 2) Per‑NPC request for consistency
+  for (const npc of npcs) {
+    try {
+      console.log(`  • Porting NPC: ${npc.name}`);
+      const llm = await generateNPCMoves(npc);
+      const actor = buildActorFromTemplate(template, npc, llm);
+
+      // Enforce fresh 16‑char actor ID and items ID already handled
+      if (!isValid16CharUUID(actor._id)) {
+        const newId = generate16CharUUID();
+        console.warn(
+          `    WARN: Actor ID invalid; reminting ${actor._id} → ${newId}`
+        );
+        actor._id = newId;
+      }
+
+      const safe = toSafeFileStub(actor.name);
+      const fname = `npc_${safe}_${actor._id}.json`;
+      const outPath = path.join(OUT_DIR, fname);
+
+      if (!DRY_RUN) {
+        await fsp.mkdir(OUT_DIR, { recursive: true });
+        await fsp.writeFile(outPath, JSON.stringify(actor, null, 2), "utf8");
+      }
+      console.log(`    ✓ Wrote ${DRY_RUN ? "(dry) " : ""}${outPath}`);
+    } catch (e) {
+      console.warn(
+        `  WARN: Failed to port NPC "${npc?.name ?? "unknown"}" from ${path.basename(
+          filePath
+        )}: ${e.message}`
+      );
+      // continue to next NPC
     }
   }
-
-  // tags
-  if (typeof out.tags !== "string") {
-    out.tags = "villain";
-  }
-
-  return out;
 }
 
-function clamp(n, min, max) {
-  return Math.max(min, Math.min(max, n));
+// Simple concurrency runner
+async function runWithConcurrency(tasks, limit) {
+  const results = [];
+  let i = 0;
+  let active = 0;
+
+  return new Promise((resolve) => {
+    const next = () => {
+      if (i >= tasks.length && active === 0) return resolve(results);
+      while (active < limit && i < tasks.length) {
+        const idx = i++;
+        active++;
+        tasks[idx]()
+          .then((res) => results.push(res))
+          .catch(() => results.push(null))
+          .finally(() => {
+            active--;
+            next();
+          });
+      }
+    };
+    next();
+  });
 }
 
-function synthesizeGenericVillainMove(name, idx) {
-  const bases = [
-    {
-      name: "Seize the Spotlight",
-      description:
-        "They force a dramatic turn—split the team or isolate a leader; anyone who stays to contest marks a condition (player chooses).",
-    },
-    {
-      name: "Collateral Crescendo",
-      description:
-        "They escalate environmental danger—collapsing structures, unruly crowds, or failing systems—demanding immediate choices or concessions.",
-    },
-    {
-      name: "Strings and Levers",
-      description:
-        "They pull on Influence and reputations; shift a hero’s Labels (fictionally justified) or present a bargain with strings attached.",
-    },
-    {
-      name: "No Clean Shots",
-      description:
-        "They negate a hero’s edge or tool for a beat, forcing a new approach or a risky move to regain initiative.",
-    },
-    {
-      name: "Vanish on Their Terms",
-      description:
-        "On a beat, they create an exit—smoke, crowd, rift. Pursuit requires marking a condition or leaving someone/something behind.",
-    },
-  ];
-  // Pick by index, rotate
-  const pick = bases[idx % bases.length];
-  // Minor flavor tag
-  return {
-    name: pick.name,
-    description: pick.description,
-  };
-}
-
-/* ------------------------------- Main Flow -------------------------------- */
+// ------------------------------ MAIN ------------------------------
 
 async function main() {
-  console.log("=== Masks NPC Porter (OpenRouter • Gemini 2.5 Pro) ===");
-  console.log(`Input Dir:  ${IN_DIR}`);
-  console.log(`Output Dir: ${OUT_DIR}`);
-  console.log(`Multi-NPC discovery: ${MULTI ? "ON" : "OFF"}`);
-  if (IMAGE_ROOT) console.log(`Image Root Prefix: ${IMAGE_ROOT}`);
-  if (DRY_RUN) console.log(`DRY RUN (no files will be written)`);
+  console.log("Masks NPC Porter — OpenRouter (Gemini 2.5 Pro)");
+  console.log(`Model: ${MODEL}`);
+  console.log(`Input dir:  ${IN_DIR}`);
+  console.log(`Output dir: ${OUT_DIR}${DRY_RUN ? " (dry run)" : ""}`);
+  console.log(`Template:   ${TEMPLATE_PATH}`);
+  console.log(`Concurrency:${CONCURRENCY}`);
+  console.log(`Pattern:    ${FILE_PATTERN}`);
 
-  await ensureDir(OUT_DIR);
+  const template = await loadTemplate();
 
-  let processedActors = 0;
-  let failedActors = 0;
-
-  for await (const filePath of walkFiles(IN_DIR)) {
-    const ext = extOf(filePath);
-    if (![".pdf", ".txt", ".md"].includes(ext)) continue;
-
-    const base = path.basename(filePath);
-    console.log(`\n— Processing source: ${base}`);
-
-    try {
-      const text = await readSourceFileAsText(filePath);
-      const defaultName = titleFromFile(base);
-
-      let candidates = [{ name: defaultName, realName: "", img: "", notes: "" }];
-      if (MULTI) {
-        candidates = await discoverNPCsFromText(text, defaultName);
-        if (!Array.isArray(candidates) || !candidates.length) {
-          candidates = [{ name: defaultName, realName: "", img: "", notes: "" }];
-        }
-      }
-
-      for (const cand of candidates) {
-        try {
-          const npcRaw =
-            (await synthesizeNpcSpec(text, cand.name, cand)) ||
-            fallbackMinimalNpc(cand.name, cand.realName, cand.img);
-
-          const npc = validateAndFixNpcSpec(npcRaw, cand.name);
-          const actorDoc = buildActorDocument(npc);
-          const outName = `npc_${safeFileBase(actorDoc.name)}_${actorDoc._id}.json`;
-          const outPath = path.join(OUT_DIR, outName);
-
-          if (!DRY_RUN) {
-            await writeFile(outPath, JSON.stringify(actorDoc, null, 2), "utf-8");
-          }
-          console.log(`  ✓ ${actorDoc.name} -> ${DRY_RUN ? "(dry run)" : outPath}`);
-          processedActors++;
-        } catch (e) {
-          console.warn(
-            `  ! Failed to port NPC '${cand?.name || "Unknown"}' from ${base}:`,
-            e?.message || e
-          );
-          failedActors++;
-          // continue to next candidate
-        }
-      }
-    } catch (err) {
-      console.warn(`! Skipping file due to error: ${base}:`, err?.message || err);
-    }
+  // Gather input files
+  let files = [];
+  try {
+    files = await listFilesRecursively(IN_DIR, FILE_PATTERN);
+  } catch (e) {
+    console.error(`ERROR: Could not read input directory: ${e.message}`);
+    process.exit(1);
+  }
+  if (!files.length) {
+    console.warn("WARN: No input files found.");
+    return;
   }
 
-  console.log(
-    `\n=== Done. Actors created: ${processedActors}. Failures: ${failedActors}. ===`
-  );
+  // Create tasks
+  const tasks = files.map((file) => () => processFile(template, file));
+  await runWithConcurrency(tasks, CONCURRENCY);
+
+  console.log("\nDone.");
 }
 
-function titleFromFile(base) {
-  const stem = base.replace(/\.[^.]+$/, "");
-  // Attempt to prettify: split on non-alnum and title case
-  const name = stem
-    .split(/[_\-\.\s]+/)
-    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ""))
-    .join(" ");
-  return name || "Unknown";
-}
-
-function fallbackMinimalNpc(name, realName = "", img = "") {
-  return {
-    name: name || "Unknown",
-    realName: realName || "",
-    img: img || "",
-    tags: "villain",
-    drive:
-      "Impose their will on Halcyon City through spectacle and pressure, until confronted or outmaneuvered.",
-    abilitiesHtml:
-      "<p>Striking abilities suited to challenge the team; edges and limits that invite tough choices.</p>",
-    biographyHtml:
-      "<p>Notes and history about the villain’s methods, ties, and ambitions.</p>",
-    villainMoves: [
-      synthesizeGenericVillainMove(name, 0),
-      synthesizeGenericVillainMove(name, 1),
-      synthesizeGenericVillainMove(name, 2),
-    ],
-    conditionMoves: {
-      Afraid: defaultConditionLine("Afraid"),
-      Angry: defaultConditionLine("Angry"),
-      Guilty: defaultConditionLine("Guilty"),
-      Hopeless: defaultConditionLine("Hopeless"),
-      Insecure: defaultConditionLine("Insecure"),
-    },
-  };
-}
-
-/* --------------------------------- Start ---------------------------------- */
 main().catch((e) => {
-  console.error("Fatal error:", e?.message || e);
+  console.error(`FATAL: ${e.message}`);
   process.exit(1);
 });
