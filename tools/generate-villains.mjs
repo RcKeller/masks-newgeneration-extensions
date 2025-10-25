@@ -431,6 +431,11 @@ function buildVariants(trigger, anchor) {
   return [...new Set(base.map((s) => String(s)))];
 }
 
+/**
+ * FIXED: Link **all** recognized GM phrases, not just those listed in gmTriggers.
+ * - We scan the prose for recognizable GM phrases (variants), combine with gmTriggers, then link all.
+ * - We still avoid adding “Make a Villain Move” if it wasn’t already in gmTriggers (so villain moves don’t re‑gain it).
+ */
 function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   // Ensure single paragraph and sanitize bold
   let wrapped = ensureSingleParagraphHTML(htmlWithP);
@@ -439,9 +444,33 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   const matchP = wrapped.match(/^<p>([\s\S]*?)<\/p>$/i);
   let inner = matchP ? matchP[1] : wrapped;
 
-  // process up to 2 triggers inline
-  const unique = [...new Set((gmTriggers || []).filter(Boolean))].slice(0, 2);
-  for (const trig of unique) {
+  // --- NEW: discover any GM phrases already present in the text (in reading order)
+  const gmList = [...new Set((gmTriggers || []).filter(Boolean))];
+  const disallowVillainMove = !gmList.includes("Make a Villain Move");
+
+  const discoveredOrdered = (() => {
+    const occurrences = [];
+    for (const trig of Object.keys(GM_UUID_MAP)) {
+      if (disallowVillainMove && trig === "Make a Villain Move") continue;
+      const anchor = GM_ANCHOR_TEXT[trig] || trig;
+      const variants = buildVariants(trig, anchor);
+      let bestIndex = -1;
+      for (const v of variants) {
+        const re = new RegExp(`(<b>)?${escapeRegex(v)}(</b>)?`, "i");
+        const m = re.exec(inner);
+        if (m) { bestIndex = m.index; break; }
+      }
+      if (bestIndex >= 0) occurrences.push({ trig, index: bestIndex });
+    }
+    occurrences.sort((a, b) => a.index - b.index);
+    return occurrences.map(o => o.trig);
+  })();
+
+  // Combine gmTriggers (priority) with discovered (reading order), then dedupe
+  const toProcess = [...new Set([...gmList, ...discoveredOrdered])];
+
+  // Link each matched trigger once where it appears (no cap now)
+  for (const trig of toProcess) {
     const target = getUUIDTargetForTrigger(trig);
     if (!target) continue;
 
