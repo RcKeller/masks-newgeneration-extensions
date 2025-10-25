@@ -106,7 +106,7 @@ const getFlag = (name, def = undefined) => {
 
 const IN_DIR        = path.resolve(getFlag("indir", "./src/packs"));
 const OUT_DIR       = path.resolve(getFlag("outdir", "./src/packs/ported"));
-const TEMPLATE_PATH = path.resolve(getFlag("template", "./example-npc.json"));
+const TEMPLATE_PATH = path.resolve(getFlag("template", "./resources/example-villain.json"));
 const MODEL         = getFlag("model", "deepseek/deepseek-chat-v3-0324");
 const CONCURRENCY   = Math.max(1, parseInt(getFlag("concurrency", "2"), 10) || 2);
 const FILE_PATTERN  = getFlag("filePattern", "*");
@@ -351,6 +351,7 @@ function deriveImagePathHint(text) {
 
 // ------------------------------ INLINE UUID LINKING (NEW) ------------------------------
 
+// PROBLEM: This doesn't need to be a straight replacement. I want the GPT to actually have all the UUID options then pick which to use.
 const GM_ANCHOR_TEXT = {
   "Inflict a Condition": "Inflicting a Condition",
   "Take Influence over": "Taking Influence",
