@@ -1389,17 +1389,17 @@ function baselineGMMovesParaphrased() {
     },
     {
         name: "Bring Team Together",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together}</p>",
         icon: ICONS["Bring Them Together"]
     },
     {
         name: "Capture Someone",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone}</p>",
         icon: ICONS["Capture Someone"]
     },
     {
         name: "Put Innocents in Danger",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger}</p>",
         icon: ICONS["Put Innocents in Danger"]
     },
     {
@@ -1419,7 +1419,7 @@ function baselineGMMovesParaphrased() {
     },
     {
         name: "Announce Between-Panel Threats",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats}</p>",
         icon: ICONS["Announce Between‑Panel Threats"]
     },
     {
@@ -1429,17 +1429,17 @@ function baselineGMMovesParaphrased() {
     },
     {
         name: "Counter",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
         icon: "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg"
     },
     {
         name: "Reverse",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
         icon: "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg"
     },
     {
         name: "Possible Consequence...",
-        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask @ GM Moves}</p>",
+        text: "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask}</p>",
         icon: ICONS["Tell Them the Possible Consequences—and Ask"]
     },
     {
