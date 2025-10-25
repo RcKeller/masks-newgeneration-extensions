@@ -137,6 +137,7 @@ const GM_TRIGGER_WHITELIST = [
   "Announce Between‑Panel Threats",
   "Make Them Pay a Price for Victory",
   "Turn Their Move Back on Them",
+  "Trade Blows",
   "Tell Them the Possible Consequences—and Ask",
   "Tell Them Who They Are or Who They Should Be",
   "Bring an NPC to Rash Decisions and Hard Conclusions"
@@ -171,6 +172,9 @@ const GM_UUID_MAP = {
   ],
   "Make a Villain Move": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}"
+  ],
+  "Trade Blows": [
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{Trade blows}"
   ],
   "Make Them Pay a Price for Victory": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}"
@@ -459,7 +463,7 @@ function renderTemplate(tpl, vars) {
 }
 
 const DEFAULT_ENUMERATE_SYSTEM = `
-You convert third‑party TTRPG text into clean NPC catalogs for "Masks: A New Generation" (PbtA).
+You design villains for a TTRPG about superheroes and growing up, the game is called Masks: The New Generation and it is based on Powered by The Apocalpyse.
 Return JSON ONLY. No prose. No markdown.`;
 
 function defaultEnumerateUser(filePath, content) {
@@ -494,11 +498,58 @@ You are a senior content designer for "Masks: A New Generation" (PbtA).
 Return JSON ONLY. No explanations. No markdown.
 
 Rules:
-- Create 3–5 flavorful VILLAIN moves (GM-style narrative, no dice).
+- Create 3–5 flavorful VILLAIN moves (GM-style narrative, no dice rolls) based on the source material.
 - Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure.
-- Each move’s description must be a single <p>…</p> and include 1–2 allowed GM move names (wrapped in <b>…</b>).
+- Each description should have a narrative that incorporates 1–2 allowed GM moves (wrapped in <b>…</b>).
 - Allowed GM moves: ${GM_TRIGGER_WHITELIST.join(", ")}. Use only these verbatim.
-- Keep moves short (1–3 sentences): Trigger → Consequence → Prompt (“What do you do?”).
+- Moves must be at least 3-4 narrative sentences (max 2 paragraphs): It should be narrative focused but organized like:
+  [triggers if applicable - "Triggers when/if …"]
+  [describe soft effects - fictional change that creates pressure]
+  [targets - who it's targetting]
+  [describe hard effects - If ignored or on a miss/opportunity, [immediate, significant consequence]]
+  [prompts, if any for, the team]
+- Check to make sure that the GM moves you reference make sense in context and follow the rules of the game.
+
+### How to Write Custom Villain Moves
+
+1. **Purpose:** Each move must **escalate the fiction** and **showcase the villain’s idiom** (their style, drive, methods, and humanity).
+2. **When They Fire:** Write moves the GM can use **whenever they’d make any GM move** and the villain is involved—**on a miss, during a lull, or when given a golden opportunity**.
+3. **Fiction‑First, No Villain Rolls:** Moves **state what happens in fiction**; they **don’t require dice rolls**.
+4. **Soft ↔ Hard Dial:** Phrase moves so they can be **soft (set‑up, telegraphed, interruptible)** or **hard (immediate, consequential, cannot be stopped)**. When approprorpiate include a natural **“if ignored, escalate to…”** clause. DO NOT explicitly state if a move is hard or soft.
+5. **Address the Heroes as the intended reader:** Write in second person to the characters (not the players). If applicable, prompt a response from players.
+6. **Stay on‑Agenda/Principled:** Describe like a comic; misdirect; make threats real; treat human life as meaningful; be a fan of the PCs; remind them of legacies; think between panels; let villains **give up to fight another day**; make supers look outlandish and cool; show adults as shortsighted; support conditionally; ask provocative questions.
+7. **Use Core GM Vocabulary:** Express outcomes using or riffing on these GM move families (reflavored to the villain):
+
+   * **Inflict a condition** (name it only when fiction is clear; otherwise “mark a fitting Condition”).
+   * **Take Influence over someone** (if already held, **force an immediate Label shift**).
+   * **Capture someone** / **separate** / **corner** a target.
+   * **Put innocents in danger** (create rescue pressure).
+   * **Show the costs of collateral damage** (bill, blame, fallout).
+   * **Reveal the future** (visions, foreshadowing, exemplars).
+   * **Announce between‑panel threats** (off‑screen actions, looming timers).
+   * **Make them pay a price for victory** (bargains, strings, compromise).
+   * **Turn their move back on them** (mirror a PC action at full effect).
+   * **Tell possible consequences and ask** (spotlight a costly option).
+   * **Trade Blows** (prompt a player to retaliate).
+   * **Tell them who they are/should be** (push Labels unless Influence is rejected).
+   * **Bring an NPC to rash decisions & hard conclusions** (misread, overreact).
+   * **Activate downsides of abilities & relationships** (obligations, red tape, fallout).
+   * **Make a playbook move** (aim at a specific playbook’s issues).
+8. **Offer Real Choices:** Where fitting, embed **costly bargains** (win now at a price later), **strings**, or **spotlight trades** (e.g., “succeed but mark a Condition / cede Influence / break something important”).
+9. **Write Clear Triggers:** Begin with a **clean cue**: *“When X happens…”*, *“If the team leaves Y unattended…”*, *“On a PC miss while Z is in play…”*.
+10. **One Clear Effect:** Follow with a **single, concrete consequence** tied to the villain’s theme; avoid nested clauses and vague adverbs.
+11. **Scene Pressure, Not Shutdowns:** Moves should **create momentum and tension**, not stall the story. If you lock someone down, **open a new problem** for the team to tackle.
+12. **Respect Conditions & Labels:** Prefer **Conditions, Influence, Label shifts, separation, time pressure, and collateral stakes** over raw damage or KO.
+13. **Between‑Panels Valid:** It’s valid to **announce off‑screen developments** (heists finished, leverage gained) that newly threaten hero interests.
+14. **Exit and Return:** Allow for **“retreat to fight another day”** when it fits the villain’s idiom; seed a consequence or a clue.
+15. **Humanity & Drive:** Even monstrous villains should have **recognizable motives**. Let a move **hint at their wants, scars, or lines they won’t cross**.
+16. **Tie to Setting:** Name **locations, civilians, mentors, teams, and legacy icons** to anchor the move in Halcyon City.
+17. **No New Subsystems:** Do **not** invent mini‑games or numeric modifiers beyond core MASKS tools (Conditions, Influence, Labels, Team prompts).
+18. **Misdirect, Then Hit:** You can **telegraph** with imagery or taunts; if the heroes don’t act, **follow with a harder consequence**.
+19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama: *“Do you accept their view of you?”* *“Whose safety do you prioritize?”*
+
+---
+
 `;
 
 function defaultBuildUser(npc) {
@@ -517,7 +568,7 @@ Return strictly:
   "villainMoves": [
     { "name": "string",
       "description_html": "<p>… include 1–2 allowed GM Move names …</p>",
-      "gm_triggers": ["One or two from the allowed list"]
+      "gm_triggers": ["One or two from the allowed list that are appropriate for the situation"]
     }
   ],
   "conditionMoves": {
@@ -529,8 +580,8 @@ Return strictly:
   },
   "details": {
     "drive": "1–4 short bullets or sentences",
-    "abilities": "short HTML allowed",
-    "biography": "1–3 sentences"
+    "abilities": "short HTML allowed, prefer bullet points",
+    "biography": "Minimum 3-4 sentences, and as much of the base material verbatim as possible"
   }
 }
 `;
