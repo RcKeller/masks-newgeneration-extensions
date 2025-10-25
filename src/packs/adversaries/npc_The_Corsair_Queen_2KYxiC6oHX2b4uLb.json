@@ -1,0 +1,1441 @@
+{
+  "name": "The Corsair Queen",
+  "type": "npc",
+  "img": "modules/masks-newgeneration-extensions/images/adversaries/the corsair queen.png",
+  "system": {
+    "stats": {},
+    "attributes": {
+      "conditions": {
+        "label": "Conditions",
+        "description": "Choose all that apply:",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "Afraid",
+            "value": false
+          },
+          "1": {
+            "label": "Angry",
+            "value": false
+          },
+          "2": {
+            "label": "Guilty",
+            "value": false
+          },
+          "3": {
+            "label": "Hopeless",
+            "value": false
+          },
+          "4": {
+            "label": "Insecure",
+            "value": false
+          }
+        }
+      },
+      "realName": {
+        "label": "Real Name",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Maggie O'Dare",
+        "position": "Left"
+      },
+      "generation": {
+        "label": "Generation",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": "Gold",
+        "position": "Left"
+      }
+    },
+    "attrLeft": {},
+    "attrTop": {},
+    "details": {
+      "drive": {
+        "label": "Drive",
+        "value": "Turn fate into fortune for her and her crew."
+      },
+      "abilities": {
+        "label": "Abilities",
+        "value": "Energized sword, command of the Flying Cutlass, leadership of pirate crew."
+      },
+      "biography": {
+        "label": "Notes",
+        "value": "A 17th-century pirate catapulted through time by Aztec magic, now commands a flying ship and unknowingly fuels an apocalyptic artifact."
+      }
+    },
+    "tags": ""
+  },
+  "prototypeToken": {
+    "name": "Aquaria",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "modules/masks-newgeneration-extensions/images/adversaries/the corsair queen.png",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": null
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "Hoist the Colors",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>When the Corsair Queen senses hesitation among her foes, she signals her crew to <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{put innocents in danger}</b> aboard their own vessel. The pirates swing ropes down to snatch bystanders or threaten hostages mid-battle, forcing you to choose between chasing them or saving lives. If ignored, they'll escape with captives who vanish into the sprawling aerial lanes of Halcyon.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "e1z2OAMMFSgaMSTD",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/flying-flag-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 10,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.e1z2OAMMFSgaMSTD"
+    },
+    {
+      "name": "Broadside Barrage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>The Flying Cutlass banks sharply as its cannons <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{unleash collateral damage}</b> across rooftops and streets below. Maggie laughs wildly as her ship’s energy projectiles ignite gas lines and collapse balconies—“A storm’s worth o’ coin washes ashore!” She’s betting you’ll prioritize damage control over pursuit.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "CZhDbIJfhaz0CMvj",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 20,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.CZhDbIJfhaz0CMvj"
+    },
+    {
+      "name": "Cutlass Gambit",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>Maggie’s energized blade crackles as she <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{parries your blows}</b> with impossible precision, her movements flickering like a skipping record. “Ye fight like accountants!” she taunts, forcing you to either <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{trade blows wildly}</b> or surrender ground to her temporal distortions.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "q54AzuwILlq4a9a8",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/charged-arrow-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 30,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.q54AzuwILlq4a9a8"
+    },
+    {
+      "name": "Temporal Plunder",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>The Queen’s sword flashes gold as she slices through a nearby landmark—and for a breath, you see dual images of the site crumbling centuries apart. She’s <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{revealing the future}</b>: “This city’s built on stolen time, loves. Reckonin’s due!” The vision fades, but the artifact in her grip pulses ominously.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "n5faZMQoqAXPWoly",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/time-trap-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 40,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.n5faZMQoqAXPWoly"
+    },
+    {
+      "name": "Afraid — Abandon Ship",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Maggie barks orders to retreat, her crew scrambling as she <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{gives ground}</b> through a shimmering temporal rift. But her escape isn’t clean—the Flying Cutlass dumps smuggled chrono-tech cargo mid-flight, <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{announcing between-panel threats}</b> as unstable devices scatter across the city.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "MqJ6zTeqI8Fgv75f",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/ufo-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 50,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.MqJ6zTeqI8Fgv75f"
+    },
+    {
+      "name": "Angry — Walk the Plank",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>The Queen <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{lashes out verbally}</b>, branding you “landlubber tyrants” as she orders her crew to <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{capture someone}</b> symbolic—a city official or your ally. “Let’s see how ye swim when the roles turn!” She’s not just fighting; she’s making a pirate’s point about authority.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "BXm4ABmWo1JnBTb3",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/skull-crossed-bones-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 60,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.BXm4ABmWo1JnBTb3"
+    },
+    {
+      "name": "Guilty — Sea Shanty Soliloquy",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Maggie stares at her flickering sword, murmuring old crew names. She <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{tells you who you should be}</b>: “Don’t chase ghosts like me, kid. Grab yer fortune ‘fore it sinks.” Her momentary sincerity vanishes as she rallies—but not before tossing you a cryptic trinket tied to the artifact’s origin.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "1DnEwucwRu3ZdMDx",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/captain-hat-profile-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.1DnEwucwRu3ZdMDx"
+    },
+    {
+      "name": "Hopeless — Dead Reckoning",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>The Queen leans against her ship’s rail, watching Halcyon’s lights. “We’re all driftwood,” she sighs, <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{making you pay a price}</b> for pressing her—she’ll surrender a clue about the artifact if you admit some part of her chaotic cause resonates. “Aye, thought so,” she smirks, tossing you a bloodstained map.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "vNhpGPeaduIoAHHF",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/ringed-planet-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.vNhpGPeaduIoAHHF"
+    },
+    {
+      "name": "Insecure — Powder Keg Bravado",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p><p>Maggie overcompensates by <b>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{pushing her crew to rash decisions}</b>, ordering reckless boarding actions orShow drafts like this oneStop generatingSave draftAdd highlights and notesHmm… something seems off here. Let me regenerate the JSON to ensure strict compliance with your template.RetryJSON输出重试中…Here's the corrected JSON output adhering strictly to your template, with all inline GM moves properly embedded and validated against the UUID catalog:```json ===================== {</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "almTH9Uhjf9vK6Ek",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 90,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.almTH9Uhjf9vK6Ek"
+    },
+    {
+      "name": "Make a Playbook Move",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.voNk2PNNF7oNqnSn]{Make a Playbook Move}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "OsD8XosEqFi7AyE7",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/playbook.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 100,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.OsD8XosEqFi7AyE7"
+    },
+    {
+      "name": "Activate Downsides of Abilities and Relationships",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of their Abilities and Relationships}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "CPAk4NnR6LoRfnLg",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 110,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481522,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.CPAk4NnR6LoRfnLg"
+    },
+    {
+      "name": "Inflict Condition",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflict a Condition}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "aBSsYFF6gpR4ylH3",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 120,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.aBSsYFF6gpR4ylH3"
+    },
+    {
+      "name": "Take Influence",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "I6zqvVnINyEs99gS",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 130,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.I6zqvVnINyEs99gS"
+    },
+    {
+      "name": "Bring Team Together",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Hc4fBGFLBxNy5cmv",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 140,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.Hc4fBGFLBxNy5cmv"
+    },
+    {
+      "name": "Capture Someone",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "9vp9sAW83kcZhC53",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 150,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.9vp9sAW83kcZhC53"
+    },
+    {
+      "name": "Put Innocents in Danger",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "OvobKj0BHki7i3oQ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 160,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.OvobKj0BHki7i3oQ"
+    },
+    {
+      "name": "Villain Move",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "XgAiJmhEtRf7ty9t",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/armor-punch-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 170,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.XgAiJmhEtRf7ty9t"
+    },
+    {
+      "name": "Show Collateral Damage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "F5U611STVcrNiYir",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 180,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.F5U611STVcrNiYir"
+    },
+    {
+      "name": "Reveal Future",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "4FhFGu4cMVW4G1CN",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 190,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.4FhFGu4cMVW4G1CN"
+    },
+    {
+      "name": "Announce Between-Panel Threats",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "JDBRb1yHU5qFp7xt",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 200,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.JDBRb1yHU5qFp7xt"
+    },
+    {
+      "name": "Price of Victory",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Bt8JAdDxJKL4FD3Y",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 210,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.Bt8JAdDxJKL4FD3Y"
+    },
+    {
+      "name": "Counter",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "mUCOEPYx4jPMDCVG",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 220,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.mUCOEPYx4jPMDCVG"
+    },
+    {
+      "name": "Reverse",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "XOWlrNKqvJCUoD3s",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 230,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.XOWlrNKqvJCUoD3s"
+    },
+    {
+      "name": "Possible Consequence...",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "kVqAGieFwFuyINAj",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 240,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.kVqAGieFwFuyINAj"
+    },
+    {
+      "name": "Tell Them Who They Are or Should Be",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "n0ZDiRHtzng3GJHa",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 250,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.n0ZDiRHtzng3GJHa"
+    },
+    {
+      "name": "Rash Decision",
+      "type": "npcMove",
+      "system": {
+        "moveType": "",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Bring an NPC to Rash Decisions and Hard Conclusions}</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Wjg4dEnZ00LC3Ay3",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 260,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761427481523,
+        "modifiedTime": 1761427481523
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!2KYxiC6oHX2b4uLb.Wjg4dEnZ00LC3Ay3"
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "ownership": {
+    "default": 0,
+    "huLnHNA8To2T4B8h": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.350",
+    "systemId": "pbta",
+    "systemVersion": "1.1.22",
+    "createdTime": 1761427481522,
+    "modifiedTime": 1761427481523,
+    "lastModifiedBy": null
+  },
+  "_id": "2KYxiC6oHX2b4uLb",
+  "sort": 100000,
+  "_key": "!actors!2KYxiC6oHX2b4uLb"
+}
