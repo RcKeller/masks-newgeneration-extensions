@@ -128,11 +128,11 @@ const GM_TRIGGER_WHITELIST = [
   "Make a Playbook Move",
   "Activate the Downsides of their Abilities and Relationships",
   "Inflict a Condition",
-  "Take Influence over Someone",
+  "Take Influence over",
   "Bring Them Together",
   "Capture Someone",
   "Put Innocents in Danger",
-  "Show the Costs of Collateral Damage",
+  "Collateral Damage",
   "Reveal the Future",
   "Announce Between‑Panel Threats",
   "Make Them Pay a Price for Victory",
@@ -140,7 +140,11 @@ const GM_TRIGGER_WHITELIST = [
   "Trade Blows",
   "Tell Them the Possible Consequences—and Ask",
   "Tell Them Who They Are or Who They Should Be",
-  "Bring an NPC to Rash Decisions and Hard Conclusions"
+  "Bring an NPC to Rash Decisions and Hard Conclusions",
+  "Lash Out Verbally",
+  "Resist or Avoid Their Blows",
+  "Struggle Past the Pain",
+  "Giving Ground"
 ];
 
 // (Kept as authoritatively provided; we parse the @UUID[…] target out)
@@ -150,8 +154,20 @@ const GM_UUID_MAP = {
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of the heroes Relationships}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of the heroes Abilities}",
   ],
+  "Giving Ground": [
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{Give ground}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{Giving ground}",
+  ],
+  "Resist or Avoid Their Blows":[
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{Resist or avoid their blows}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{Resist their blows}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{Avoid their blows}",
+  ],
+  "Struggle Past the Pain": ["@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.KfrxYBcKmyhJEFkh]{Struggle Past the Pain}"],
+  "Lash Out Verbally":["@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3]{Lashing out verbally}"],
   "Announce Between‑Panel Threats": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats}"
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Reveal Between-Panel Threats}",
   ],
   "Bring an NPC to Rash Decisions and Hard Conclusions": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Bring an NPC to Rash Decisions and Hard Conclusions}",
@@ -162,7 +178,8 @@ const GM_UUID_MAP = {
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together}"
   ],
   "Capture Someone": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone}"
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture an Innocent}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone}",
   ],
   "Inflict a Condition": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflict a Condition}"
@@ -177,26 +194,37 @@ const GM_UUID_MAP = {
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{Trade blows}"
   ],
   "Make Them Pay a Price for Victory": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}"
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Heroes Pay a Price}",
   ],
   "Put Innocents in Danger": [
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Endanger Innocents}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger}"
   ],
   "Reveal the Future": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future, Subtly or Directly}"
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future, Subtly or Directly}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Foreshadow}",
   ],
-  "Show the Costs of Collateral Damage": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}"
+  "Collateral Damage": [
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Inflict Collateral Damage}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Collateral Damage}"
   ],
-  "Take Influence over Someone": [
+  "Take Influence over": [
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Takes Influence Over}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}"
   ],
   "Tell Them the Possible Consequences—and Ask": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences}",
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Offer a Difficult Choice}",
   ],
   "Tell Them Who They Are or Who They Should Be": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}"
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Should Be}",
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}",
   ],
   "Turn Their Move Back on Them": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}"
@@ -206,10 +234,10 @@ const GM_UUID_MAP = {
 const ICONS = {
   default: "modules/masks-newgeneration-unofficial/images/gameicons/aura-#ffffff-#3da7db.svg",
   "Inflict a Condition": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-#ffffff-#3da7db.svg",
-  "Take Influence over Someone": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
+  "Take Influence over": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-#ffffff-#3da7db.svg",
   "Put Innocents in Danger": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-#ffffff-#3da7db.svg",
   "Capture Someone": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-#ffffff-#3da7db.svg",
-  "Show the Costs of Collateral Damage": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
+  "Collateral Damage": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-#ffffff-#3da7db.svg",
   "Tell Them the Possible Consequences—and Ask": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-#ffffff-#3da7db.svg",
   "Make Them Pay a Price for Victory": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-#ffffff-#3da7db.svg",
   "Bring Them Together": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-#ffffff-#3da7db.svg",
@@ -326,10 +354,10 @@ function deriveImagePathHint(text) {
 
 const GM_ANCHOR_TEXT = {
   "Inflict a Condition": "Inflicting a Condition",
-  "Take Influence over Someone": "Taking Influence",
+  "Take Influence over": "Taking Influence",
   "Capture Someone": "Capturing Someone",
   "Put Innocents in Danger": "Putting Innocents in Danger",
-  "Show the Costs of Collateral Damage": "Causing Collateral Damage",
+  "Collateral Damage": "Causing Collateral Damage",
   "Tell Them the Possible Consequences—and Ask": "Stating the Possible Consequences",
   "Make Them Pay a Price for Victory": "Exacting a Price for Victory",
   "Reveal the Future": "Revealing the Future",
@@ -354,14 +382,14 @@ function getUUIDTargetForTrigger(trigger) {
 function buildVariants(trigger, anchor) {
   const base = [trigger, anchor];
   switch (trigger) {
-    case "Capture Someone":
-      base.push("Capturing Someone");
+    case "Capture":
+      base.push("Capturing");
       break;
-    case "Show the Costs of Collateral Damage":
+    case "Collateral Damage":
       base.push("Showing the Costs of Collateral Damage", "Cause Collateral Damage", "Causing Collateral Damage");
       break;
-    case "Take Influence over Someone":
-      base.push("Taking Influence over Someone", "Taking Influence");
+    case "Take Influence over":
+      base.push("Taking Influence over", "Taking Influence", "Takes Influence");
       break;
     case "Inflict a Condition":
       base.push("Inflicting a Condition");
@@ -768,12 +796,12 @@ function ensureConditionMoves(cond) {
     },
     Angry: {
       name: "Angry — Smash First, Ask Later",
-      gm_triggers: ["Show the Costs of Collateral Damage"],
+      gm_triggers: ["Collateral Damage"],
       description_html: "<p>Rage hits the wrong target; the scene fractures around you. What do you do?</p>",
     },
     Guilty: {
       name: "Guilty — Overcorrect in Public",
-      gm_triggers: ["Take Influence over Someone"],
+      gm_triggers: ["Takes Influence over"],
       description_html: "<p>Contrition hands the narrative to an adult or rival. What do you do?</p>",
     },
     Hopeless: {
@@ -861,11 +889,11 @@ function baselineGMMovesParaphrased() {
     },
     {
       name: "Take Influence",
-      text: "Frame the moment so a rival or adult can <b>Take Influence over Someone</b>, or the target marks a fitting Condition to resist.",
-      icon: ICONS["Take Influence over Someone"],
+      text: "Frame the moment so a rival or adult can <b>Takes Influence over</b>, or the target marks a fitting Condition to resist.",
+      icon: ICONS["Takes Influence over"],
     },
     {
-      name: "Capture Someone",
+      name: "Capture",
       text: "Separate or restrain a target—avoid it only by conceding position, time, or assets. <b>Capture Someone</b>.",
       icon: ICONS["Capture Someone"],
     },
@@ -875,9 +903,9 @@ function baselineGMMovesParaphrased() {
       icon: ICONS["Put Innocents in Danger"],
     },
     {
-      name: "Show the Costs of Collateral Damage",
-      text: "Make fallout immediate and visible; gear cracks, structures fail—<b>Show the Costs of Collateral Damage</b>.",
-      icon: ICONS["Show the Costs of Collateral Damage"],
+      name: "Collateral Damage",
+      text: "Make fallout immediate and visible; gear cracks, structures fail—<b>Collateral Damage</b>.",
+      icon: ICONS["Collateral Damage"],
     },
     {
       name: "Tell Them Possible Consequences and Ask",
