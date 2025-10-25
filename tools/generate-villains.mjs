@@ -194,7 +194,8 @@ const GM_UUID_MAP = {
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}"
   ],
   "Trade Blows": [
-    "@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{Trade blows}"
+    // FIXED: added missing "JournalEntry" segment
+    "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7]{Trade blows}"
   ],
   "Make Them Pay a Price for Victory": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}",
@@ -535,7 +536,7 @@ function buildGmLinkCatalogText() {
   return lines.join("\n");
 }
 
-// ------------------------------ INLINE UUID LINKING (FALLBACK-ONLY) ------------------------------
+// ------------------------------ INLINE UUID LINKING (ROBUST) ------------------------------
 
 const GM_ANCHOR_TEXT = {
   "Inflict a Condition": "Inflicting a Condition",
@@ -614,68 +615,169 @@ function buildVariants(trigger, anchor) {
   return [...new Set(base.map((s) => String(s)))];
 }
 
+function countUUIDLinks(s) {
+  return (String(s || "").match(/@UUID\[[^\]]+\]\{[^}]+\}/g) || []).length;
+}
+
+function pruneToMaxUUIDLinks(html, maxLinks = 3) {
+  let used = 0;
+  return String(html || "").replace(/<b>\s*@UUID\[([^\]]+)\]\{([^}]+)\}\s*<\/b>/gi, (m, target, label) => {
+    used++;
+    if (used <= maxLinks) return m;
+    // Demote extras to plain bold label
+    return `<b>${label}</b>`;
+  });
+}
+
 /**
- * Fallback linker: only used if the LLM failed to include any @UUID links.
- * The LLM is now responsible for choosing the right UUID and hand-writing {label}.
+ * Normalize malformed curly braces / nested bold patterns around UUID links.
+ * - Collapses patterns like `<b>{ @UUID[...] {Label} }</b>` → `<b>@UUID[...]{Label}</b>`
+ * - Removes outer braces that wrap entire <b>…</b> payload.
+ * - Collapses "extra words + link" inside <b>…</b> to just the link.
+ */
+function normalizeMalformedUUIDMarkup(html) {
+  let s = String(html || "");
+
+  // Remove nested bolds first
+  s = sanitizeBold(s);
+
+  // Remove braces that wrap entire bold content
+  s = s.replace(/<b>\s*\{([^{}]+)\}\s*<\/b>/g, "<b>$1</b>");
+
+  // `{ @UUID[...] {Label} }` -> `@UUID[...] {Label}`
+  s = s.replace(/\{\s*@UUID\[/gi, "@UUID[");
+  s = s.replace(/\}\s*\}/g, "}"); // handle accidental double close
+
+  // If a <b> contains extra words + a proper link, strip the extra words
+  s = s.replace(
+    /<b>\s*([^<]*?)\s*@UUID\[([^\]]+)\]\{([^}]+)\}\s*([^<]*?)<\/b>/gi,
+    (_m, _pre, target, label, _post) => `<b>@UUID[${target}]{${label}}</b>`
+  );
+
+  // Clean again
+  return sanitizeBold(s);
+}
+
+/**
+ * Convert bold GM phrases **without** a UUID into linked form, preferring the
+ * current move's gmTriggers if provided. Uses the bolded text as the {label}.
+ */
+function linkBoldGMTextWithoutUUID(inner, gmTriggers = [], disallowVillainMove = true) {
+  let linkCount = countUUIDLinks(inner);
+  if (linkCount >= 3) return inner;
+
+  return inner.replace(/<b>([\s\S]*?)<\/b>/gi, (m, boldInner) => {
+    if (/@UUID\[[^\]]+\]\{[^}]+\}/.test(boldInner)) return m; // already linked
+    if (linkCount >= 3) return m;
+
+    // Try to choose a trigger: prefer ones declared on the move
+    const preferred = [...new Set((gmTriggers || []).filter(Boolean))];
+    const candidateTriggers = preferred.length ? preferred : Object.keys(GM_UUID_MAP);
+
+    for (const trig of candidateTriggers) {
+      if (disallowVillainMove && trig === "Make a Villain Move") continue;
+      const target = getUUIDTargetForTrigger(trig);
+      if (!target) continue;
+
+      // If boldInner resembles any variants, use this trigger
+      const anchor = GM_ANCHOR_TEXT[trig] || trig;
+      const variants = buildVariants(trig, anchor);
+      const resembles = variants.some(v =>
+        new RegExp(`\\b${escapeRegex(v)}\\b`, "i").test(boldInner)
+      );
+
+      // If no resemblance, still allow if gmTriggers explicitly includes it (let the writer customize the label)
+      if (resembles || preferred.includes(trig)) {
+        linkCount++;
+        const label = boldInner.replace(/^\{\s*|\s*\}$/g, "").trim(); // strip outer braces if present
+        return `<b>@UUID[${target}]{${label}}</b>`;
+      }
+    }
+
+    return m; // leave as-is if we couldn't confidently link it
+  });
+}
+
+/**
+ * Fallback linker: also used now as a **repair pass** even when some links exist.
+ * - Repairs malformed markup
+ * - Upgrades bold-only GM phrases to UUID links
+ * - Optionally embeds a link on the first visible prose mention if still missing
+ * - Enforces 1–3 total links
  */
 function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   let wrapped = ensureSingleParagraphHTML(htmlWithP);
-  wrapped = sanitizeBold(wrapped);
+  wrapped = normalizeMalformedUUIDMarkup(wrapped);
+
   const matchP = wrapped.match(/^<p>([\s\S]*?)<\/p>$/i);
   let inner = matchP ? matchP[1] : wrapped;
 
   const gmList = [...new Set((gmTriggers || []).filter(Boolean))];
   const disallowVillainMove = !gmList.includes("Make a Villain Move");
 
-  const discoveredOrdered = (() => {
-    const occurrences = [];
-    for (const trig of Object.keys(GM_UUID_MAP)) {
-      if (disallowVillainMove && trig === "Make a Villain Move") continue;
+  // 1) Upgrade bold-only GM phrases to UUID links (keeps the LLM's label inside {…})
+  inner = linkBoldGMTextWithoutUUID(inner, gmList, disallowVillainMove);
+
+  // 2) Discover inline phrases in plain text and link them if we still have <1 link>
+  const currentLinks = countUUIDLinks(inner);
+  if (currentLinks === 0) {
+    const discoveredOrdered = (() => {
+      const occurrences = [];
+      for (const trig of Object.keys(GM_UUID_MAP)) {
+        if (disallowVillainMove && trig === "Make a Villain Move") continue;
+        const anchor = GM_ANCHOR_TEXT[trig] || trig;
+        const variants = buildVariants(trig, anchor);
+        let bestIndex = -1;
+        for (const v of variants) {
+          // accept optional <b>…</b> and optional surrounding braces
+          const re = new RegExp(`(\\{)?\\s*(<b>)?${escapeRegex(v)}(</b>)?\\s*(\\})?`, "i");
+          const m = re.exec(inner);
+          if (m) { bestIndex = m.index; break; }
+        }
+        if (bestIndex >= 0) occurrences.push({ trig, index: bestIndex });
+      }
+      occurrences.sort((a, b) => a.index - b.index);
+      return occurrences.map(o => o.trig);
+    })();
+
+    const toProcess = [...new Set([...gmList, ...discoveredOrdered])];
+
+    for (const trig of toProcess) {
+      if (countUUIDLinks(inner) >= 1) break; // ensure at least one
+      const target = getUUIDTargetForTrigger(trig);
+      if (!target) continue;
+
       const anchor = GM_ANCHOR_TEXT[trig] || trig;
+      const link = `@UUID[${target}]{${anchor}}`;
+
       const variants = buildVariants(trig, anchor);
-      let bestIndex = -1;
+      let replaced = false;
       for (const v of variants) {
-        const re = new RegExp(`(<b>)?${escapeRegex(v)}(</b>)?`, "i");
-        const m = re.exec(inner);
-        if (m) { bestIndex = m.index; break; }
+        const re = new RegExp(`(\\{)?\\s*(<b>)?${escapeRegex(v)}(</b>)?\\s*(\\})?`, "i");
+        if (re.test(inner)) {
+          inner = inner.replace(re, `<b>${link}</b>`);
+          replaced = true;
+          break;
+        }
       }
-      if (bestIndex >= 0) occurrences.push({ trig, index: bestIndex });
-    }
-    occurrences.sort((a, b) => a.index - b.index);
-    return occurrences.map(o => o.trig);
-  })();
 
-  const toProcess = [...new Set([...gmList, ...discoveredOrdered])];
-
-  for (const trig of toProcess) {
-    const target = getUUIDTargetForTrigger(trig);
-    if (!target) continue;
-
-    const anchor = GM_ANCHOR_TEXT[trig] || trig;
-    const link = `@UUID[${target}]{${anchor}}`;
-
-    const variants = buildVariants(trig, anchor);
-    let replaced = false;
-    for (const v of variants) {
-      const re = new RegExp(`(<b>)?${escapeRegex(v)}(</b>)?`, "i");
-      if (re.test(inner)) {
-        inner = inner.replace(re, `<b>${link}</b>`);
-        replaced = true;
-        break;
-      }
-    }
-
-    if (!replaced) {
-      const punctIdx = inner.search(/[.!?](\s|$)/);
-      const insertion = `<b>${link}</b>`;
-      if (punctIdx >= 0) {
-        inner = inner.slice(0, punctIdx) + (inner[punctIdx - 1] === " " ? "" : " ") + insertion + inner.slice(punctIdx);
-      } else {
-        inner = inner + (/\s$/.test(inner) ? "" : " ") + insertion;
+      if (!replaced) {
+        // Insert before the first sentence break if not found
+        const punctIdx = inner.search(/[.!?](\s|$)/);
+        const insertion = `<b>${link}</b>`;
+        if (punctIdx >= 0) {
+          inner = inner.slice(0, punctIdx) + (inner[punctIdx - 1] === " " ? "" : " ") + insertion + inner.slice(punctIdx);
+        } else {
+          inner = inner + (/\s$/.test(inner) ? "" : " ") + insertion;
+        }
       }
     }
   }
 
+  // 3) Enforce max of 3 links (the brief says 1–3)
+  inner = pruneToMaxUUIDLinks(inner, 3);
+
+  // 4) Final cleanup
   const out = `<p>${inner}</p>`;
   return sanitizeBold(out);
 }
@@ -789,7 +891,6 @@ ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
 17. **No New Subsystems:** Do **not** invent mini‑games or numeric modifiers beyond core MASKS tools (Conditions, Influence, Labels, Team prompts).
 18. **Misdirect, Then Hit:** You can **telegraph** with imagery or taunts; if the heroes don’t act, **follow with a harder consequence**.
 19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama: *“Do you accept their view of you?”* *“Whose safety do you prioritize?”*
-
 `;
 
 function defaultBuildUser(npc) {
@@ -1010,10 +1111,10 @@ function ensureVillainMoves(moves) {
     desc = ensureSingleParagraphHTML(desc);
     // Enforce min length
     desc = padToMinSentences(desc, 4);
-    // If the LLM failed to include any UUID links, fallback to auto-embed
-    if (!hasAnyUUIDLink(desc)) {
-      desc = embedUUIDLinksInline(desc, gm_triggers);
-    }
+
+    // Always repair/upgrade inline links, even if some links exist already
+    desc = embedUUIDLinksInline(desc, gm_triggers);
+
     // Icon selection from LLM (fallback to trigger-based)
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : chooseIconFromTriggers(gm_triggers);
     const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : [];
@@ -1083,7 +1184,7 @@ function ensureConditionMoves(cond) {
     let baseDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
     baseDesc = ensureSingleParagraphHTML(baseDesc);
     baseDesc = padToMinSentences(baseDesc, 4);
-    const description_html = hasAnyUUIDLink(baseDesc) ? sanitizeBold(baseDesc) : embedUUIDLinksInline(baseDesc, gm_triggers);
+    const description_html = embedUUIDLinksInline(baseDesc, gm_triggers);
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : (defaults[k].img || chooseIconFromTriggers(gm_triggers));
     const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : pickRandom(ALL_MOVE_ICONS, 5);
     out[k] = { name, gm_triggers, description_html, img, img_options };
@@ -1146,7 +1247,7 @@ function buildMoveItem({ name, moveType, description_html, icon, sort = 0, flags
 }
 
 function baselineGMMovesParaphrased() {
-  // Preserve GM options (names mirror the sample; text paraphrased)
+  // Preserve GM options (names mirror the sample; text paraphrased). Intentionally bold-only.
   return [
     {
       name: "Inflict a Condition",
@@ -1415,4 +1516,3 @@ main().catch((e) => {
   console.error(`FATAL: ${e.message}`);
   process.exit(1);
 });
-
