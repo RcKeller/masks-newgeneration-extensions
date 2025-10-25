@@ -58,7 +58,9 @@
  * • Moves are narrative GM-style; no villain dice. One <p>…</p> per description.
  * • Each custom Villain OR Condition move:
  *     - Must reference 1–2 allowed GM move names (wrapped in <b>…</b>), and
- *     - Must embed 1–2 matching @UUID[...] links from the provided index.
+ *     - Must embed the @UUID[...] link **inline on the GM phrase** (no trailing “— …” block).
+ *       (Foundry will replace that with a link; the {…} text is the link label.)
+ * • Non-condition **villain** moves will NOT use “Make a Villain Move”.
  * • Exactly five condition moves (Afraid, Angry, Guilty, Hopeless, Insecure).
  * • Preserves a small baseline set of GM options (not removed).
  * • Every actor and item gets a fresh 16‑char [A‑Za‑z0‑9] UUID.
@@ -140,6 +142,7 @@ const GM_TRIGGER_WHITELIST = [
   "Bring an NPC to Rash Decisions and Hard Conclusions"
 ];
 
+// (Kept as authoritatively provided; we parse the @UUID[…] target out)
 const GM_UUID_MAP = {
   "Activate the Downsides of their Abilities and Relationships": [
     "@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of the heroes Abilities and Relationships}",
@@ -255,14 +258,14 @@ function ensureSingleParagraphHTML(htmlOrText) {
   const stripped = s.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
   return `<p>${stripped}</p>`;
 }
-function wrapGMTriggersBold(text, triggers = []) {
-  let out = text;
-  for (const t of triggers) {
-    const safe = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`\\b${safe}\\b`, "g");
-    out = out.replace(re, `<b>${t}</b>`);
-  }
-  return out;
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function sanitizeBold(html) {
+  return html
+    .replace(/<b>\s*<b>/g, "<b>")
+    .replace(/<\/b>\s*<\/b>/g, "</b>")
+    .replace(/<b>\s*<\/b>/g, "");
 }
 function pickRandom(arr, n = 1) {
   const copy = [...arr];
@@ -304,19 +307,6 @@ function stripCodeFences(s) {
 }
 function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
 
-function appendUUIDRefsToHTML(html, gmTriggers) {
-  const candidates = [];
-  for (const trig of gmTriggers || []) {
-    const m = GM_UUID_MAP[trig];
-    if (m && m.length) candidates.push(...m);
-  }
-  const chosen = (candidates.length ? pickRandom(candidates, Math.min(2, candidates.length)) : pickRandom(Object.values(GM_UUID_MAP).flat(), 1));
-  const block = chosen.join(" ");
-  const single = ensureSingleParagraphHTML(html);
-  // inject before closing </p> to avoid double <p>
-  return single.replace(/<\/p>\s*$/i, ` — ${block}</p>`);
-}
-
 function chooseIconFromTriggers(triggers = []) {
   for (const t of triggers) if (ICONS[t]) return ICONS[t];
   return ICONS.default;
@@ -326,6 +316,132 @@ function deriveImagePathHint(text) {
   const m = text.match(/(modules\/te-core-rules\/[^\s"')]+?\.(png|jpg|jpeg|webp|svg))/i)
         || text.match(/(modules\/[^\s"')]+?\.(png|jpg|jpeg|webp|svg))/i);
   return m ? m[1] : null;
+}
+
+// ------------------------------ INLINE UUID LINKING (NEW) ------------------------------
+
+const GM_ANCHOR_TEXT = {
+  "Inflict a Condition": "Inflicting a Condition",
+  "Take Influence over Someone": "Taking Influence",
+  "Capture Someone": "Capturing Someone",
+  "Put Innocents in Danger": "Putting Innocents in Danger",
+  "Show the Costs of Collateral Damage": "Causing Collateral Damage",
+  "Tell Them the Possible Consequences—and Ask": "Stating the Possible Consequences",
+  "Make Them Pay a Price for Victory": "Exacting a Price for Victory",
+  "Reveal the Future": "Revealing the Future",
+  "Announce Between‑Panel Threats": "Announcing Between-Panel Threats",
+  "Activate the Downsides of their Abilities and Relationships": "Activating the Downsides of Abilities/Relationships",
+  "Turn Their Move Back on Them": "Turning Their Move Back on Them",
+  "Tell Them Who They Are or Who They Should Be": "Telling Them Who They Are",
+  "Bring an NPC to Rash Decisions and Hard Conclusions": "Driving an NPC to Rash Decisions",
+  "Bring Them Together": "Bringing Them Together",
+  "Make a Playbook Move": "Making a Playbook Move",
+  "Make a Villain Move": "Making a Villain Move",
+};
+
+function getUUIDTargetForTrigger(trigger) {
+  const list = GM_UUID_MAP[trigger];
+  if (!list || !list.length) return null;
+  // extract the [target] portion from the first entry
+  const m = list[0].match(/^@UUID\[(.+?)\]\{.*\}$/);
+  return m ? m[1] : null;
+}
+
+function buildVariants(trigger, anchor) {
+  const base = [trigger, anchor];
+  switch (trigger) {
+    case "Capture Someone":
+      base.push("Capturing Someone");
+      break;
+    case "Show the Costs of Collateral Damage":
+      base.push("Showing the Costs of Collateral Damage", "Cause Collateral Damage", "Causing Collateral Damage");
+      break;
+    case "Take Influence over Someone":
+      base.push("Taking Influence over Someone", "Taking Influence");
+      break;
+    case "Inflict a Condition":
+      base.push("Inflicting a Condition");
+      break;
+    case "Put Innocents in Danger":
+      base.push("Putting Innocents in Danger");
+      break;
+    case "Tell Them the Possible Consequences—and Ask":
+      base.push("Possible Consequences", "Stating the Possible Consequences");
+      break;
+    case "Announce Between‑Panel Threats":
+      base.push("Announce Between-Panel Threats", "Announcing Between-Panel Threats");
+      break;
+    case "Bring Them Together":
+      base.push("Bringing Them Together");
+      break;
+    case "Make Them Pay a Price for Victory":
+      base.push("Making Them Pay a Price for Victory", "Pay a Price for Victory", "Exacting a Price for Victory");
+      break;
+    case "Reveal the Future":
+      base.push("Revealing the Future");
+      break;
+    case "Turn Their Move Back on Them":
+      base.push("Turning Their Move Back on Them");
+      break;
+    case "Tell Them Who They Are or Who They Should Be":
+      base.push("Telling Them Who They Are");
+      break;
+    case "Make a Playbook Move":
+      base.push("Making a Playbook Move");
+      break;
+    case "Make a Villain Move":
+      base.push("Making a Villain Move");
+      break;
+    default:
+      break;
+  }
+  // dedupe, preserve order
+  return [...new Set(base.map((s) => String(s)))];
+}
+
+function embedUUIDLinksInline(htmlWithP, gmTriggers) {
+  // Ensure single paragraph and sanitize bold
+  let wrapped = ensureSingleParagraphHTML(htmlWithP);
+  wrapped = sanitizeBold(wrapped);
+
+  const matchP = wrapped.match(/^<p>([\s\S]*?)<\/p>$/i);
+  let inner = matchP ? matchP[1] : wrapped;
+
+  // process up to 2 triggers inline
+  const unique = [...new Set((gmTriggers || []).filter(Boolean))].slice(0, 2);
+  for (const trig of unique) {
+    const target = getUUIDTargetForTrigger(trig);
+    if (!target) continue;
+
+    const anchor = GM_ANCHOR_TEXT[trig] || trig;
+    const link = `@UUID[${target}]{${anchor}}`;
+
+    // Try to replace an existing phrase (with or without <b>)
+    const variants = buildVariants(trig, anchor);
+    let replaced = false;
+    for (const v of variants) {
+      const re = new RegExp(`(<b>)?${escapeRegex(v)}(</b>)?`, "i");
+      if (re.test(inner)) {
+        inner = inner.replace(re, `<b>${link}</b>`);
+        replaced = true;
+        break;
+      }
+    }
+
+    // If nothing matched, inject before sentence-ending punctuation
+    if (!replaced) {
+      const punctIdx = inner.search(/[.!?](\s|$)/);
+      const insertion = `<b>${link}</b>`;
+      if (punctIdx >= 0) {
+        inner = inner.slice(0, punctIdx) + (inner[punctIdx - 1] === " " ? "" : " ") + insertion + inner.slice(punctIdx);
+      } else {
+        inner = inner + (/\s$/.test(inner) ? "" : " ") + insertion;
+      }
+    }
+  }
+
+  const out = `<p>${inner}</p>`;
+  return sanitizeBold(out);
 }
 
 // ------------------------------ PROMPTS (override via ./resources) ------------------------------
@@ -380,7 +496,7 @@ Return JSON ONLY. No explanations. No markdown.
 Rules:
 - Create 3–5 flavorful VILLAIN moves (GM-style narrative, no dice).
 - Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure.
-- Each move’s description must be a single <p>…</p> and include 1–2 allowed GM move names wrapped in <b>…</b>.
+- Each move’s description must be a single <p>…</p> and include 1–2 allowed GM move names (wrapped in <b>…</b>).
 - Allowed GM moves: ${GM_TRIGGER_WHITELIST.join(", ")}. Use only these verbatim.
 - Keep moves short (1–3 sentences): Trigger → Consequence → Prompt (“What do you do?”).
 `;
@@ -400,7 +516,7 @@ Return strictly:
 {
   "villainMoves": [
     { "name": "string",
-      "description_html": "<p>… 1–2 <b>GM Move</b> names …</p>",
+      "description_html": "<p>… include 1–2 allowed GM Move names …</p>",
       "gm_triggers": ["One or two from the allowed list"]
     }
   ],
@@ -557,28 +673,37 @@ function coerceGMTriggers(arr) {
   return list.slice(0, 2);
 }
 
+// NEW: For non-condition villain moves, disallow “Make a Villain Move”
+function sanitizeVillainTriggers(arr) {
+  let list = coerceGMTriggers(arr).filter((t) => t !== "Make a Villain Move");
+  if (!list.length) list = ["Inflict a Condition"];
+  return list;
+}
+
 function ensureVillainMoves(moves) {
-  let out = (Array.isArray(moves) ? moves : []).map((m) => ({
-    name: String(m?.name ?? "").trim() || "Villain Gambit",
-    gm_triggers: coerceGMTriggers(m?.gm_triggers),
-    description_html: ensureSingleParagraphHTML(String(m?.description_html ?? "").trim()),
-  })).filter((m) => m.name && m.description_html);
+  let out = (Array.isArray(moves) ? moves : []).map((m) => {
+    const name = String(m?.name ?? "").trim() || "Villain Gambit";
+    const gm_triggers = sanitizeVillainTriggers(m?.gm_triggers);
+    let desc = String(m?.description_html ?? "").trim();
+    desc = ensureSingleParagraphHTML(desc);
+    // Inline-embed UUID links on the GM phrases (no trailing block, no redundant <b>)
+    const description_html = embedUUIDLinksInline(desc, gm_triggers);
+    return { name, gm_triggers, description_html };
+  }).filter((m) => m.name && m.description_html);
+
   if (out.length < 3) {
     while (out.length < 3) {
+      const gm_triggers = ["Inflict a Condition"];
+      const desc = "<p>A ruthless push threatens the team unless they accept a hard cost. What do you do?</p>";
       out.push({
         name: `Villain Gambit ${out.length + 1}`,
-        gm_triggers: ["Inflict a Condition"],
-        description_html: "<p>A ruthless push that <b>Inflict a Condition</b> unless the heroes accept a hard cost. What do you do?</p>",
+        gm_triggers,
+        description_html: embedUUIDLinksInline(desc, gm_triggers),
       });
     }
   } else if (out.length > 5) {
     out = out.slice(0, 5);
   }
-  // Bold triggers + UUID links
-  out = out.map((m) => {
-    const bolded = wrapGMTriggersBold(m.description_html, m.gm_triggers);
-    return { ...m, description_html: appendUUIDRefsToHTML(bolded, m.gm_triggers) };
-  });
   return out;
 }
 
@@ -588,41 +713,38 @@ function ensureConditionMoves(cond) {
     Afraid: {
       name: "Afraid — Flinch from the Blow",
       gm_triggers: ["Put Innocents in Danger"],
-      description_html: "<p>Hesitation opens a gap; you <b>Put Innocents in Danger</b> unless someone steps up and owns the risk. What do you do?</p>",
+      description_html: "<p>Hesitation opens a gap; bystanders are at risk unless someone steps in. What do you do?</p>",
     },
     Angry: {
       name: "Angry — Smash First, Ask Later",
       gm_triggers: ["Show the Costs of Collateral Damage"],
-      description_html: "<p>Rage hits the wrong target; <b>Show the Costs of Collateral Damage</b> in the scene right now. What do you do?</p>",
+      description_html: "<p>Rage hits the wrong target; the scene fractures around you. What do you do?</p>",
     },
     Guilty: {
       name: "Guilty — Overcorrect in Public",
       gm_triggers: ["Take Influence over Someone"],
-      description_html: "<p>Contrition hands the narrative away; an adult or rival can <b>Take Influence over Someone</b>. What do you do?</p>",
+      description_html: "<p>Contrition hands the narrative to an adult or rival. What do you do?</p>",
     },
     Hopeless: {
       name: "Hopeless — Fade Between Panels",
       gm_triggers: ["Make Them Pay a Price for Victory"],
-      description_html: "<p>Offer success if they accept to <b>Make Them Pay a Price for Victory</b>; otherwise your exit sticks. What do you do?</p>",
+      description_html: "<p>You can win, but only by accepting a cost right now. What do you do?</p>",
     },
     Insecure: {
       name: "Insecure — Second‑Guess and Stall",
       gm_triggers: ["Tell Them the Possible Consequences—and Ask"],
-      description_html: "<p>Lay it out with <b>Tell Them the Possible Consequences—and Ask</b> before you act. What do you do?</p>",
+      description_html: "<p>Doubt stalls momentum; the costs are laid out plainly. What do you do?</p>",
     },
   };
+
   const out = {};
   for (const k of keys) {
     const m = cond?.[k] ?? {};
     const name = String(m?.name ?? "").trim() || defaults[k].name;
     const gm_triggers = coerceGMTriggers(m?.gm_triggers?.length ? m.gm_triggers : defaults[k].gm_triggers);
-    const desc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
-    const bolded = wrapGMTriggersBold(desc, gm_triggers);
-    out[k] = {
-      name,
-      gm_triggers,
-      description_html: appendUUIDRefsToHTML(ensureSingleParagraphHTML(bolded), gm_triggers),
-    };
+    const baseDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
+    const description_html = embedUUIDLinksInline(baseDesc, gm_triggers);
+    out[k] = { name, gm_triggers, description_html };
   }
   return out;
 }
@@ -679,7 +801,7 @@ function buildMoveItem({ name, moveType, description_html, icon, sort = 0 }) {
 }
 
 function baselineGMMovesParaphrased() {
-  // Preserve GM options (names mirror the sample; text paraphrased to avoid duplication)
+  // Preserve GM options (names mirror the sample; text paraphrased)
   return [
     {
       name: "Inflict a Condition",
@@ -754,7 +876,7 @@ function buildActorFromTemplate(template, npc, llm) {
   actor.items = [];
   let sort = 0;
 
-  // Villain moves
+  // Villain moves (with inline UUID links)
   for (const vm of llm.villainMoves) {
     actor.items.push(
       buildMoveItem({
@@ -767,7 +889,7 @@ function buildActorFromTemplate(template, npc, llm) {
     );
   }
 
-  // Condition moves
+  // Condition moves (with inline UUID links)
   for (const cname of ["Afraid", "Angry", "Guilty", "Hopeless", "Insecure"]) {
     const cm = llm.conditionMoves[cname];
     actor.items.push(
@@ -781,7 +903,7 @@ function buildActorFromTemplate(template, npc, llm) {
     );
   }
 
-  // Baseline GM options (preserved)
+  // Baseline GM options (preserved; no UUID linking here)
   for (const gm of baselineGMMovesParaphrased()) {
     actor.items.push(
       buildMoveItem({
