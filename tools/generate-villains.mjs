@@ -536,83 +536,191 @@ function buildGmLinkCatalogText() {
   return lines.join("\n");
 }
 
+// ------------------------------ NATURAL, MASKS‑ALIGNED UUID LABELS ------------------------------
+
+/**
+ * Labels used when we must fabricate an in‑sentence UUID label.
+ * These are deliberately **plain, sentence‑case, MASKS‑toned** phrases.
+ * They are not the canonical names; they are *how it reads in the prose*.
+ */
+const NATURAL_LABELS = {
+  "Inflict a Condition": "inflict a Condition",
+  "Take Influence over": "take Influence",
+  "Capture Someone": "capture someone",
+  "Put Innocents in Danger": "put innocents in danger",
+  "Collateral Damage": "show what the collateral will cost",
+  "Tell Them the Possible Consequences—and Ask": "lay out the consequences—and ask",
+  "Make Them Pay a Price for Victory": "make you pay to win",
+  "Reveal the Future": "reveal what's coming",
+  "Announce Between‑Panel Threats": "announce an off‑panel threat",
+  "Activate the Downsides of their Abilities and Relationships": "activate a downside of their abilities or relationships",
+  "Turn Their Move Back on Them": "turn your move back on you",
+  "Tell Them Who They Are or Who They Should Be": "tell them who they are",
+  "Bring an NPC to Rash Decisions and Hard Conclusions": "push an NPC to a rash decision",
+  "Bring Them Together": "bring them together",
+  "Make a Playbook Move": "make a playbook move",
+  "Make a Villain Move": "make a villain move",
+  "Giving Ground": "give ground",
+  "Trade Blows": "trade blows",
+  "Resist or Avoid Their Blows": "resist or avoid their blows",
+  "Struggle Past the Pain": "struggle past the pain",
+  "Lash Out Verbally": "lash out verbally"
+};
+
+// Normalize and improve the label inside a UUID macro to sound like natural prose.
+const LABEL_REWRITE_TABLE = (() => {
+  const table = new Map();
+  const add = (from, to) => table.set(from.toLowerCase(), to);
+  // Core variations → natural forms
+  add("inflicts a condition", "inflict a Condition");
+  add("inflicting a condition", "inflict a Condition");
+  add("inflict a condition", "inflict a Condition");
+
+  add("take influence over someone", "take Influence");
+  add("take influence over", "take Influence");
+  add("taking influence", "take Influence");
+  add("take influence", "take Influence");
+
+  add("capture someone", "capture someone");
+  add("capture an innocent", "capture someone");
+
+  add("put innocents in danger", "put innocents in danger");
+  add("endanger innocents", "put innocents in danger");
+
+  add("show the costs of collateral damage", "show what the collateral will cost");
+  add("inflict collateral damage", "cause collateral damage");
+  add("collateral damage", "cause collateral damage");
+  add("cause collateral damage", "cause collateral damage");
+  add("show the cost of collateral damage", "show what the collateral will cost");
+
+  add("tell them the possible consequences and ask", "lay out the consequences—and ask");
+  add("tell them the possible consequences", "lay out the consequences");
+  add("offer a difficult choice", "offer a difficult choice");
+  add("possible consequences", "lay out the consequences");
+
+  add("make them pay a price for victory", "make you pay to win");
+  add("heroes pay a price", "make you pay to win");
+  add("pay a price for victory", "make you pay to win");
+  add("exacting a price for victory", "make you pay to win");
+
+  add("reveal the future, subtly or directly", "reveal what's coming");
+  add("reveal the future", "reveal what's coming");
+  add("foreshadow", "reveal what's coming");
+
+  add("announce between-panel threats", "announce an off-panel threat");
+  add("reveal between-panel threats", "announce an off-panel threat");
+
+  add("activate the downsides of the heroes abilities and relationships", "activate a downside of their abilities or relationships");
+  add("activate the downsides of the heroes relationships", "activate a downside of their relationships");
+  add("activate the downsides of the heroes abilities", "activate a downside of their abilities");
+  add("activate the downsides of their abilities and relationships", "activate a downside of their abilities or relationships");
+
+  add("turn their move back on them", "turn your move back on you");
+
+  add("tell them who they are or who they should be", "tell them who they are");
+  add("tell them who they are", "tell them who they are");
+  add("tell them who they should be", "tell them who they are");
+
+  add("bring an npc to rash decisions and hard conclusions", "push an NPC to a rash decision");
+  add("prompt an npc to make a rash decision", "push an NPC to a rash decision");
+  add("prompt an npc to make a hard conclusion", "push an NPC to a rash decision");
+
+  add("bring them together", "bring them together");
+
+  add("give ground", "give ground");
+  add("giving ground", "give ground");
+
+  add("resist or avoid their blows", "resist or avoid their blows");
+  add("resist their blows", "resist or avoid their blows");
+  add("avoid their blows", "resist or avoid their blows");
+
+  add("make a playbook move", "make a playbook move");
+  add("make a villain move", "make a villain move");
+
+  add("trade blows", "trade blows");
+  add("struggle past the pain", "struggle past the pain");
+  add("lashing out verbally", "lash out verbally");
+  add("lash out verbally", "lash out verbally");
+  return table;
+})();
+
+function naturalizeUUIDLabel(labelRaw) {
+  let label = String(labelRaw || "").replace(/^\{|\}$/g, "").trim();
+  // remove any lingering " @ GM Moves" noise
+  label = label.replace(/\s*@\s*GM\s*Moves?\.?/ig, "").trim();
+  // lookup table normalization
+  const tblHit = LABEL_REWRITE_TABLE.get(label.toLowerCase());
+  if (tblHit) return tblHit;
+  // if the label matches a known trigger, prefer our natural phrasing
+  for (const trig of Object.keys(NATURAL_LABELS)) {
+    if (label.toLowerCase() === trig.toLowerCase()) return NATURAL_LABELS[trig];
+  }
+  // finally: sentence‑case first letter if mid‑sentence usage is expected
+  label = label.replace(/^\s*([A-Z])/, (_, c) => c.toLowerCase());
+  return label;
+}
+
+function normalizeAndNaturalizeUUIDLabels(html) {
+  return String(html || "").replace(
+    /@UUID\[([^\]]+)\]\{([^}]+)\}/g,
+    (_m, target, label) => `@UUID[${target}]{${naturalizeUUIDLabel(label)}}`
+  );
+}
+
 // ------------------------------ INLINE UUID LINKING (ROBUST) ------------------------------
 
-const GM_ANCHOR_TEXT = {
-  "Inflict a Condition": "Inflicting a Condition",
-  "Take Influence over": "Taking Influence",
-  "Capture Someone": "Capturing Someone",
-  "Put Innocents in Danger": "Putting Innocents in Danger",
-  "Collateral Damage": "Causing Collateral Damage",
-  "Tell Them the Possible Consequences—and Ask": "Stating the Possible Consequences",
-  "Make Them Pay a Price for Victory": "Exacting a Price for Victory",
-  "Reveal the Future": "Revealing the Future",
-  "Announce Between‑Panel Threats": "Announcing Between-Panel Threats",
-  "Activate the Downsides of their Abilities and Relationships": "Activating the Downsides of Abilities/Relationships",
-  "Turn Their Move Back on Them": "Turning Their Move Back on Them",
-  "Tell Them Who They Are or Who They Should Be": "Telling Them Who They Are",
-  "Bring an NPC to Rash Decisions and Hard Conclusions": "Driving an NPC to Rash Decisions",
-  "Bring Them Together": "Bringing Them Together",
-  "Make a Playbook Move": "Making a Playbook Move",
-  "Make a Villain Move": "Making a Villain Move",
-};
+function caseVariants(s) {
+  const t = String(s || "");
+  const lower = t.toLowerCase();
+  const title = t.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1));
+  return [...new Set([t, lower, title])];
+}
+
+function buildVariants(trigger, anchor) {
+  // include both the canonical move name and our natural prose anchor, in many surface forms
+  const variants = new Set();
+  for (const v of caseVariants(trigger)) variants.add(v);
+  for (const v of caseVariants(anchor)) variants.add(v);
+  // common paraphrases
+  switch (trigger) {
+    case "Capture Someone":
+      ["capturing someone", "capture someone", "separate and capture"].forEach(v => variants.add(v));
+      break;
+    case "Collateral Damage":
+      ["collateral damage", "show the collateral", "the collateral cost"].forEach(v => variants.add(v));
+      break;
+    case "Tell Them the Possible Consequences—and Ask":
+      ["possible consequences", "the consequences and ask"].forEach(v => variants.add(v));
+      break;
+    case "Announce Between‑Panel Threats":
+      ["between‑panel threat", "off‑panel threat", "between-panel threats"].forEach(v => variants.add(v));
+      break;
+    case "Make Them Pay a Price for Victory":
+      ["price for victory", "pay to win", "victory costs"].forEach(v => variants.add(v));
+      break;
+    case "Reveal the Future":
+      ["reveal what's coming", "foreshadow"].forEach(v => variants.add(v));
+      break;
+    case "Turn Their Move Back on Them":
+      ["turn your move back", "turn their move back"].forEach(v => variants.add(v));
+      break;
+    case "Tell Them Who They Are or Who They Should Be":
+      ["tell them who they are", "tell them who they should be"].forEach(v => variants.add(v));
+      break;
+    case "Giving Ground":
+      ["give ground", "giving ground"].forEach(v => variants.add(v));
+      break;
+    default:
+      break;
+  }
+  return [...variants];
+}
 
 function getUUIDTargetForTrigger(trigger) {
   const list = GM_UUID_MAP[trigger];
   if (!list || !list.length) return null;
   const m = list[0].match(/^@UUID\[(.+?)\]\{.*\}$/);
   return m ? m[1] : null;
-}
-
-function buildVariants(trigger, anchor) {
-  const base = [trigger, anchor];
-  switch (trigger) {
-    case "Capture Someone":
-      base.push("Capturing Someone");
-      break;
-    case "Collateral Damage":
-      base.push("Showing the Costs of Collateral Damage", "Cause Collateral Damage", "Causing Collateral Damage");
-      break;
-    case "Take Influence over":
-      base.push("Taking Influence over", "Taking Influence");
-      break;
-    case "Inflict a Condition":
-      base.push("Inflicting a Condition");
-      break;
-    case "Put Innocents in Danger":
-      base.push("Putting Innocents in Danger");
-      break;
-    case "Tell Them the Possible Consequences—and Ask":
-      base.push("Possible Consequences", "Stating the Possible Consequences");
-      break;
-    case "Announce Between‑Panel Threats":
-      base.push("Announce Between-Panel Threats", "Announcing Between-Panel Threats");
-      break;
-    case "Bring Them Together":
-      base.push("Bringing Them Together");
-      break;
-    case "Make Them Pay a Price for Victory":
-      base.push("Making Them Pay a Price for Victory", "Pay a Price for Victory", "Exacting a Price for Victory");
-      break;
-    case "Reveal the Future":
-      base.push("Revealing the Future");
-      break;
-    case "Turn Their Move Back on Them":
-      base.push("Turning Their Move Back on Them");
-      break;
-    case "Tell Them Who They Are or Who They Should Be":
-      base.push("Telling Them Who They Are");
-      break;
-    case "Make a Playbook Move":
-      base.push("Making a Playbook Move");
-      break;
-    case "Make a Villain Move":
-      base.push("Making a Villain Move");
-      break;
-    default:
-      break;
-  }
-  return [...new Set(base.map((s) => String(s)))];
 }
 
 function countUUIDLinks(s) {
@@ -625,15 +733,12 @@ function pruneToMaxUUIDLinks(html, maxLinks = 3) {
     used++;
     if (used <= maxLinks) return m;
     // Demote extras to plain bold label
-    return `<b>${label}</b>`;
+    return `<b>${naturalizeUUIDLabel(label)}</b>`;
   });
 }
 
 /**
  * Normalize malformed curly braces / nested bold patterns around UUID links.
- * - Collapses patterns like `<b>{ @UUID[...] {Label} }</b>` → `<b>@UUID[...]{Label}</b>`
- * - Removes outer braces that wrap entire <b>…</b> payload.
- * - Collapses "extra words + link" inside <b>…</b> to just the link.
  */
 function normalizeMalformedUUIDMarkup(html) {
   let s = String(html || "");
@@ -648,19 +753,19 @@ function normalizeMalformedUUIDMarkup(html) {
   s = s.replace(/\{\s*@UUID\[/gi, "@UUID[");
   s = s.replace(/\}\s*\}/g, "}"); // handle accidental double close
 
-  // If a <b> contains extra words + a proper link, strip the extra words
+  // If a <b> contains extra words + a proper link, strip to just the link
   s = s.replace(
     /<b>\s*([^<]*?)\s*@UUID\[([^\]]+)\]\{([^}]+)\}\s*([^<]*?)<\/b>/gi,
-    (_m, _pre, target, label, _post) => `<b>@UUID[${target}]{${label}}</b>`
+    (_m, _pre, target, label, _post) => `<b>@UUID[${target}]{${naturalizeUUIDLabel(label)}}</b>`
   );
 
-  // Clean again
   return sanitizeBold(s);
 }
 
 /**
  * Convert bold GM phrases **without** a UUID into linked form, preferring the
- * current move's gmTriggers if provided. Uses the bolded text as the {label}.
+ * current move's gmTriggers if provided. Uses the bolded text as the {label},
+ * but naturalized to MASKS tone.
  */
 function linkBoldGMTextWithoutUUID(inner, gmTriggers = [], disallowVillainMove = true) {
   let linkCount = countUUIDLinks(inner);
@@ -670,7 +775,6 @@ function linkBoldGMTextWithoutUUID(inner, gmTriggers = [], disallowVillainMove =
     if (/@UUID\[[^\]]+\]\{[^}]+\}/.test(boldInner)) return m; // already linked
     if (linkCount >= 3) return m;
 
-    // Try to choose a trigger: prefer ones declared on the move
     const preferred = [...new Set((gmTriggers || []).filter(Boolean))];
     const candidateTriggers = preferred.length ? preferred : Object.keys(GM_UUID_MAP);
 
@@ -679,31 +783,29 @@ function linkBoldGMTextWithoutUUID(inner, gmTriggers = [], disallowVillainMove =
       const target = getUUIDTargetForTrigger(trig);
       if (!target) continue;
 
-      // If boldInner resembles any variants, use this trigger
-      const anchor = GM_ANCHOR_TEXT[trig] || trig;
+      const anchor = NATURAL_LABELS[trig] || trig;
       const variants = buildVariants(trig, anchor);
       const resembles = variants.some(v =>
         new RegExp(`\\b${escapeRegex(v)}\\b`, "i").test(boldInner)
       );
 
-      // If no resemblance, still allow if gmTriggers explicitly includes it (let the writer customize the label)
       if (resembles || preferred.includes(trig)) {
         linkCount++;
-        const label = boldInner.replace(/^\{\s*|\s*\}$/g, "").trim(); // strip outer braces if present
+        const label = naturalizeUUIDLabel(boldInner);
         return `<b>@UUID[${target}]{${label}}</b>`;
       }
     }
 
-    return m; // leave as-is if we couldn't confidently link it
+    return `<b>${naturalizeUUIDLabel(boldInner)}</b>`; // still normalize label casing
   });
 }
 
 /**
- * Fallback linker: also used now as a **repair pass** even when some links exist.
+ * Fallback linker + repair + tone pass.
  * - Repairs malformed markup
  * - Upgrades bold-only GM phrases to UUID links
- * - Optionally embeds a link on the first visible prose mention if still missing
- * - Enforces 1–3 total links
+ * - Ensures at least one and at most three UUID links
+ * - Naturalizes label text to plain English
  */
 function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   let wrapped = ensureSingleParagraphHTML(htmlWithP);
@@ -715,17 +817,16 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
   const gmList = [...new Set((gmTriggers || []).filter(Boolean))];
   const disallowVillainMove = !gmList.includes("Make a Villain Move");
 
-  // 1) Upgrade bold-only GM phrases to UUID links (keeps the LLM's label inside {…})
+  // 1) Upgrade bold-only GM phrases to UUID links (keeps/normalizes label)
   inner = linkBoldGMTextWithoutUUID(inner, gmList, disallowVillainMove);
 
-  // 2) Discover inline phrases in plain text and link them if we still have <1 link>
-  const currentLinks = countUUIDLinks(inner);
-  if (currentLinks === 0) {
+  // 2) If there are no links yet, find a good phrase and insert one
+  if (countUUIDLinks(inner) === 0) {
     const discoveredOrdered = (() => {
       const occurrences = [];
       for (const trig of Object.keys(GM_UUID_MAP)) {
         if (disallowVillainMove && trig === "Make a Villain Move") continue;
-        const anchor = GM_ANCHOR_TEXT[trig] || trig;
+        const anchor = NATURAL_LABELS[trig] || trig;
         const variants = buildVariants(trig, anchor);
         let bestIndex = -1;
         for (const v of variants) {
@@ -747,7 +848,7 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
       const target = getUUIDTargetForTrigger(trig);
       if (!target) continue;
 
-      const anchor = GM_ANCHOR_TEXT[trig] || trig;
+      const anchor = NATURAL_LABELS[trig] || "make a move";
       const link = `@UUID[${target}]{${anchor}}`;
 
       const variants = buildVariants(trig, anchor);
@@ -774,12 +875,43 @@ function embedUUIDLinksInline(htmlWithP, gmTriggers) {
     }
   }
 
-  // 3) Enforce max of 3 links (the brief says 1–3)
+  // 3) Naturalize labels on any/all links
+  inner = normalizeAndNaturalizeUUIDLabels(inner);
+
+  // 4) Enforce max of 3 links (brief says 1–3)
   inner = pruneToMaxUUIDLinks(inner, 3);
 
-  // 4) Final cleanup
   const out = `<p>${inner}</p>`;
   return sanitizeBold(out);
+}
+
+// ------------------------------ TONE POLISH (anti‑pedantry) ------------------------------
+
+/**
+ * Light‑touch, safe rewrites to remove clunky phrasing that models often produce.
+ * We *do not* change content; we only nudge wording toward clear MASKS tone.
+ */
+function polishMasksTone(html) {
+  let s = String(html || "");
+
+  // Normalize "Triggers when/if" → "When/If"
+  s = s.replace(/(<p>|\s|^)(Triggers\s+when)\b/ig, "$1When");
+  s = s.replace(/(<p>|\s|^)(Triggers\s+if)\b/ig, "$1If");
+  s = s.replace(/(<p>|\s|^)(This triggers\s+when)\b/ig, "$1When");
+
+  // De-meta: "on a miss/opportunity" → "if you stall"
+  s = s.replace(/\bon a miss\/opportunity\b/ig, "if you stall");
+
+  // Slightly warmer synonyms
+  s = s.replace(/\bIf they resist,\b/ig, "If they push back,");
+  s = s.replace(/\bIf they refuse,\b/ig, "If they refuse,");
+  s = s.replace(/\bwith precision\b/ig, ""); // remove stock phrase
+  s = s.replace(/\bto prove (?:his|her|their) point\b/ig, ""); // remove stock phrase
+
+  // Excess whitespace
+  s = s.replace(/\s{2,}/g, " ");
+
+  return s;
 }
 
 // ------------------------------ PROMPTS (override via ./resources) ------------------------------
@@ -836,15 +968,16 @@ Rules:
 - Create 5 CONDITION moves: exactly Afraid, Angry, Guilty, Hopeless, Insecure. Condition moves are how that villain reacts when inflicted with said condition, e.g. how they lash out in anger, how they take out their insecurities, assuage their guilt, etc.
 - Every move description must be at least **4–6 full sentences** (max 2 paragraphs).
 - Moves should be narrative focused but organized like:
-  [triggers if applicable - "Triggers when/if …"]
+  [triggers if applicable - "When …" NOT "Triggers when …"]
   [describe soft effects - fictional change that creates pressure]
   [targets - who it's targetting]
-  [describe hard effects - If ignored or on a miss/opportunity, [immediate, significant consequence]]
-  [prompts, if any for, the team]
+  [describe hard effects - If ignored, escalate to an immediate, significant consequence]
+  [prompts, if any, for the team; short, specific]
 - **Inline linking is mandatory:** Each move must incorporate **1–3** allowed GM moves by embedding the exact @UUID link **inline on the GM phrase**, wrapped in <b>…</b>.
   • Choose the UUID from the GM_LINK_CATALOG below.
-  • **Hand-write the {label} text** for the link so it is grammatically correct in context (e.g., "{Take Influence}", "{Taking Influence over her}", "{Show the costs of collateral damage}").
-  • Do not add out-of-band link blocks or headers; links appear only inline in the prose.
+  • **Hand-write the {label} text** so it reads like plain, compelling English *in the sentence*. You are encouraged to paraphrase: e.g. "{inflict a Condition}", "{take Influence}", "{show what the collateral will cost}", "{announce an off‑panel threat}", "{lay out the consequences—and ask}", "{make you pay to win}", "{turn your move back on you}".
+  • Keep labels **sentence‑case** when mid‑sentence. Avoid Title Case inside labels unless they start a sentence or include proper nouns (e.g., Condition, Influence).
+  • Do not add out‑of‑band link blocks or headers; links appear only inline in the prose.
 - Allowed GM moves (names): {{GM_TRIGGERS}}. Non-condition villain moves must not reference "Make a Villain Move".
 - **Icons:** Any move can use any icon. For each move, pick an "img" from ICON_CATALOG that would fit thematically.
 - Check to make sure that the GM moves you reference make sense in context and follow the rules of the game.
@@ -860,8 +993,8 @@ ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
 1. **Purpose:** Each move must **escalate the fiction** and **showcase the villain’s idiom** (their style, drive, methods, and humanity).
 2. **When They Fire:** Write moves the GM can use **whenever they’d make any GM move** and the villain is involved—**on a miss, during a lull, or when given a golden opportunity**.
 3. **Fiction‑First, No Villain Rolls:** Moves **state what happens in fiction**; they **don’t require dice rolls**.
-4. **Soft ↔ Hard Dial:** Phrase moves so they can be **soft (set‑up, telegraphed, interruptible)** or **hard (immediate, consequential, cannot be stopped)**. When approprorpiate include a natural **“if ignored, escalate to…”** clause. DO NOT explicitly state if a move is hard or soft.
-5. **Address the Heroes as the intended reader:** Write in second person to the characters (not the players). If applicable, prompt a response from players.
+4. **Soft ↔ Hard Dial:** Phrase moves so they can be **soft (set‑up, telegraphed, interruptible)** or **hard (immediate, consequential, cannot be stopped)**. Include a natural **“if ignored, escalate to…”** clause when it helps; do **not** mention “soft/hard/miss/opportunity” in the final prose.
+5. **Address the Heroes as the intended reader:** Write in second person to the characters (not the players).
 6. **Stay on‑Agenda/Principled:** Describe like a comic; misdirect; make threats real; treat human life as meaningful; be a fan of the PCs; remind them of legacies; think between panels; let villains **give up to fight another day**; make supers look outlandish and cool; show adults as shortsighted; support conditionally; ask provocative questions.
 7. **Use Core GM Vocabulary:** Express outcomes using or riffing on these GM move families (reflavored to the villain):
    * **Inflict a condition** (name it only when fiction is clear; otherwise “mark a fitting Condition”).
@@ -880,7 +1013,7 @@ ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
    * **Activate downsides of abilities & relationships** (obligations, red tape, fallout).
    * **Make a playbook move** (aim at a specific playbook’s issues).
 8. **Offer Real Choices:** Where fitting, embed **costly bargains** (win now at a price later), **strings**, or **spotlight trades** (e.g., “succeed but mark a Condition / cede Influence / break something important”).
-9. **Write Clear Triggers:** Begin with a **clean cue**: *“When X happens…”*, *“If the team leaves Y unattended…”*, *“On a PC miss while Z is in play…”*.
+9. **Write Clear Triggers:** Begin with a clean cue: *“When X happens…”*, *“If the team leaves Y unattended…”*, *“While Z is in play…”*. Do **not** write “Triggers when/if…”.
 10. **One Clear Effect:** Follow with a **single, concrete consequence** tied to the villain’s theme; avoid nested clauses and vague adverbs.
 11. **Scene Pressure, Not Shutdowns:** Moves should **create momentum and tension**, not stall the story. If you lock someone down, **open a new problem** for the team to tackle.
 12. **Respect Conditions & Labels:** Prefer **Conditions, Influence, Label shifts, separation, time pressure, and collateral stakes** over raw damage or KO.
@@ -890,7 +1023,8 @@ ICON_CATALOG (choose strings exactly as listed; do not invent new paths):
 16. **Tie to Setting:** Name **locations, civilians, mentors, teams, and legacy icons** to anchor the move in Halcyon City.
 17. **No New Subsystems:** Do **not** invent mini‑games or numeric modifiers beyond core MASKS tools (Conditions, Influence, Labels, Team prompts).
 18. **Misdirect, Then Hit:** You can **telegraph** with imagery or taunts; if the heroes don’t act, **follow with a harder consequence**.
-19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama: *“Do you accept their view of you?”* *“Whose safety do you prioritize?”*
+19. **Provocative Prompts:** Sprinkle **pointed questions** that invite teen drama.
+20. **Tone Guardrails (IMPORTANT):** Use plain, vivid English. Avoid stiff constructions like “Triggers when…”, “If they resist… then…”, “with precision”, “to prove their point”. Vary your sentence openings. Never pad with designer slang; the final prose should read like a comic panel caption.
 `;
 
 function defaultBuildUser(npc) {
@@ -1087,50 +1221,63 @@ function countSentences(html) {
   return matches ? matches.length : (text.length > 0 ? 1 : 0);
 }
 
+// varied, non‑trite panel prompts to avoid repetitive "What do you do?"
+const PANEL_PROMPTS = [
+  "How do you respond?",
+  "Who do you protect first?",
+  "What do you leave behind to stop this?",
+  "Do you take the deal—or take the hit?",
+  "Whose voice do you hear in your head?",
+  "Where do you draw the line?",
+  "Do you stand your ground or give it?",
+  "What truth do you refuse to accept?",
+  "Do you split up or stay together?",
+  "What do you break to keep someone safe?"
+];
+
 function padToMinSentences(html, min = 4) {
   let out = String(html || "");
   let c = countSentences(out);
-  const fillers = [
-    "Between panels, the threat grows in ways you can feel but not entirely see.",
-    "If you hesitate, their leverage sharpens and the moment turns against you.",
-    "Step up with a cost, or watch the scene tilt toward disaster.",
-    "What do you do?"
-  ];
   while (c < min) {
-    out = ensureSingleParagraphHTML(out).replace(/<\/p>$/, ` ${fillers[Math.min(c, fillers.length - 1)]}</p>`);
+    const prompt = PANEL_PROMPTS[(c - 1) % PANEL_PROMPTS.length];
+    out = ensureSingleParagraphHTML(out).replace(/<\/p>$/, ` ${prompt}</p>`);
     c++;
   }
   return out;
+}
+
+function finalizeDescription(descHtml, gm_triggers) {
+  // Ensure one paragraph, minimum sentences, embedded & naturalized UUIDs, then tone polish.
+  let d = ensureSingleParagraphHTML(descHtml);
+  d = padToMinSentences(d, 4);
+  d = embedUUIDLinksInline(d, gm_triggers);
+  d = normalizeAndNaturalizeUUIDLabels(d);
+  d = polishMasksTone(d);
+  return sanitizeBold(d);
 }
 
 function ensureVillainMoves(moves) {
   let out = (Array.isArray(moves) ? moves : []).map((m, idx) => {
     const name = String(m?.name ?? "").trim() || `Villain Gambit ${idx + 1}`;
     const gm_triggers = sanitizeVillainTriggers(m?.gm_triggers);
-    let desc = String(m?.description_html ?? "").trim();
-    desc = ensureSingleParagraphHTML(desc);
-    // Enforce min length
-    desc = padToMinSentences(desc, 4);
+    const rawDesc = String(m?.description_html ?? "").trim();
+    const description_html = finalizeDescription(rawDesc, gm_triggers);
 
-    // Always repair/upgrade inline links, even if some links exist already
-    desc = embedUUIDLinksInline(desc, gm_triggers);
-
-    // Icon selection from LLM (fallback to trigger-based)
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : chooseIconFromTriggers(gm_triggers);
     const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : [];
 
-    return { name, gm_triggers, description_html: sanitizeBold(desc), img, img_options };
+    return { name, gm_triggers, description_html, img, img_options };
   }).filter((m) => m.name && m.description_html);
 
   if (out.length < 3) {
     while (out.length < 3) {
       const gm_triggers = ["Inflict a Condition"];
-      let desc = "<p>An ugly opportunity opens and the villain presses hard, daring you to accept a cost to keep anyone safe.</p>";
-      desc = padToMinSentences(desc, 4);
+      let desc = "<p>An ugly opening appears and the villain presses it, daring you to pay a cost to keep anyone safe.</p>";
+      const description_html = finalizeDescription(desc, gm_triggers);
       out.push({
         name: `Villain Gambit ${out.length + 1}`,
         gm_triggers,
-        description_html: embedUUIDLinksInline(desc, gm_triggers),
+        description_html,
         img: chooseIconFromTriggers(gm_triggers),
         img_options: pickRandom(ALL_MOVE_ICONS, 5)
       });
@@ -1147,31 +1294,31 @@ function ensureConditionMoves(cond) {
     Afraid: {
       name: "Afraid — Flinch from the Blow",
       gm_triggers: ["Put Innocents in Danger"],
-      description_html: "<p>You catch the danger a heartbeat too late and your guard slips. A civilian cries out as the threat veers toward them. Your fear writes the next panel unless you step in. If you turn away, the moment narrows into a cruel choice. What do you do?</p>",
+      description_html: "<p>You catch the danger a heartbeat too late and your guard slips. A civilian cries out as the threat veers toward them. Your fear writes the next panel unless you step in. If you turn away, the moment narrows into a cruel choice.</p>",
       img: CONDITION_ICONS.Afraid
     },
     Angry: {
       name: "Angry — Smash First, Ask Later",
       gm_triggers: ["Collateral Damage"],
-      description_html: "<p>Your temper leaps faster than your plan and the scene fractures around you. A signpost bends, a window bursts, and blame starts to find a target with your face on it. The villain grins as consequences gather like stormclouds. If you don't redirect, the fallout will land somewhere that matters. What do you do?</p>",
+      description_html: "<p>Your temper moves faster than your plan and the scene fractures around you. A signpost bends, a window bursts, and blame starts to find a target with your face on it. The villain grins as consequences gather like stormclouds. If you don't redirect, the fallout lands somewhere that matters.</p>",
       img: CONDITION_ICONS.Angry
     },
     Guilty: {
       name: "Guilty — Overcorrect in Public",
       gm_triggers: ["Take Influence over"],
-      description_html: "<p>You're already apologizing as you move, handing the narrative to an onlooker who wants to define you. Their words bite deeper than any jab, and your body follows that script. The opening they wanted appears between panels. If you don't push back, you'll carry their label out of this scene. What do you do?</p>",
+      description_html: "<p>You're already apologizing as you move, handing the narrative to an onlooker who wants to define you. Their words bite deeper than any jab, and your body follows that script. The opening they wanted appears between panels. If you don't push back, you'll carry their label out of this scene.</p>",
       img: CONDITION_ICONS.Guilty
     },
     Hopeless: {
       name: "Hopeless — Fade Between Panels",
       gm_triggers: ["Make Them Pay a Price for Victory"],
-      description_html: "<p>You can see the win from here, but it's laughably out of reach without shedding something now. The villain sets the stakes on the table with a practiced flick. Your hesitation gives them minutes you don't have. Refuse the cost and they'll set the terms of the next page. What do you do?</p>",
+      description_html: "<p>You can see the win from here, but it's out of reach without shedding something now. The villain sets the stakes on the table with a practiced flick. Your hesitation gives them minutes you don't have. Refuse the cost and they'll set the terms of the next page.</p>",
       img: CONDITION_ICONS.Hopeless
     },
     Insecure: {
       name: "Insecure — Second‑Guess and Stall",
       gm_triggers: ["Tell Them the Possible Consequences—and Ask"],
-      description_html: "<p>Your doubts stack like panels, slowing everything you touch. The risks line up and glare back until they feel inevitable. The villain notices and starts framing the scene to their advantage. If you won't decide, someone else will decide for you. What do you do?</p>",
+      description_html: "<p>Your doubts stack like panels, slowing everything you touch. The risks line up and glare back until they feel inevitable. The villain notices and starts framing the scene to their advantage. If you won't decide, someone else will decide for you.</p>",
       img: CONDITION_ICONS.Insecure
     },
   };
@@ -1181,10 +1328,8 @@ function ensureConditionMoves(cond) {
     const m = cond?.[k] ?? {};
     const name = String(m?.name ?? "").trim() || defaults[k].name;
     const gm_triggers = coerceGMTriggers(m?.gm_triggers?.length ? m.gm_triggers : defaults[k].gm_triggers);
-    let baseDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
-    baseDesc = ensureSingleParagraphHTML(baseDesc);
-    baseDesc = padToMinSentences(baseDesc, 4);
-    const description_html = embedUUIDLinksInline(baseDesc, gm_triggers);
+    const rawDesc = String(m?.description_html ?? "").trim() || defaults[k].description_html;
+    const description_html = finalizeDescription(rawDesc, gm_triggers);
     const img = ALL_MOVE_ICONS.includes(m?.img) ? m.img : (defaults[k].img || chooseIconFromTriggers(gm_triggers));
     const img_options = Array.isArray(m?.img_options) ? m.img_options.filter((p) => ALL_MOVE_ICONS.includes(p)).slice(0, 8) : pickRandom(ALL_MOVE_ICONS, 5);
     out[k] = { name, gm_triggers, description_html, img, img_options };
@@ -1247,36 +1392,36 @@ function buildMoveItem({ name, moveType, description_html, icon, sort = 0, flags
 }
 
 function baselineGMMovesParaphrased() {
-  // Preserve GM options (names mirror the sample; text paraphrased). Intentionally bold-only.
+  // Preserved GM options (intentionally bold-only; not auto‑linked)
   return [
     {
       name: "Inflict a Condition",
-      text: "Lean on the fiction and <b>Inflict a Condition</b> unless a costly compromise is accepted.",
+      text: "Push the moment hard and <b>inflict a Condition</b> unless someone accepts a real cost.",
       icon: ICONS["Inflict a Condition"],
     },
     {
       name: "Take Influence",
-      text: "Frame the moment so a rival or adult can <b>Take Influence over</b>, or the target marks a fitting Condition to resist.",
+      text: "Hand an opening to a rival or adult to <b>take Influence</b>, or the target marks a fitting Condition to resist.",
       icon: ICONS["Take Influence over"],
     },
     {
       name: "Capture",
-      text: "Separate or restrain a target—avoid it only by conceding position, time, or assets. <b>Capture Someone</b>.",
+      text: "Split, corner, or restrain a target—avoid it only by conceding position, time, or assets. <b>capture someone</b>.",
       icon: ICONS["Capture Someone"],
     },
     {
       name: "Put Innocents in Danger",
-      text: "Shift the spotlight to bystanders and <b>Put Innocents in Danger</b>, forcing a split or hard choice.",
+      text: "Shift the spotlight to bystanders and <b>put innocents in danger</b>, forcing a split or hard choice.",
       icon: ICONS["Put Innocents in Danger"],
     },
     {
       name: "Collateral Damage",
-      text: "Make fallout immediate and visible; gear cracks, structures fail—<b>Collateral Damage</b>.",
+      text: "Make fallout immediate and visible—gear cracks, structures fail; <b>show what the collateral will cost</b>.",
       icon: ICONS["Collateral Damage"],
     },
     {
       name: "Tell Them Possible Consequences and Ask",
-      text: "Lay out the stakes clearly and <b>Tell Them the Possible Consequences—and Ask</b> if they proceed.",
+      text: "Lay out the stakes clearly and <b>lay out the consequences—and ask</b> if they go through with it.",
       icon: ICONS["Tell Them the Possible Consequences—and Ask"],
     },
   ];
