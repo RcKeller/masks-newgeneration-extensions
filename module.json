@@ -16,13 +16,37 @@
 	],
 	"packs": [
 		{
-			"name": "sgb30",
-			"label": "SGB30+",
-			"path": "packs/sgb30",
+			"name": "sgb30-characters",
+			"label": "SGB30+ Characters",
+			"path": "packs/sgb30-characters",
 			"type": "Actor",
 			"system": "pbta",
 			"ownership": {
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "sgb30-campaign",
+			"label": "SGB30+",
+			"path": "packs/sgb30-campaign",
+			"type": "JournalEntry",
+			"system": "pbta",
+			"ownership": {
 				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "sgb30-gm",
+			"label": "GM",
+			"path": "packs/sgb30-gm",
+			"type": "JournalEntry",
+			"system": "pbta",
+			"ownership": {
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -44,7 +68,8 @@
 			"type": "Actor",
 			"system": "pbta",
 			"ownership": {
-				"PLAYER": "OBSERVER",
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -55,7 +80,8 @@
 			"type": "Actor",
 			"system": "pbta",
 			"ownership": {
-				"PLAYER": "OBSERVER",
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -66,31 +92,16 @@
 			"type": "Actor",
 			"system": "pbta",
 			"ownership": {
-				"PLAYER": "OBSERVER",
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
 				"ASSISTANT": "OWNER"
 			}
 		}
 	],
 	"packFolders": [
 		{
-			"name": "Villains",
-			"packs": [
-				"villains",
-				"adversaries",
-				"champions-villains"
-			],
-			"folders": []
-		},
-		{
-			"name": "GM Moves",
-			"packs": [
-				"gm-moves"
-			],
-			"folders": []
-		},
-		{
-			"name": "sgb30",
-			"packs": ["sgb30"],
+			"name": "GM Materials",
+			"packs": ["sgb30-gm", "sgb30-characters", "sgb30-campaign", "villains", "champions-villains", "adversaries"],
 			"folders": []
 		}
 	],
