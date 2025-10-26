@@ -1,1045 +1,878 @@
 {
-	"folder": null,
-	"name": "Bob",
-	"type": "character",
-	"_id": "yPBvm3Jv4GWKuCuc",
-	"img": "tokenizer/pc-images/doggo.Avatar.KX6BRwrYN2RZd2P8.webp?1760751614399",
-	"system": {
-		"stats": {
-			"danger": {
-				"label": "Danger",
-				"value": 0,
-				"toggle": true
-			},
-			"freak": {
-				"label": "Freak",
-				"value": 0,
-				"toggle": true
-			},
-			"savior": {
-				"label": "Savior",
-				"value": 0,
-				"toggle": true
-			},
-			"superior": {
-				"label": "Superior",
-				"value": 0,
-				"toggle": true
-			},
-			"mundane": {
-				"label": "Mundane",
-				"value": 0,
-				"toggle": true
-			}
-		},
-		"attributes": {
-			"realName": {
-				"label": "Real Name",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "Text",
-				"value": ""
-			},
-			"xp": {
-				"label": "Potential",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "Xp",
-				"value": 0,
-				"max": 5,
-				"steps": [false, false, false, false, false],
-				"position": "Top"
-			},
-			"theDoomed": {
-				"type": "Clock",
-				"label": "Doom Track",
-				"max": 5,
-				"value": 0,
-				"playbook": "The Doomed",
-				"steps": [false, false, false, false, false],
-				"position": "Top"
-			},
-			"theBull": {
-				"type": "LongText",
-				"label": "The Bull's Heart",
-				"playbook": "The Bull",
-				"position": "Top"
-			},
-			"theNova": {
-				"type": "Number",
-				"label": "Held Burn",
-				"playbook": "The Nova",
-				"value": 0,
-				"position": "Top"
-			},
-			"theProtege": {
-				"type": "LongText",
-				"label": "Mentor's Labels",
-				"playbook": "The Protégé",
-				"position": "Top"
-			},
-			"theSoldier": {
-				"type": "Number",
-				"label": "Soldier",
-				"playbook": "The Soldier",
-				"value": 2,
-				"position": "Top"
-			},
-			"theHarbingerMemories": {
-				"type": "Number",
-				"label": "Memories Score",
-				"playbook": "The Harbinger",
-				"value": -1,
-				"position": "Top"
-			},
-			"theNomad": {
-				"type": "Number",
-				"label": "Influence Given",
-				"playbook": "The Nomad",
-				"value": 0,
-				"max": 6,
-				"position": "Top"
-			},
-			"theBrain": {
-				"type": "ListMany",
-				"label": "Your Shame",
-				"playbook": "The Brain",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					}
-				},
-				"position": "Top"
-			},
-			"conditions": {
-				"label": "Conditions",
-				"description": "Choose all that apply:",
-				"customLabel": false,
-				"userLabel": false,
-				"type": "ListMany",
-				"condition": true,
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "Afraid (-2 to engage)",
-						"value": false
-					},
-					"1": {
-						"label": "Angry (-2 to comfort or pierce)",
-						"value": false
-					},
-					"2": {
-						"label": "Guilty (-2 to provoke or assess)",
-						"value": false
-					},
-					"3": {
-						"label": "Hopeless (-2 to unleash)",
-						"value": false
-					},
-					"4": {
-						"label": "Insecure (-2 to defend or reject)",
-						"value": false
-					}
-				}
-			},
-			"bringsDoomCloser": {
-				"type": "ListMany",
-				"condition": false,
-				"label": "Doom",
-				"description": "What brings your doom closer? Choose two.",
-				"playbook": "The Doomed",
-				"position": "Left"
-			},
-			"doomedSanctuaryFeatures": {
-				"type": "LongText",
-				"label": "Sanctuary Features",
-				"description": "Choose three features of your sanctuary:",
-				"playbook": "The Doomed",
-				"position": "Left"
-			},
-			"doomedSanctuaryDownsides": {
-				"type": "LongText",
-				"label": "Sanctuary Downsides",
-				"description": "Choose two downsides of your sanctuary:",
-				"playbook": "The Doomed",
-				"position": "Left"
-			},
-			"theScionGreatestEnemy": {
-				"type": "ListMany",
-				"label": "Greatest Enemy",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theScionGreatestVictim": {
-				"type": "ListMany",
-				"label": "Greatest Victim",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theScionPersonalIdol": {
-				"type": "ListMany",
-				"label": "Personal Idol",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theScionGreatestLeader": {
-				"type": "ListMany",
-				"label": "Greatest Leader",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theScionGreatestHero": {
-				"type": "ListMany",
-				"label": "Greatest Hero",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theScionBiggestCelebrity": {
-				"type": "ListMany",
-				"label": "Biggest Celebrity",
-				"playbook": "The Scion",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							},
-							"4": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theHarbinger": {
-				"type": "LongText",
-				"label": "Memories",
-				"playbook": "The Harbinger",
-				"position": "Left"
-			},
-			"theStarAdvantages": {
-				"type": "ListMany",
-				"label": "Audience Advantages",
-				"playbook": "The Star",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"theStarDemands": {
-				"type": "ListMany",
-				"label": "Audience Demands",
-				"playbook": "The Star",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"theInnocent": {
-				"type": "ListMany",
-				"label": "You Future Self",
-				"playbook": "The Innocent",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					},
-					"2": {
-						"label": "[Text]",
-						"value": false
-					},
-					"3": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"theNewborn": {
-				"type": "ListMany",
-				"label": "Lessons",
-				"playbook": "The Newborn",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					},
-					"2": {
-						"label": "[Text]",
-						"value": false
-					},
-					"3": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"theReformed": {
-				"type": "ListMany",
-				"label": "Friends in Low Places",
-				"playbook": "The Reformed",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							}
-						}
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							}
-						}
-					},
-					"2": {
-						"label": "[Text]",
-						"value": false,
-						"values": {
-							"0": {
-								"value": false
-							},
-							"1": {
-								"value": false
-							},
-							"2": {
-								"value": false
-							},
-							"3": {
-								"value": false
-							}
-						}
-					}
-				}
-			},
-			"theJanus": {
-				"type": "ListMany",
-				"label": "Obligations",
-				"playbook": "The Janus",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					},
-					"2": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"theProtegeMentorsResources": {
-				"type": "LongText",
-				"label": "Mentor's Resources",
-				"description": "Choose up to three resources that your mentor gave you and the team:",
-				"playbook": "The Protégé",
-				"position": "Left"
-			},
-			"theLegacy": {
-				"type": "LongText",
-				"label": "Legacy Members",
-				"playbook": "The Legacy",
-				"value": " <i>: is still active and prominent in the city.</i><br> <i>: is retired and quite judgmental.</i><br> <i>: is the next possible member of your legacy.</i><br> <i>: is the greatest opponent your legacy ever faced...and is still at large.</i>",
-				"position": "Left"
-			},
-			"theBeacon": {
-				"type": "ListMany",
-				"label": "Drives",
-				"playbook": "The Beacon",
-				"position": "Left",
-				"options": {
-					"0": {
-						"label": "[Text]",
-						"value": false
-					},
-					"1": {
-						"label": "[Text]",
-						"value": false
-					},
-					"2": {
-						"label": "[Text]",
-						"value": false
-					},
-					"3": {
-						"label": "[Text]",
-						"value": false
-					}
-				}
-			},
-			"momentUnlocked": {
-				"label": "Moment of Truth",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "Checkbox",
-				"checkboxLabel": "Unlocked",
-				"value": false
-			},
-			"advancements": {
-				"label": "Advancements",
-				"description": "When you fill your potential track, you advance. Choose from the list below.",
-				"customLabel": false,
-				"userLabel": false,
-				"type": "ListMany",
-				"condition": false,
-				"playbook": true
-			},
-			"laterAdvances": {
-				"label": "Later Advances",
-				"description": "When you’ve taken five advances from the top list, you can take advances from the list below.",
-				"customLabel": false,
-				"userLabel": false,
-				"type": "ListMany",
-				"condition": false,
-				"playbook": true
-			},
-			"relationshipQuestions": {
-				"label": "Relationships",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "LongText",
-				"playbook": true
-			},
-			"momentOfTruth": {
-				"label": "Moment of Truth",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "LongText",
-				"playbook": true
-			},
-			"teamQuestion": {
-				"label": "When our team first came together...",
-				"description": null,
-				"customLabel": false,
-				"userLabel": false,
-				"type": "LongText",
-				"playbook": true
-			}
-		},
-		"attrLeft": {},
-		"attrTop": {},
-		"details": {
-			"look": {
-				"label": "Look",
-				"value": ""
-			},
-			"abilities": {
-				"label": "Abilities",
-				"value": "<p><em>Access to all Basic Moves and may act instead of Casshan.</em></p><p><em>Labels</em></p>"
-			},
-			"backstory": {
-				"label": "Backstory",
-				"value": ""
-			},
-			"biography": {
-				"label": "Notes",
-				"value": ""
-			}
-		},
-		"advancements": 0,
-		"playbook": {
-			"name": "",
-			"slug": "",
-			"uuid": ""
-		},
-		"resources": {
-			"forward": {
-				"value": 0
-			},
-			"ongoing": {
-				"value": 0
-			},
-			"hold": {
-				"value": 0
-			},
-			"rollFormula": ""
-		}
-	},
-	"prototypeToken": {
-		"name": "Doggo",
-		"displayName": 0,
-		"actorLink": true,
-		"width": 1,
-		"height": 1,
-		"texture": {
-			"src": "tokenizer/pc-images/doggo.Token.KX6BRwrYN2RZd2P8.webp?1760751614399",
-			"anchorX": 0.5,
-			"anchorY": 0.5,
-			"offsetX": 0,
-			"offsetY": 0,
-			"fit": "contain",
-			"scaleX": 1,
-			"scaleY": 1,
-			"rotation": 0,
-			"tint": "#ffffff",
-			"alphaThreshold": 0.75
-		},
-		"lockRotation": false,
-		"rotation": 0,
-		"alpha": 1,
-		"disposition": 1,
-		"displayBars": 0,
-		"bar1": {
-			"attribute": null
-		},
-		"bar2": {
-			"attribute": null
-		},
-		"light": {
-			"negative": false,
-			"priority": 0,
-			"alpha": 0.5,
-			"angle": 360,
-			"bright": 0,
-			"color": null,
-			"coloration": 1,
-			"dim": 0,
-			"attenuation": 0.5,
-			"luminosity": 0.5,
-			"saturation": 0,
-			"contrast": 0,
-			"shadows": 0,
-			"animation": {
-				"type": null,
-				"speed": 5,
-				"intensity": 5,
-				"reverse": false
-			},
-			"darkness": {
-				"min": 0,
-				"max": 1
-			}
-		},
-		"sight": {
-			"enabled": false,
-			"range": 0,
-			"angle": 360,
-			"visionMode": "basic",
-			"color": null,
-			"attenuation": 0.1,
-			"brightness": 0,
-			"saturation": 0,
-			"contrast": 0
-		},
-		"detectionModes": [],
-		"occludable": {
-			"radius": 0
-		},
-		"ring": {
-			"enabled": false,
-			"colors": {
-				"ring": null,
-				"background": null
-			},
-			"effects": 1,
-			"subject": {
-				"scale": 1,
-				"texture": null
-			}
-		},
-		"turnMarker": {
-			"mode": 1,
-			"animation": null,
-			"src": null,
-			"disposition": false
-		},
-		"movementAction": null,
-		"flags": {},
-		"randomImg": false,
-		"appendNumber": false,
-		"prependAdjective": false
-	},
-	"items": [
-		{
-			"_id": "6rnOFrthWetWrS7c",
-			"name": "Unleash Your Powers",
-			"type": "move",
-			"img": "modules/masks-newgeneration-unofficial/images/gameicons/energise-%23ffffff-%233da7db.svg",
-			"system": {
-				"description": "<p>When you <strong>unleash your powers</strong> to overcome an obstacle, reshape your environment, or extend your senses, roll + Freak.</p>",
-				"moveType": "basic",
-				"rollFormula": "",
-				"moveResults": {
-					"failure": {
-						"key": "data.moveResults.failure.value",
-						"label": "Complications...",
-						"value": "<p>Mark Potential and the GM makes a move.</p>"
-					},
-					"partial": {
-						"key": "data.moveResults.partial.value",
-						"label": "Partial success",
-						"value": "<p>You do it. Mark a condition or the GM will tell you how the effect is&nbsp; <a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.LGWniZDyhHCEZxtg\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Unstable</a> or <a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.q24rfVSZIs8xQwya\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Temporary</a>.</p>"
-					},
-					"success": {
-						"key": "data.moveResults.success.value",
-						"label": "Success!",
-						"value": "<p>You do it.</p>"
-					}
-				},
-				"uses": 0,
-				"rollType": "freak",
-				"rollMod": 0,
-				"actorType": "character",
-				"choices": ""
-			},
-			"effects": [],
-			"folder": "AOEag4Ri4UFgRMu2",
-			"sort": 101563,
-			"flags": {
-				"core": {},
-				"cf": {
-					"id": "temp_sjbmyuxuqd",
-					"path": "Moves#/CF_SEP/Moves Basic",
-					"color": "#000000"
-				}
-			},
-			"_stats": {
-				"compendiumSource": null,
-				"duplicateSource": null,
-				"exportSource": null,
-				"coreVersion": "13.350",
-				"systemId": "pbta",
-				"systemVersion": "1.1.22",
-				"lastModifiedBy": null
-			},
-			"ownership": {
-				"default": 0
-			},
-			"_key": "!actors.items!BXAM8g7xQncrfQDn.6rnOFrthWetWrS7c"
-		},
-		{
-			"_id": "8YWu2jLltaiLjqwh",
-			"name": "Comfort or Support",
-			"type": "move",
-			"img": "modules/masks-newgeneration-unofficial/images/gameicons/love-letter-%23ffffff-%233da7db.svg",
-			"system": {
-				"description": "<p>When you <strong>comfort or support someone</strong>, roll + Mundane.</p>",
-				"moveType": "basic",
-				"rollFormula": "",
-				"moveResults": {
-					"failure": {
-						"key": "data.moveResults.failure.value",
-						"label": "Complications...",
-						"value": "<p>Mark Potential and the GM makes a move.</p>"
-					},
-					"partial": {
-						"key": "data.moveResults.partial.value",
-						"label": "Partial success",
-						"value": "<p>They hear you: they mark potential, clear a condition, or shift Labels if they open up to you.</p>"
-					},
-					"success": {
-						"key": "data.moveResults.success.value",
-						"label": "Success!",
-						"value": "<p>They hear you: they mark potential, clear a condition, or shift Labels if they open up to you. You can also add a Team to the pool or clear a condition yourself.</p>"
-					}
-				},
-				"uses": 0,
-				"rollType": "mundane",
-				"rollMod": 0,
-				"actorType": "character",
-				"choices": ""
-			},
-			"effects": [],
-			"folder": "AOEag4Ri4UFgRMu2",
-			"sort": 200000,
-			"flags": {
-				"core": {},
-				"cf": {
-					"id": "temp_sjbmyuxuqd",
-					"path": "Moves#/CF_SEP/Moves Basic",
-					"color": "#000000"
-				}
-			},
-			"_stats": {
-				"compendiumSource": null,
-				"duplicateSource": null,
-				"exportSource": null,
-				"coreVersion": "13.350",
-				"systemId": "pbta",
-				"systemVersion": "1.1.22",
-				"lastModifiedBy": null
-			},
-			"ownership": {
-				"default": 0
-			},
-			"_key": "!actors.items!BXAM8g7xQncrfQDn.8YWu2jLltaiLjqwh"
-		},
-		{
-			"_id": "RbWTLi81e6IZ9vH4",
-			"name": "Directly Engage a Threat",
-			"type": "move",
-			"img": "modules/masks-newgeneration-unofficial/images/gameicons/wide-arrow-dunk-%23ffffff-%233da7db.svg",
-			"system": {
-				"description": "<p>When you <strong>directly engage a threat</strong>, roll + Danger.</p>",
-				"moveType": "basic",
-				"rollFormula": "",
-				"moveResults": {
-					"failure": {
-						"key": "data.moveResults.failure.value",
-						"label": "Complications...",
-						"value": "<p>Mark Potential and the GM makes a move.</p>"
-					},
-					"partial": {
-						"key": "data.moveResults.partial.value",
-						"label": "Partial success",
-						"value": "<p><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Trading blows\">Trade blows</a> and pick one.</p>\n<ul>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{Resisting or avoiding their blows}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.VTyTLEzt5Zbx3JM4]{Taking something from them}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.AGsdZxeDIixx5ulh]{Creating an opportunity for your allies}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.3e3Dyp1IAnqrGwNj]{Impress, surprise, or frighten the opposition}</h4>\n</li>\n</ul>"
-					},
-					"success": {
-						"key": "data.moveResults.success.value",
-						"label": "Success!",
-						"value": "<p><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.ychaHSFqGy2SK7d7\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Trading blows\">Trade blows</a> and pick two.</p>\n<ul>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.t9kFvEp4eNYMCUkC]{Resisting or avoiding their blows}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.VTyTLEzt5Zbx3JM4]{Taking something from them}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.AGsdZxeDIixx5ulh]{Creating an opportunity for your allies}</h4>\n</li>\n<li>\n<h4>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.3e3Dyp1IAnqrGwNj]{Impress, surprise, or frighten the opposition}</h4>\n</li>\n</ul>"
-					}
-				},
-				"uses": 0,
-				"rollType": "danger",
-				"rollMod": 0,
-				"actorType": "character",
-				"choices": ""
-			},
-			"effects": [],
-			"folder": "AOEag4Ri4UFgRMu2",
-			"sort": 125000,
-			"flags": {
-				"core": {},
-				"cf": {
-					"id": "temp_sjbmyuxuqd",
-					"path": "Moves#/CF_SEP/Moves Basic",
-					"color": "#000000"
-				}
-			},
-			"_stats": {
-				"compendiumSource": null,
-				"duplicateSource": null,
-				"exportSource": null,
-				"coreVersion": "13.350",
-				"systemId": "pbta",
-				"systemVersion": "1.1.22",
-				"lastModifiedBy": null
-			},
-			"ownership": {
-				"default": 0
-			},
-			"_key": "!actors.items!BXAM8g7xQncrfQDn.RbWTLi81e6IZ9vH4"
-		},
-		{
-			"_id": "kLPw1b8IARpKEeXs",
-			"name": "Take a Powerful Blow",
-			"type": "move",
-			"img": "modules/masks-newgeneration-unofficial/images/gameicons/punch-blast-%23ffffff-%233da7db.svg",
-			"system": {
-				"description": "<p>When you <strong>take a powerful blow</strong>, roll + conditions marked.</p>",
-				"moveType": "basic",
-				"rollFormula": "",
-				"moveResults": {
-					"failure": {
-						"key": "data.moveResults.failure.value",
-						"label": "Complications...",
-						"value": "<p>You stand strong. Mark potential as normal, and say how you weather the blow.</p>"
-					},
-					"partial": {
-						"key": "data.moveResults.partial.value",
-						"label": "Partial success",
-						"value": "<p>Choose one:</p>\n<ul>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Lashing out verbally</a>: provoke a teammate to foolhardy action or take advantage of your Influence to inflict a condition</li>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Giving ground</a>: your opposition gets an opportunity</li>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.KfrxYBcKmyhJEFkh\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Struggling past the pain</a> mark two conditions</li>\n</ul>"
-					},
-					"success": {
-						"key": "data.moveResults.success.value",
-						"label": "Success!",
-						"value": "<p>Choose one:</p>\n<ul>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.BF6HYIkVcFB3mI9H\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">You must remove yourself from the situation</a>: flee, pass out, etc.</li>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.gIyoY4vJY9lgPyvW\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">You lose control of yourself or your powers in a terrible way</a></li>\n<li>Two options from this list:\n<ul>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.7bUuUXo8ob2I9rx3\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Lashing out verbally</a>: provoke a teammate to foolhardy action or take advantage of your Influence to inflict a condition</li>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Giving ground</a>: your opposition gets an opportunity</li>\n<li><a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.KfrxYBcKmyhJEFkh\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Creating an opportunity for your allies\">Struggling past the pain</a>: mark two conditions</li>\n</ul>\n</li>\n</ul>"
-					}
-				},
-				"uses": 0,
-				"rollType": "prompt",
-				"rollMod": 0,
-				"actorType": "character",
-				"choices": ""
-			},
-			"effects": [],
-			"folder": "AOEag4Ri4UFgRMu2",
-			"sort": 103125,
-			"flags": {
-				"core": {},
-				"cf": {
-					"id": "temp_sjbmyuxuqd",
-					"path": "Moves#/CF_SEP/Moves Basic",
-					"color": "#000000"
-				}
-			},
-			"_stats": {
-				"compendiumSource": null,
-				"duplicateSource": null,
-				"exportSource": null,
-				"coreVersion": "13.350",
-				"systemId": "pbta",
-				"systemVersion": "1.1.22",
-				"lastModifiedBy": null
-			},
-			"ownership": {
-				"default": 0
-			},
-			"_key": "!actors.items!BXAM8g7xQncrfQDn.kLPw1b8IARpKEeXs"
-		},
-		{
-			"_id": "sog3ZBzKUOxRDHWw",
-			"name": "Defend",
-			"type": "move",
-			"img": "modules/masks-newgeneration-unofficial/images/gameicons/shield-reflect-%23ffffff-%233da7db.svg",
-			"system": {
-				"description": "<p>When you <strong>defend someone or something</strong> from an immediate threat, roll + Savior.</p>",
-				"moveType": "basic",
-				"rollFormula": "",
-				"moveResults": {
-					"failure": {
-						"key": "data.moveResults.failure.value",
-						"label": "Complications...",
-						"value": "<p>Mark Potential and the GM makes a move.</p>"
-					},
-					"partial": {
-						"key": "data.moveResults.partial.value",
-						"label": "Partial success",
-						"value": "<h3>For NPC threats:</h3>\n<p>You <a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.4g7nxJy9tPVI1Zr4\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Keeping them safe\">Keep them safe</a> and choose one. But it costs you: expose yourself to danger or escalate the situation.</p>\n<ul>\n<li>Add a Team to the pool</li>\n<li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.PzqlHqRhI7uRWAxR]</li>\n<li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.UQp2JmzBob2lVP3C]{Clear a Condition}</li>\n</ul>\n<p>&nbsp;</p>\n<h3>For PC threats:</h3>\n<p>Give them -2 to their roll.</p>\n<p>You <a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.OM3f9fIRUZmDmQnp\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Expose yourself to cost, retribution, or judgment\">Expose yourself to cost, retribution, or judgment</a></p>"
-					},
-					"success": {
-						"key": "data.moveResults.success.value",
-						"label": "Success!",
-						"value": "<h3>For NPC threats:</h3>\n<p>You <a class=\"content-link\" draggable=\"true\" data-uuid=\"Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.4g7nxJy9tPVI1Zr4\" data-id=\"AGsdZxeDIixx5ulh\" data-pack=\"world\" data-type=\"JournalEntryPage\" data-tooltip=\"Keeping them safe\">Keep them safe</a> and choose one.</p>\n<ul>\n<li>Add a Team to the pool</li>\n<li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.PzqlHqRhI7uRWAxR]</li>\n<li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.UQp2JmzBob2lVP3C]{Clear a Condition}</li>\n</ul>\n<p>&nbsp;</p>\n<h3>For PC threats:</h3>\n<p>Give them -2 to their roll.</p>"
-					}
-				},
-				"uses": 0,
-				"rollType": "savior",
-				"rollMod": 0,
-				"actorType": "character",
-				"choices": ""
-			},
-			"effects": [],
-			"folder": "AOEag4Ri4UFgRMu2",
-			"sort": 150000,
-			"flags": {
-				"core": {},
-				"cf": {
-					"id": "temp_sjbmyuxuqd",
-					"path": "Moves#/CF_SEP/Moves Basic",
-					"color": "#000000"
-				}
-			},
-			"_stats": {
-				"compendiumSource": null,
-				"duplicateSource": null,
-				"exportSource": null,
-				"coreVersion": "13.350",
-				"systemId": "pbta",
-				"systemVersion": "1.1.22",
-				"lastModifiedBy": null
-			},
-			"ownership": {
-				"default": 0
-			},
-			"_key": "!actors.items!BXAM8g7xQncrfQDn.sog3ZBzKUOxRDHWw"
-		}
-	],
-	"effects": [],
-	"flags": {
-		"masks-newgeneration-unofficial": {
-			"influences": []
-		}
-	},
-	"_stats": {
-		"compendiumSource": null,
-		"duplicateSource": null,
-		"exportSource": null,
-		"coreVersion": "13.350",
-		"systemId": "pbta",
-		"systemVersion": "1.1.22",
-		"createdTime": 1761449316086,
-		"modifiedTime": 1761449316086,
-		"lastModifiedBy": "huLnHNA8To2T4B8h"
-	},
-	"ownership": {
-		"default": 0,
-		"huLnHNA8To2T4B8h": 3
-	},
-	"sort": 0,
-	"_key": "!actors!yPBvm3Jv4GWKuCuc"
+  "folder": null,
+  "name": "Bob",
+  "type": "character",
+  "_id": "yPBvm3Jv4GWKuCuc",
+  "img": "tokenizer/pc-images/doggo.Avatar.KX6BRwrYN2RZd2P8.webp?1760751614399",
+  "system": {
+    "stats": {
+      "danger": {
+        "label": "Danger",
+        "value": 0,
+        "toggle": true
+      },
+      "freak": {
+        "label": "Freak",
+        "value": 0,
+        "toggle": true
+      },
+      "savior": {
+        "label": "Savior",
+        "value": 0,
+        "toggle": true
+      },
+      "superior": {
+        "label": "Superior",
+        "value": 0,
+        "toggle": true
+      },
+      "mundane": {
+        "label": "Mundane",
+        "value": 0,
+        "toggle": true
+      }
+    },
+    "attributes": {
+      "realName": {
+        "label": "Real Name",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Text",
+        "value": ""
+      },
+      "xp": {
+        "label": "Potential",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Xp",
+        "value": 0,
+        "max": 5,
+        "steps": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "position": "Top"
+      },
+      "theDoomed": {
+        "type": "Clock",
+        "label": "Doom Track",
+        "max": 5,
+        "value": 0,
+        "playbook": "The Doomed",
+        "steps": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "position": "Top"
+      },
+      "theBull": {
+        "type": "LongText",
+        "label": "The Bull's Heart",
+        "playbook": "The Bull",
+        "position": "Top"
+      },
+      "theNova": {
+        "type": "Number",
+        "label": "Held Burn",
+        "playbook": "The Nova",
+        "value": 0,
+        "position": "Top"
+      },
+      "theProtege": {
+        "type": "LongText",
+        "label": "Mentor's Labels",
+        "playbook": "The Protégé",
+        "position": "Top"
+      },
+      "theSoldier": {
+        "type": "Number",
+        "label": "Soldier",
+        "playbook": "The Soldier",
+        "value": 2,
+        "position": "Top"
+      },
+      "theHarbingerMemories": {
+        "type": "Number",
+        "label": "Memories Score",
+        "playbook": "The Harbinger",
+        "value": -1,
+        "position": "Top"
+      },
+      "theNomad": {
+        "type": "Number",
+        "label": "Influence Given",
+        "playbook": "The Nomad",
+        "value": 0,
+        "max": 6,
+        "position": "Top"
+      },
+      "theBrain": {
+        "type": "ListMany",
+        "label": "Your Shame",
+        "playbook": "The Brain",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          }
+        },
+        "position": "Top"
+      },
+      "conditions": {
+        "label": "Conditions",
+        "description": "Choose all that apply:",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": true,
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "Afraid (-2 to engage)",
+            "value": false
+          },
+          "1": {
+            "label": "Angry (-2 to comfort or pierce)",
+            "value": false
+          },
+          "2": {
+            "label": "Guilty (-2 to provoke or assess)",
+            "value": false
+          },
+          "3": {
+            "label": "Hopeless (-2 to unleash)",
+            "value": false
+          },
+          "4": {
+            "label": "Insecure (-2 to defend or reject)",
+            "value": false
+          }
+        }
+      },
+      "bringsDoomCloser": {
+        "type": "ListMany",
+        "condition": false,
+        "label": "Doom",
+        "description": "What brings your doom closer? Choose two.",
+        "playbook": "The Doomed",
+        "position": "Left"
+      },
+      "doomedSanctuaryFeatures": {
+        "type": "LongText",
+        "label": "Sanctuary Features",
+        "description": "Choose three features of your sanctuary:",
+        "playbook": "The Doomed",
+        "position": "Left"
+      },
+      "doomedSanctuaryDownsides": {
+        "type": "LongText",
+        "label": "Sanctuary Downsides",
+        "description": "Choose two downsides of your sanctuary:",
+        "playbook": "The Doomed",
+        "position": "Left"
+      },
+      "theScionGreatestEnemy": {
+        "type": "ListMany",
+        "label": "Greatest Enemy",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theScionGreatestVictim": {
+        "type": "ListMany",
+        "label": "Greatest Victim",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theScionPersonalIdol": {
+        "type": "ListMany",
+        "label": "Personal Idol",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theScionGreatestLeader": {
+        "type": "ListMany",
+        "label": "Greatest Leader",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theScionGreatestHero": {
+        "type": "ListMany",
+        "label": "Greatest Hero",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theScionBiggestCelebrity": {
+        "type": "ListMany",
+        "label": "Biggest Celebrity",
+        "playbook": "The Scion",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              },
+              "4": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theHarbinger": {
+        "type": "LongText",
+        "label": "Memories",
+        "playbook": "The Harbinger",
+        "position": "Left"
+      },
+      "theStarAdvantages": {
+        "type": "ListMany",
+        "label": "Audience Advantages",
+        "playbook": "The Star",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "theStarDemands": {
+        "type": "ListMany",
+        "label": "Audience Demands",
+        "playbook": "The Star",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "theInnocent": {
+        "type": "ListMany",
+        "label": "You Future Self",
+        "playbook": "The Innocent",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          },
+          "2": {
+            "label": "[Text]",
+            "value": false
+          },
+          "3": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "theNewborn": {
+        "type": "ListMany",
+        "label": "Lessons",
+        "playbook": "The Newborn",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          },
+          "2": {
+            "label": "[Text]",
+            "value": false
+          },
+          "3": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "theReformed": {
+        "type": "ListMany",
+        "label": "Friends in Low Places",
+        "playbook": "The Reformed",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              }
+            }
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              }
+            }
+          },
+          "2": {
+            "label": "[Text]",
+            "value": false,
+            "values": {
+              "0": {
+                "value": false
+              },
+              "1": {
+                "value": false
+              },
+              "2": {
+                "value": false
+              },
+              "3": {
+                "value": false
+              }
+            }
+          }
+        }
+      },
+      "theJanus": {
+        "type": "ListMany",
+        "label": "Obligations",
+        "playbook": "The Janus",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          },
+          "2": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "theProtegeMentorsResources": {
+        "type": "LongText",
+        "label": "Mentor's Resources",
+        "description": "Choose up to three resources that your mentor gave you and the team:",
+        "playbook": "The Protégé",
+        "position": "Left"
+      },
+      "theLegacy": {
+        "type": "LongText",
+        "label": "Legacy Members",
+        "playbook": "The Legacy",
+        "value": " <i>: is still active and prominent in the city.</i><br> <i>: is retired and quite judgmental.</i><br> <i>: is the next possible member of your legacy.</i><br> <i>: is the greatest opponent your legacy ever faced...and is still at large.</i>",
+        "position": "Left"
+      },
+      "theBeacon": {
+        "type": "ListMany",
+        "label": "Drives",
+        "playbook": "The Beacon",
+        "position": "Left",
+        "options": {
+          "0": {
+            "label": "[Text]",
+            "value": false
+          },
+          "1": {
+            "label": "[Text]",
+            "value": false
+          },
+          "2": {
+            "label": "[Text]",
+            "value": false
+          },
+          "3": {
+            "label": "[Text]",
+            "value": false
+          }
+        }
+      },
+      "momentUnlocked": {
+        "label": "Moment of Truth",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "Checkbox",
+        "checkboxLabel": "Unlocked",
+        "value": false
+      },
+      "advancements": {
+        "label": "Advancements",
+        "description": "When you fill your potential track, you advance. Choose from the list below.",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "playbook": true
+      },
+      "laterAdvances": {
+        "label": "Later Advances",
+        "description": "When you’ve taken five advances from the top list, you can take advances from the list below.",
+        "customLabel": false,
+        "userLabel": false,
+        "type": "ListMany",
+        "condition": false,
+        "playbook": true
+      },
+      "relationshipQuestions": {
+        "label": "Relationships",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "LongText",
+        "playbook": true
+      },
+      "momentOfTruth": {
+        "label": "Moment of Truth",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "LongText",
+        "playbook": true
+      },
+      "teamQuestion": {
+        "label": "When our team first came together...",
+        "description": null,
+        "customLabel": false,
+        "userLabel": false,
+        "type": "LongText",
+        "playbook": true
+      }
+    },
+    "attrLeft": {},
+    "attrTop": {},
+    "details": {
+      "look": {
+        "label": "Look",
+        "value": ""
+      },
+      "abilities": {
+        "label": "Abilities",
+        "value": "<p><em>Access to all Basic Moves and may act instead of Casshan.</em></p><p><em>Labels</em></p>"
+      },
+      "backstory": {
+        "label": "Backstory",
+        "value": ""
+      },
+      "biography": {
+        "label": "Notes",
+        "value": ""
+      }
+    },
+    "advancements": 0,
+    "playbook": {
+      "name": "",
+      "slug": "",
+      "uuid": ""
+    },
+    "resources": {
+      "forward": {
+        "value": 0
+      },
+      "ongoing": {
+        "value": 0
+      },
+      "hold": {
+        "value": 0
+      },
+      "rollFormula": ""
+    }
+  },
+  "prototypeToken": {
+    "name": "Doggo",
+    "displayName": 0,
+    "actorLink": true,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "tokenizer/pc-images/doggo.Token.KX6BRwrYN2RZd2P8.webp?1760751614399",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": 1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": null
+    },
+    "bar2": {
+      "attribute": null
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "items": [
+    {
+      "name": "Move",
+      "type": "move",
+      "system": {
+        "moveType": "basic",
+        "description": "",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0,
+        "rollType": "",
+        "rollMod": 0,
+        "actorType": "character",
+        "choices": ""
+      },
+      "_id": "xoIsvQQYDiDPqXBN",
+      "img": "icons/svg/aura.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "huLnHNA8To2T4B8h": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "createdTime": 1761450719628,
+        "modifiedTime": 1761450719628,
+        "lastModifiedBy": "huLnHNA8To2T4B8h"
+      },
+      "_key": "!actors.items!yPBvm3Jv4GWKuCuc.xoIsvQQYDiDPqXBN"
+    },
+    {
+      "name": "Move (2)",
+      "type": "move",
+      "system": {
+        "moveType": "basic",
+        "description": "",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0,
+        "rollType": "",
+        "rollMod": 0,
+        "actorType": "character",
+        "choices": ""
+      },
+      "_id": "EAAaEwldsyU0zspU",
+      "img": "icons/svg/aura.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "huLnHNA8To2T4B8h": 3
+      },
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "createdTime": 1761450720420,
+        "modifiedTime": 1761450720420,
+        "lastModifiedBy": "huLnHNA8To2T4B8h"
+      },
+      "_key": "!actors.items!yPBvm3Jv4GWKuCuc.EAAaEwldsyU0zspU"
+    }
+  ],
+  "effects": [],
+  "flags": {
+    "masks-newgeneration-unofficial": {
+      "influences": []
+    }
+  },
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.350",
+    "systemId": "pbta",
+    "systemVersion": "1.1.22",
+    "createdTime": 1761449316086,
+    "modifiedTime": 1761449316086,
+    "lastModifiedBy": "huLnHNA8To2T4B8h"
+  },
+  "ownership": {
+    "default": 0,
+    "huLnHNA8To2T4B8h": 3
+  },
+  "sort": 0,
+  "_key": "!actors!yPBvm3Jv4GWKuCuc"
 }
