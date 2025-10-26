@@ -2,7 +2,7 @@
   "folder": null,
   "name": "Wendy",
   "type": "character",
-  "img": "modules/masks-newgeneration-extensions/images/sgb30/wendy.png",
+  "img": "modules/masks-newgeneration-extensions/images/sgb30/pc-images/wendy.Avatar.webp?1761453903393",
   "system": {
     "stats": {
       "danger": {
@@ -302,24 +302,7 @@
         "options": {
           "0": {
             "label": "[Text]",
-            "value": false,
-            "values": {
-              "0": {
-                "value": false
-              },
-              "1": {
-                "value": false
-              },
-              "2": {
-                "value": false
-              },
-              "3": {
-                "value": false
-              },
-              "4": {
-                "value": false
-              }
-            }
+            "value": false
           }
         }
       },
@@ -331,24 +314,7 @@
         "options": {
           "0": {
             "label": "[Text]",
-            "value": false,
-            "values": {
-              "0": {
-                "value": false
-              },
-              "1": {
-                "value": false
-              },
-              "2": {
-                "value": false
-              },
-              "3": {
-                "value": false
-              },
-              "4": {
-                "value": false
-              }
-            }
+            "value": false
           }
         }
       },
@@ -656,7 +622,7 @@
     "width": 1,
     "height": 1,
     "texture": {
-      "src": "modules/masks-newgeneration-extensions/images/sgb30/wendy.Token.webp?1761197458298",
+      "src": "modules/masks-newgeneration-extensions/images/sgb30/pc-images/wendy.Token.webp?1761453903393",
       "anchorX": 0.5,
       "anchorY": 0.5,
       "offsetX": 0,
@@ -771,12 +737,12 @@
           "partial": {
             "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": "<p>Choose one.</p>\n<ul>\n<li>Listeners can&rsquo;t keep doing what they&rsquo;re doing</li>\n<li>Listeners can&rsquo;t flee without addressing you</li>\n<li>Listeners can&rsquo;t attack you without losing status or position</li>\n</ul>"
+            "value": "<p>Choose one.</p>\n<ul>\n<li>Listeners can’t keep doing what they’re doing</li>\n<li>Listeners can’t flee without addressing you</li>\n<li>Listeners can’t attack you without losing status or position</li>\n</ul>"
           },
           "success": {
             "key": "data.moveResults.success.value",
             "label": "Success!",
-            "value": "<p>Choose two.</p>\n<ul>\n<li>Listeners can&rsquo;t keep doing what they&rsquo;re doing</li>\n<li>Listeners can&rsquo;t flee without addressing you</li>\n<li>Listeners can&rsquo;t attack you without losing status or position</li>\n</ul>"
+            "value": "<p>Choose two.</p>\n<ul>\n<li>Listeners can’t keep doing what they’re doing</li>\n<li>Listeners can’t flee without addressing you</li>\n<li>Listeners can’t attack you without losing status or position</li>\n</ul>"
           }
         },
         "uses": 0,
@@ -805,37 +771,37 @@
       "_key": "!actors.items!ZQCIpiejtDMVQ3FB.PBcvXviZbvSuASHN"
     },
     {
-      "name": "Move",
+      "name": "Free Refills",
       "type": "move",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/popcorn-%23ffffff-%233da7db.svg",
       "system": {
+        "description": "<p><em>Equivalent: Comfort and Support</em></p><p>A sudden generosity: she <strong>offers material aid</strong> (assets, info, safe passage) to the team. If they accept, <strong>clear a team member’s condition</strong> but <strong>she gains Influence</strong> or stakes a future favor.</p>",
         "moveType": "basic",
-        "description": "",
         "rollFormula": "",
         "moveResults": {
           "failure": {
-            "key": "system.moveResults.failure.value",
+            "key": "data.moveResults.failure.value",
             "label": "Complications...",
-            "value": ""
+            "value": "<p>Mark Potential and the GM makes a move.</p>"
           },
           "partial": {
-            "key": "system.moveResults.partial.value",
+            "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": ""
+            "value": "<p>They hear you: they mark potential or clear a condition.</p>"
           },
           "success": {
-            "key": "system.moveResults.success.value",
+            "key": "data.moveResults.success.value",
             "label": "Success!",
-            "value": ""
+            "value": "<p>Clear a condition and Wendy gains Influence over the target.</p>"
           }
         },
         "uses": 0,
-        "rollType": "",
+        "rollType": "mundane",
         "rollMod": 0,
         "actorType": "character",
         "choices": ""
       },
       "_id": "C2g9gmY4mEOfg7D8",
-      "img": "icons/svg/aura.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -858,37 +824,37 @@
       "_key": "!actors.items!ZQCIpiejtDMVQ3FB.C2g9gmY4mEOfg7D8"
     },
     {
-      "name": "Move (2)",
+      "name": "Fresh, Never Frozen",
       "type": "move",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/cold-heart-%23ffffff-%233da7db.svg",
       "system": {
+        "description": "<p><em>Equivalent: Defend</em></p><p>When you step in to shield someone from a chilling threat - be it cold, paralysis, or a public “freeze‑out”, <strong>roll +Savior</strong>.</p>",
         "moveType": "basic",
-        "description": "",
         "rollFormula": "",
         "moveResults": {
           "failure": {
-            "key": "system.moveResults.failure.value",
+            "key": "data.moveResults.failure.value",
             "label": "Complications...",
-            "value": ""
+            "value": "<p>The cold gets in - mark Potential on the character controlling Wendy, and the GM makes a move.</p>"
           },
           "partial": {
-            "key": "system.moveResults.partial.value",
+            "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": ""
+            "value": "<p>You succeed - barely. <strong>Mark a condition</strong> on the closest ally witnessing Wendy's distress.</p>"
           },
           "success": {
-            "key": "system.moveResults.success.value",
+            "key": "data.moveResults.success.value",
             "label": "Success!",
-            "value": ""
+            "value": "<p>Choose Two</p>"
           }
         },
         "uses": 0,
-        "rollType": "",
+        "rollType": "savior",
         "rollMod": 0,
         "actorType": "character",
-        "choices": ""
+        "choices": "<ul><li><p>Reduce or block the immediate effect on your target (GM says how)</p></li><li><p><strong>Clear Afraid</strong> from them or <strong>give +1 forward</strong> to Defend that threat next beat</p></li><li><p>Add <strong>+1 Team</strong> to the pool</p></li></ul>"
       },
       "_id": "qakKfM7Y5qbAPCzM",
-      "img": "icons/svg/aura.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -911,37 +877,37 @@
       "_key": "!actors.items!ZQCIpiejtDMVQ3FB.qakKfM7Y5qbAPCzM"
     },
     {
-      "name": "Move (3)",
+      "name": "Clapback, Served Hot",
       "type": "move",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
       "system": {
+        "description": "<p><em>Equivalent: Provoke</em></p><p>When someone publicly demeans you or your team and you answer with razor‑sharp poise, <strong>roll</strong> <strong>+Superior.</strong></p>",
         "moveType": "basic",
-        "description": "",
         "rollFormula": "",
         "moveResults": {
           "failure": {
-            "key": "system.moveResults.failure.value",
+            "key": "data.moveResults.failure.value",
             "label": "Complications...",
-            "value": ""
+            "value": "<p>Mark Potential and the GM makes a move.</p>"
           },
           "partial": {
-            "key": "system.moveResults.partial.value",
+            "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": ""
+            "value": "<p>Your rebuttal is successful, but hella' cringe.</p><p><strong>The most close ally Shifts Labels</strong> or <strong>marks a condition</strong>, depending on who you embarass yourself in front of.</p>"
           },
           "success": {
-            "key": "system.moveResults.success.value",
+            "key": "data.moveResults.success.value",
             "label": "Success!",
             "value": ""
           }
         },
         "uses": 0,
-        "rollType": "",
+        "rollType": "superior",
         "rollMod": 0,
         "actorType": "character",
-        "choices": ""
+        "choices": "<p>Choose one the target must accept:</p><ul><li><p><strong>Retract or soften</strong> their stance and <strong>give you an opening</strong>;</p></li><li><p>They mark a condition;</p></li><li><p>They grant you Influence.</p></li></ul>"
       },
       "_id": "cbJgjmqd1El3xUo5",
-      "img": "icons/svg/aura.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -978,7 +944,7 @@
     "systemId": "pbta",
     "systemVersion": "1.1.22",
     "createdTime": 1761447026504,
-    "modifiedTime": 1761447026504,
+    "modifiedTime": 1761453903423,
     "lastModifiedBy": "huLnHNA8To2T4B8h"
   },
   "_id": "ZQCIpiejtDMVQ3FB",

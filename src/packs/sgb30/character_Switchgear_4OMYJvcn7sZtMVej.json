@@ -3,7 +3,7 @@
   "name": "Switchgear",
   "type": "character",
   "_id": "4OMYJvcn7sZtMVej",
-  "img": "tokenizer/pc-images/switchgear.Avatar.webp?1761256087848",
+  "img": "modules/masks-newgeneration-extensions/images/sgb30/pc-images/switchgear.Avatar.webp?1761453744210",
   "system": {
     "stats": {
       "danger": {
@@ -332,24 +332,7 @@
         "options": {
           "0": {
             "label": "[Text]",
-            "value": false,
-            "values": {
-              "0": {
-                "value": false
-              },
-              "1": {
-                "value": false
-              },
-              "2": {
-                "value": false
-              },
-              "3": {
-                "value": false
-              },
-              "4": {
-                "value": false
-              }
-            }
+            "value": false
           }
         }
       },
@@ -657,7 +640,7 @@
     "width": 1,
     "height": 1,
     "texture": {
-      "src": "tokenizer/pc-images/switchgear.Token.webp?1761256087848",
+      "src": "modules/masks-newgeneration-extensions/images/sgb30/pc-images/switchgear.Token.webp?1761453744210",
       "anchorX": 0.5,
       "anchorY": 0.5,
       "offsetX": 0,
@@ -746,37 +729,37 @@
   },
   "items": [
     {
-      "name": "Move",
+      "name": "Thread the Needle",
       "type": "move",
       "system": {
+        "description": "<p data-start=\"5301\" data-end=\"5525\">When you force a way through with wheels, routes, or logistics—tight corners, backstage corridors, traffic patterns—<strong>say what you exploit</strong> and <strong>roll +Danger</strong></p>",
         "moveType": "basic",
-        "description": "",
         "rollFormula": "",
         "moveResults": {
           "failure": {
-            "key": "system.moveResults.failure.value",
+            "key": "data.moveResults.failure.value",
             "label": "Complications...",
-            "value": ""
+            "value": "<p>Mark Potential for the hero that prompted the move and @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}</p>"
           },
           "partial": {
-            "key": "system.moveResults.partial.value",
+            "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": ""
+            "value": "<p>You do it. Choose one option.</p>"
           },
           "success": {
-            "key": "system.moveResults.success.value",
+            "key": "data.moveResults.success.value",
             "label": "Success!",
-            "value": ""
+            "value": "<p>You do it, and it's badass. Choose two:</p>"
           }
         },
         "uses": 0,
-        "rollType": "",
+        "rollType": "danger",
         "rollMod": 0,
         "actorType": "character",
-        "choices": ""
+        "choices": "<ul><li><p>Reshape the environment</p></li><li><p>Bypass a barrier</p></li><li><p>@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.3e3Dyp1IAnqrGwNj]{Impress, surprise, or frighten the opposition}</p></li><li><p>@UUID[Compendium.masks-newgeneration-unofficial.documents.w5RMQhyRMu0Kz8Bh.JournalEntryPage.AGsdZxeDIixx5ulh]{Creating an opportunity for your allies}</p></li></ul>"
       },
       "_id": "LeQO3lPWL5UY5mJr",
-      "img": "icons/svg/aura.svg",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/encirclement-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -799,37 +782,37 @@
       "_key": "!actors.items!4OMYJvcn7sZtMVej.LeQO3lPWL5UY5mJr"
     },
     {
-      "name": "Move (2)",
+      "name": "White‑Glove Treatment",
       "type": "move",
       "system": {
+        "description": "<p data-start=\"5934\" data-end=\"6090\">When you protect a person or asset by interposing your vehicle, body, or staff access, <strong>roll +Savior</strong></p>",
         "moveType": "basic",
-        "description": "",
         "rollFormula": "",
         "moveResults": {
           "failure": {
-            "key": "system.moveResults.failure.value",
+            "key": "data.moveResults.failure.value",
             "label": "Complications...",
-            "value": ""
+            "value": "<p>You’re pinned, cornered, or blamed; <strong>mark potential</strong> and a <strong>Condition</strong> on the player prompting the move, and @UUID[Item.bnYzF1pzyDdDaNyt]{Put Innocents in Danger}.</p>"
           },
           "partial": {
-            "key": "system.moveResults.partial.value",
+            "key": "data.moveResults.partial.value",
             "label": "Partial success",
-            "value": ""
+            "value": "<p>Choose 1, but the person who prompted the move <strong>takes a condition</strong>.</p>"
           },
           "success": {
-            "key": "system.moveResults.success.value",
+            "key": "data.moveResults.success.value",
             "label": "Success!",
-            "value": ""
+            "value": "<p>Choose two:</p>"
           }
         },
         "uses": 0,
-        "rollType": "",
+        "rollType": "savior",
         "rollMod": 0,
         "actorType": "character",
-        "choices": ""
+        "choices": "<ul><li>Add a Team to the pool</li><li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.AGsdZxeDIixx5ulh]{Creating an opportunity for your allies}</li><li>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.UQp2JmzBob2lVP3C]{Clear a Condition}</li></ul><p> </p>"
       },
       "_id": "EKSBgYqQSX9sF7Hm",
-      "img": "icons/svg/aura.svg",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/red-carpet-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -866,7 +849,7 @@
     "systemId": "pbta",
     "systemVersion": "1.1.22",
     "createdTime": 1761449316086,
-    "modifiedTime": 1761449316086,
+    "modifiedTime": 1761453744406,
     "lastModifiedBy": "huLnHNA8To2T4B8h"
   },
   "ownership": {
