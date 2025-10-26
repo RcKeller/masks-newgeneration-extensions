@@ -1060,7 +1060,7 @@ Return strictly:
   "details": {
     "drive": "1–4 short bullets or sentences summarizing the villain's motives and goals",
     "abilities": "short HTML allowed, prefer bullet points",
-    "biography": "HARD MINIMUM 3-4 sentences, and as much of the base material verbatim as possible. MORE IS BETTER"
+    "biography": "HARD MINIMUM 3-4 sentences, and as much of the base material verbatim as possible. MORE IS BETTER. Include Entries in facts section as bullet points if available"
   }
 }
 `;
