@@ -21,9 +21,19 @@
 			"path": "packs/sgb30",
 			"type": "Actor",
 			"system": "pbta",
-			"private": true,
 			"ownership": {
-				"PLAYER": "NONE",
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "gm-moves",
+			"label": "GM Moves",
+			"path": "packs/gm-moves",
+			"type": "Item",
+			"system": "pbta",
+			"ownership": {
+				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -33,9 +43,8 @@
 			"path": "packs/villains",
 			"type": "Actor",
 			"system": "pbta",
-			"private": true,
 			"ownership": {
-				"PLAYER": "NONE",
+				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -45,9 +54,8 @@
 			"path": "packs/champions-villains",
 			"type": "Actor",
 			"system": "pbta",
-			"private": true,
 			"ownership": {
-				"PLAYER": "NONE",
+				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -57,21 +65,8 @@
 			"path": "packs/adversaries",
 			"type": "Actor",
 			"system": "pbta",
-			"private": true,
 			"ownership": {
-				"PLAYER": "NONE",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "ported",
-			"label": "Ported",
-			"path": "packs/ported",
-			"type": "Actor",
-			"system": "pbta",
-			"private": true,
-			"ownership": {
-				"PLAYER": "NONE",
+				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		}
@@ -82,16 +77,20 @@
 			"packs": [
 				"villains",
 				"adversaries",
-				"champions-villains",
-				"ported"
+				"champions-villains"
 			],
-			"private": true,
 			"folders": []
 		},
 		{
-			"name": "Allies",
-			"packs": ["allies"],
-			"private": true,
+			"name": "GM Moves",
+			"packs": [
+				"gm-moves"
+			],
+			"folders": []
+		},
+		{
+			"name": "sgb30",
+			"packs": ["sgb30"],
 			"folders": []
 		}
 	],
