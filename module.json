@@ -1,11 +1,11 @@
 {
 	"id": "masks-newgeneration-extensions",
-	"title": "Masks: A New Generation (PbtA) Extensions",
-	"description": "Additional features for the unoffical Masks: A New Generation system",
+	"title": "Masks: SGB30+ Edition",
+	"description": "Campaign Modules and custom features for Masks: A New Generation",
 	"version": "#{VERSION}#",
 	"compatibility": {
 		"minimum": 13,
-		"verified": 13.348,
+		"verified": 13.350,
 		"maximum": 15
 	},
 	"authors": [
@@ -17,7 +17,7 @@
 	"packs": [
 		{
 			"name": "sgb30-characters",
-			"label": "SGB30+ Characters",
+			"label": "Characters",
 			"path": "packs/sgb30-characters",
 			"type": "Actor",
 			"system": "pbta",
@@ -29,7 +29,7 @@
 		},
 		{
 			"name": "sgb30-campaign",
-			"label": "SGB30+",
+			"label": "Rules & Recaps",
 			"path": "packs/sgb30-campaign",
 			"type": "JournalEntry",
 			"system": "pbta",
@@ -39,10 +39,22 @@
 			}
 		},
 		{
-			"name": "sgb30-gm",
-			"label": "GM",
-			"path": "packs/sgb30-gm",
-			"type": "JournalEntry",
+			"name": "sgb30-playlist",
+			"label": "Playlists",
+			"path": "packs/sgb30-playlist",
+			"type": "Playlist",
+			"system": "pbta",
+			"ownership": {
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "sgb30-scenes",
+			"label": "Scenes",
+			"path": "packs/sgb30-scenes",
+			"type": "Scene",
 			"system": "pbta",
 			"ownership": {
 				"PLAYER": "NONE",
@@ -57,7 +69,8 @@
 			"type": "Item",
 			"system": "pbta",
 			"ownership": {
-				"PLAYER": "OBSERVER",
+				"PLAYER": "NONE",
+				"TRUSTED": "OWNER",
 				"ASSISTANT": "OWNER"
 			}
 		},
@@ -100,8 +113,13 @@
 	],
 	"packFolders": [
 		{
-			"name": "GM Materials",
-			"packs": ["sgb30-gm", "sgb30-characters", "sgb30-campaign", "villains", "champions-villains", "adversaries"],
+			"name": "SGB30+ Campaign",
+			"packs": ["sgb30-characters", "sgb30-scenes", "sgb30-playlist", "sgb30-campaign"],
+			"folders": []
+		},
+		{
+			"name": "Villains",
+			"packs": ["villains", "champions-villains", "adversaries"],
 			"folders": []
 		}
 	],
@@ -139,13 +157,13 @@
 	"media": [
 		{
 			"type": "screenshot",
-			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/main/images/screenshots/character-sheet_light.webp",
+			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/campaign/sgb/images/sgb30/covers/1.webp",
 			"loop": false,
 			"caption": "Masks character sheet screenshot from Foundry VTT."
 		},
 		{
 			"type": "cover",
-			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/main/images/cover.webp",
+			"url": "https://raw.githubusercontent.com/RcKeller/masks-newgeneration-extensions/campaign/sgb/images/sgb30/covers/1.webp",
 			"loop": false,
 			"caption": "Cover Image for the Unofficial Rhapsody of Blood package."
 		}
