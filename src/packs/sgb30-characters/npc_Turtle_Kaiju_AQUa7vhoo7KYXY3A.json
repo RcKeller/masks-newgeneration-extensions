@@ -1,7 +1,7 @@
 {
-  "name": "Badger",
+  "name": "Turtle Kaiju",
   "type": "npc",
-  "img": "modules/masks-newgeneration-extensions/images/sgb30/npc-images/badger.Avatar.webp?1761854442731",
+  "img": "modules/masks-newgeneration-extensions/images/adversaries/turtle kaiju.png",
   "system": {
     "stats": {},
     "attributes": {
@@ -42,7 +42,7 @@
         "customLabel": false,
         "userLabel": false,
         "type": "Text",
-        "value": "",
+        "value": "Turtle Kaiju",
         "position": "Left"
       },
       "generation": {
@@ -51,7 +51,7 @@
         "customLabel": false,
         "userLabel": false,
         "type": "Text",
-        "value": "",
+        "value": "Gold",
         "position": "Left"
       }
     },
@@ -60,27 +60,27 @@
     "details": {
       "drive": {
         "label": "Drive",
-        "value": "<p>Prove that slow and steady wins. Reclaim the waterfront for the Great Turtle Spirits. Humble rash, flashy heroes.</p>"
+        "value": "Unleash destruction indiscriminately, forcing heroes to make impossible choices.,Provoke panic and chaos to expose the city's fragility.,Retreat when wounded, only to return stronger."
       },
       "abilities": {
         "label": "Abilities",
-        "value": "<p>Mystic shellcraft; spectral terrapin invocations; superhuman durability; gravity-slowing auras; shield mastery and improvised bucklers.</p>"
+        "value": "<ul><li><b>Shellquakes:</b> Stomp attacks that destabilize structures.</li><li><b>Harbor Surges:</b> Tidal waves from submerged movement.</li><li><b>Carapace Defense:</b> Nearly impenetrable shell.</li><li><b>Storm Wake:</b> Hurricane-force winds when agitated.</li></ul>"
       },
       "biography": {
         "label": "Notes",
-        "value": "<p>Keeper of ancient terrapin rites. Champions patience, resilience, and the long view—at any cost.</p>"
+        "value": "A colossal terrapin of unknown origin, Turtle Kaiju emerges without warning from the depths of the Halcyon River. Its appearances are marked by seismic destruction and flooding, as if the creature itself is a force of nature. Some speculate it’s a mutated relic from the city’s industrial pollution, while others whisper it’s a living weapon from a bygone era. Whatever the truth, its rampages leave heroes torn between stopping the beast and saving those caught in its wake."
       }
     },
     "tags": ""
   },
   "prototypeToken": {
-    "name": "Villain",
+    "name": "Aquaria",
     "displayName": 0,
     "actorLink": false,
     "width": 1,
     "height": 1,
     "texture": {
-      "src": "modules/masks-newgeneration-extensions/images/sgb30/npc-images/badger.Token.webp?1761854442731",
+      "src": "modules/masks-newgeneration-extensions/images/adversaries/turtle kaiju.png",
       "anchorX": 0.5,
       "anchorY": 0.5,
       "offsetX": 0,
@@ -169,10 +169,393 @@
   },
   "items": [
     {
+      "name": "Shellquake",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>When Turtle Kaiju slams its massive shell into the ground, the resulting shockwave sends buildings trembling and streets splitting apart. Civilians scream as debris rains down, forcing heroes to choose between stabilizing the collapsing structures or pressing the attack. If ignored, entire blocks will crumble, @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{inflicting collateral damage} that will haunt the team’s reputation.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "jRHNMpEtD4NU7HqJ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 10,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760816,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.jRHNMpEtD4NU7HqJ"
+    },
+    {
+      "name": "Harbor Surge",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>With a thunderous roar, Turtle Kaiju dives back into the river, displacing a tidal wave that surges toward the docks. Fishing boats and cargo ships are tossed like toys, their crews clinging desperately to wreckage. The heroes must act now to @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{save the innocents} or risk losing them to the churning waters—unless they’re willing to let civilians drown to strike at the beast.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "aQbFRHE2ZkysiuRY",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/entangled-typhoon-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 20,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760816,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.aQbFRHE2ZkysiuRY"
+    },
+    {
+      "name": "Storm Wake",
+      "type": "npcMove",
+      "system": {
+        "moveType": "villain",
+        "description": "<p>As Turtle Kaiju moves, it churns the air into a localized hurricane, hurling cars and signage like projectiles. The howling winds make it nearly impossible to hear, let alone coordinate a counterattack. Heroes must @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{struggle to regroup} or risk being separated and picked off one by one.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "6w7dTPjdWrmJHcH2",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 30,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760816,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.6w7dTPjdWrmJHcH2"
+    },
+    {
+      "name": "Afraid — Retreat into Shell",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Turtle Kaiju recoils, tucking its head and limbs into its impenetrable carapace as the heroes press their advantage. The ground shakes as it begins to roll backward, crushing everything in its path toward the river. Heroes must @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.w5RMQhyRMu0Kz8Bh.JournalEntryPage.Xp8um8mddjyw1T7N]{give ground} or be flattened—but if they let it escape, it’ll return twice as destructive.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "Ugwea6rDR8Mjbclj",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 40,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.Ugwea6rDR8Mjbclj"
+    },
+    {
+      "name": "Angry — Frenzied Destruction",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Enraged, Turtle Kaiju abandons all strategy, lashing out with its snapping beak and thrashing limbs. It smashes through power lines and gas mains, igniting fires and @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{causing collateral damage} in every direction. The heroes must contain the chaos or watch the city burn—but getting close risks being crushed underfoot.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "VlyupNHA3o7G7WcS",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/enrage-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 50,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.VlyupNHA3o7G7WcS"
+    },
+    {
+      "name": "Guilty — Submerged Lament",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Turtle Kaiju’s eyes dim as it lets out a mournful bellow, sinking partially into the river. Its wake floods nearby basements and subways, trapping survivors in rising water. The heroes hear cries for help—but pursuing the vulnerable beast now means @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{abandoning those in need}. What kind of heroes does that make them?</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "b3RAUOiFJIfU7Y1a",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/cold-heart-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 60,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.b3RAUOiFJIfU7Y1a"
+    },
+    {
+      "name": "Hopeless — Crushing Despair",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Turtle Kaiju slows, its massive body shuddering as if weighed down by invisible chains. But its mere presence warps the battlefield—cracks spread from its footsteps, and the air grows thick with oppressive humidity. Heroes feel their @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{hope slipping away}, marked by a Condition unless they rally against the gloom.</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "McW6BP8VjGd4WjMI",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 70,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.McW6BP8VjGd4WjMI"
+    },
+    {
+      "name": "Insecure — Defensive Rampage",
+      "type": "npcMove",
+      "system": {
+        "moveType": "condition",
+        "description": "<p>Turtle Kaiju hesitates, glancing at its reflection in the shattered glass of skyscrapers—then roars and rams its shell into the nearest building, as if to prove its might. The collapsing tower @UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{threatens to crush someone} beneath the rubble. Will the heroes exploit this moment of doubt, or save the victims first?</p>",
+        "rollFormula": "",
+        "moveResults": {
+          "failure": {
+            "key": "system.moveResults.failure.value",
+            "label": "Complications...",
+            "value": ""
+          },
+          "partial": {
+            "key": "system.moveResults.partial.value",
+            "label": "Partial success",
+            "value": ""
+          },
+          "success": {
+            "key": "system.moveResults.success.value",
+            "label": "Success!",
+            "value": ""
+          }
+        },
+        "uses": 0
+      },
+      "_id": "mL1Do1B5YPBwiW5i",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 80,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "13.350",
+        "systemId": "pbta",
+        "systemVersion": "1.1.22",
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.mL1Do1B5YPBwiW5i"
+    },
+    {
       "name": "Make a Playbook Move",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.voNk2PNNF7oNqnSn]{Make a Playbook Move}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -194,11 +577,11 @@
         },
         "uses": 0
       },
-      "_id": "jw4dQSPYqNMtOvPB",
+      "_id": "XKOd2aJC8Yfh7ytL",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/playbook.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 90,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -207,18 +590,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.jw4dQSPYqNMtOvPB"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.XKOd2aJC8Yfh7ytL"
     },
     {
       "name": "Activate Downsides of Abilities and Relationships",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NXgUwNBxnjOEIqRa]{Activate the Downsides of their Abilities and Relationships}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -240,11 +624,11 @@
         },
         "uses": 0
       },
-      "_id": "HDegc8SHUcQ825Fu",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
+      "_id": "qe2fKvthqlGR3DA3",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/liar-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 100,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -253,18 +637,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.HDegc8SHUcQ825Fu"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.qe2fKvthqlGR3DA3"
     },
     {
       "name": "Inflict Condition",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.aiXzW3H0z4NREaFc]{Inflict a Condition}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -286,11 +671,11 @@
         },
         "uses": 0
       },
-      "_id": "3UepmZskQPWMGiRj",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/convince-%23ffffff-%233da7db.svg",
+      "_id": "zQiHTukcoQmiwDdZ",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/spiky-explosion-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 110,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -299,18 +684,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.3UepmZskQPWMGiRj"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.zQiHTukcoQmiwDdZ"
     },
     {
       "name": "Take Influence",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.NQfxjpOmX5mqu1Ow]{Take Influence Over Someone}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -332,11 +718,11 @@
         },
         "uses": 0
       },
-      "_id": "X2X9y5NmlDD6ob7T",
+      "_id": "f5e3KbiOyFjALhSk",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/distraction-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 120,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -345,19 +731,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.X2X9y5NmlDD6ob7T"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.f5e3KbiOyFjALhSk"
     },
     {
       "name": "Bring Team Together",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.5NEbMj9wQ0QJFLYz]{Bring Them Together}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -378,11 +765,11 @@
         },
         "uses": 0
       },
-      "_id": "caxrtPxOrxqXxOmU",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/conqueror-%23ffffff-%233da7db.svg",
+      "_id": "RtI32HmmCPGUjzt7",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/team-upgrade-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 130,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -391,19 +778,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.caxrtPxOrxqXxOmU"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.RtI32HmmCPGUjzt7"
     },
     {
       "name": "Capture Someone",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.u8A6Gk7GoqBIMQBs]{Capture Someone}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -424,11 +812,11 @@
         },
         "uses": 0
       },
-      "_id": "gklAyGD3mAmbJuHG",
+      "_id": "QAPICeDbOXnfDWlC",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/arrest-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 140,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -437,19 +825,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.gklAyGD3mAmbJuHG"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.QAPICeDbOXnfDWlC"
     },
     {
       "name": "Put Innocents in Danger",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.J6NDHhQ2xeaHUZ6Y]{Put Innocents in Danger}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -470,11 +859,11 @@
         },
         "uses": 0
       },
-      "_id": "MRbtumLRGQ0IAEdN",
+      "_id": "IgZ15MY5sijUbohJ",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/target-dummy-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 150,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -483,18 +872,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.MRbtumLRGQ0IAEdN"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.IgZ15MY5sijUbohJ"
     },
     {
       "name": "Villain Move",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.gUeKGSiXfwJEKGeS]{Make a Villain Move}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -516,11 +906,11 @@
         },
         "uses": 0
       },
-      "_id": "0zNNaCFDPHugDpt3",
+      "_id": "68KXE4y3WRysyY7y",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/armor-punch-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 160,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -529,18 +919,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.0zNNaCFDPHugDpt3"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.68KXE4y3WRysyY7y"
     },
     {
       "name": "Show Collateral Damage",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.y38zWkHIGzqyZmGc]{Show the Costs of Collateral Damage}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -562,11 +953,11 @@
         },
         "uses": 0
       },
-      "_id": "aT5CGvCilHK5gz1l",
+      "_id": "LWv5GIqJt0Em8b5P",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/bulldozer-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 170,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -575,18 +966,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.aT5CGvCilHK5gz1l"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.LWv5GIqJt0Em8b5P"
     },
     {
       "name": "Reveal Future",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.Rm4fQyfiwGkpytfF]{Reveal the Future}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -608,11 +1000,11 @@
         },
         "uses": 0
       },
-      "_id": "BHmCwWJjNYQdbEcg",
+      "_id": "txdSU7dtECHWOmf4",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/eye-target-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 180,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -621,19 +1013,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.BHmCwWJjNYQdbEcg"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.txdSU7dtECHWOmf4"
     },
     {
       "name": "Announce Between-Panel Threats",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.sSBCr0W3EJYs6Tg7]{Announce Between-Panel Threats}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -654,11 +1047,11 @@
         },
         "uses": 0
       },
-      "_id": "GTc9QAOw0U0Wlp7Q",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/frankenstein-creature-%23ffffff-%233da7db.svg",
+      "_id": "eMeBjnqb2NfkQ10K",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/ringing-alarm-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 190,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -667,18 +1060,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.GTc9QAOw0U0Wlp7Q"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.eMeBjnqb2NfkQ10K"
     },
     {
       "name": "Price of Victory",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.JournalEntry.llXD7GIZiU5z5MiG.JournalEntryPage.89UPbdTtpbs4kmP3]{Make Them Pay a Price for Victory}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -700,11 +1094,11 @@
         },
         "uses": 0
       },
-      "_id": "OQdlsFW7ggCGoby3",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/snatch-%23ffffff-%233da7db.svg",
+      "_id": "lsWZACSLVUR16RLy",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 200,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -713,19 +1107,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.OQdlsFW7ggCGoby3"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.lsWZACSLVUR16RLy"
     },
     {
       "name": "Counter",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -746,11 +1141,11 @@
         },
         "uses": 0
       },
-      "_id": "eWeibQQ0xypKY6hX",
+      "_id": "eWSBGJHCRvUwnmtD",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/halt-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 210,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -759,19 +1154,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.eWeibQQ0xypKY6hX"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.eWSBGJHCRvUwnmtD"
     },
     {
       "name": "Reverse",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.EgNc30M2opeJiQOg]{Turn Their Move Back on Them}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -792,11 +1188,11 @@
         },
         "uses": 0
       },
-      "_id": "79Gi8vYPeGRRVg6H",
+      "_id": "cPlAPj69HBZv75sm",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/mirror-mirror-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 220,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -805,19 +1201,20 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.79Gi8vYPeGRRVg6H"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.cPlAPj69HBZv75sm"
     },
     {
       "name": "Possible Consequence...",
       "type": "npcMove",
       "system": {
-        "moveType": "",
-        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask @ GM Moves}</p>",
+        "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.TxVR9tX5Y50wmTRt]{Tell them the Possible Consequences and Ask}</p>",
         "rollFormula": "",
         "moveResults": {
           "failure": {
@@ -838,11 +1235,11 @@
         },
         "uses": 0
       },
-      "_id": "ImVtcTbfC41AN7Wn",
+      "_id": "18PZu5oOAEU7R5ll",
       "img": "modules/masks-newgeneration-unofficial/images/gameicons/death-note-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 230,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -851,18 +1248,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.ImVtcTbfC41AN7Wn"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.18PZu5oOAEU7R5ll"
     },
     {
       "name": "Tell Them Who They Are or Should Be",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.vbmelu6amDCsv8Xp]{Tell Them Who They Are or Who They Should Be}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -884,11 +1282,11 @@
         },
         "uses": 0
       },
-      "_id": "A0EtYo3rhRddm7SK",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/pointing-%23ffffff-%233da7db.svg",
+      "_id": "sh4Y0mylpf2xcWFB",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/philosopher-bust-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 240,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -897,18 +1295,19 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.A0EtYo3rhRddm7SK"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.sh4Y0mylpf2xcWFB"
     },
     {
       "name": "Rash Decision",
       "type": "npcMove",
       "system": {
-        "moveType": "",
         "description": "<p>@UUID[Compendium.masks-newgeneration-unofficial.documents.llXD7GIZiU5z5MiG.JournalEntryPage.WDtPMAeq3CIumtrg]{Bring an NPC to Rash Decisions and Hard Conclusions}</p>",
         "rollFormula": "",
         "moveResults": {
@@ -930,11 +1329,11 @@
         },
         "uses": 0
       },
-      "_id": "BtQXu8aGq3YnRzq7",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/charging-bull.svg",
+      "_id": "QIofEG0OlAHRZT2w",
+      "img": "modules/masks-newgeneration-unofficial/images/gameicons/radar-sweep-%23ffffff-%233da7db.svg",
       "effects": [],
       "folder": null,
-      "sort": 0,
+      "sort": 250,
       "flags": {},
       "_stats": {
         "compendiumSource": null,
@@ -943,384 +1342,22 @@
         "coreVersion": "13.350",
         "systemId": "pbta",
         "systemVersion": "1.1.22",
-        "lastModifiedBy": null
+        "lastModifiedBy": null,
+        "createdTime": 1761855760817,
+        "modifiedTime": 1761855760817
       },
       "ownership": {
         "default": 0
       },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.BtQXu8aGq3YnRzq7"
-    },
-    {
-      "name": "Afraid - Into the Shell",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>He retreats beneath a shimmering terrapin dome that divides the field.</p><p><strong>Split the party</strong> by sealing off a lane or rooftop and <strong>endanger civilians</strong> outside unless someone holds the barrier open. Anyone pursuing him into the dome must <strong>mark Afraid</strong> or expose themselves to a hard move from the environment (falling masonry, rising tide).</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "byfhQXYKl3Nuxgre",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/suspicious-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.byfhQXYKl3Nuxgre"
-    },
-    {
-      "name": "Angry - Snapping Point",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>With a guttural bark, he surges forward like a snapping turtle.</p><p><strong>–1 Team</strong> from the pool as he shatters formation. <strong>Target 1 hero</strong>: they choose—<strong>stand their ground and mark Angry</strong> as his shield slams into them, or <strong>give ground</strong> and let him <strong>break something important</strong> (cover, gear, or a relationship stake).</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "205Ruxz5koQddVro",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/confrontation-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.205Ruxz5koQddVro"
-    },
-    {
-      "name": "Guilty - Return the Hatchling",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>His conscience twinges; he rescues a terrified turtle—or a civilian—before the crush.</p><p>He takes <strong>+1 on his next action</strong> and offers an olive branch to a hero. If the hero accepts the moment of grace, <strong>clear 1 of his conditions</strong> but give that hero a chance to <strong>exercise Influence</strong> immediately (shift his Labels, demand a promise, or press for surrender). If refused, he <strong>inflicts Guilty</strong> on someone who witnesses the rejection.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "DAwGBKnGdaPvhlam",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/robber-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.DAwGBKnGdaPvhlam"
-    },
-    {
-      "name": "Hopeless - The Long View",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>He settles into a waiting stance—the tortoise outlasting the hare.</p><p>Unless a hero <strong>Directly Engages</strong> him within the next two turns, he <strong>exits the scene</strong> (escapes along the riverfront or into storm drains). If caught, he remains but <strong>marks a condition</strong> from the effort.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "jmD65RPmq29sIsq0",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/kneeling-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.jmD65RPmq29sIsq0"
-    },
-    {
-      "name": "Insecure - Reinforce the Shell",
-      "type": "npcMove",
-      "system": {
-        "moveType": "condition",
-        "description": "<p>Overcompensating, he rebuilds a problem the heroes solved.</p><p>Bring back one <strong>hazard or liability</strong> the team removed—rising floodwater, gridlocked traffic, or a stampede of panicked turtles. If a defeated minion returns, they come back with <strong>at least 3 conditions</strong> marked.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "kV9UYyWPwVjvBCKu",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/broken-pottery-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.kV9UYyWPwVjvBCKu"
-    },
-    {
-      "name": "Shell Up",
-      "type": "npcMove",
-      "system": {
-        "moveType": "villain",
-        "description": "<p>The Turtle Tamer crouches; a translucent tortoise carapace blooms and <strong>turns force back on the reckless</strong>.</p><p><strong>Anyone who rushes him</strong> this round must either <strong>back off</strong> and give him time and positioning (he <strong>repositions</strong> and removes one complication on him) or <strong>press in and mark Angry</strong> as the shell bristles and absorbs the blow. Creative or ranged approaches can earn the team <strong>+1 Team</strong> if they reframe the exchange on-panel.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "ghasvNrczsDl331V",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/brodie-helmet-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.ghasvNrczsDl331V"
-    },
-    {
-      "name": "Patience of the Tortoise",
-      "type": "npcMove",
-      "system": {
-        "moveType": "villain",
-        "description": "<p>He draws everyone into <strong>his pace</strong>. The fight <em>drags</em>—panel borders widen; word balloons stretch.</p><p>Until a hero spends a panel establishing a clever workaround or team rhythm, <strong>basic moves that lean on speed or initiative</strong> suffer <strong>–1</strong>, and the GM <strong>advances any countdown</strong> tied to flooding, traffic, or public panic.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "dLLvEjvSAzkVk9tv",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/chess-knight-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.dLLvEjvSAzkVk9tv"
-    },
-    {
-      "name": "Blessing of the War Snapper",
-      "type": "npcMove",
-      "system": {
-        "moveType": "villain",
-        "description": "<p>He slams a carved totem; spectral jaws <strong>clack like thunder</strong>.</p><p><strong>Choose the boldest hero</strong>: they must <strong>give ground</strong> (the team loses <strong>1 Team</strong> and he splits the party or claims key cover) or <strong>stand firm and mark Angry</strong>. Either way, he <strong>shreds</strong> a piece of cover or an asset in the scene.</p>",
-        "rollFormula": "",
-        "moveResults": {
-          "failure": {
-            "key": "system.moveResults.failure.value",
-            "label": "Complications...",
-            "value": ""
-          },
-          "partial": {
-            "key": "system.moveResults.partial.value",
-            "label": "Partial success",
-            "value": ""
-          },
-          "success": {
-            "key": "system.moveResults.success.value",
-            "label": "Success!",
-            "value": ""
-          }
-        },
-        "uses": 0
-      },
-      "_id": "UUMCPc9r5yC4yZsh",
-      "img": "modules/masks-newgeneration-unofficial/images/gameicons/centaur-heart-%23ffffff-%233da7db.svg",
-      "effects": [],
-      "folder": null,
-      "sort": 0,
-      "flags": {},
-      "_stats": {
-        "compendiumSource": null,
-        "duplicateSource": null,
-        "exportSource": null,
-        "coreVersion": "13.350",
-        "systemId": "pbta",
-        "systemVersion": "1.1.22",
-        "lastModifiedBy": null
-      },
-      "ownership": {
-        "default": 0
-      },
-      "_key": "!actors.items!p4LM5eUI6cZNsGiE.UUMCPc9r5yC4yZsh"
+      "_key": "!actors.items!AQUa7vhoo7KYXY3A.QIofEG0OlAHRZT2w"
     }
   ],
   "effects": [],
-  "folder": "mZxQRaH7gFWagkQh",
+  "folder": null,
+  "ownership": {
+    "default": 0,
+    "huLnHNA8To2T4B8h": 3
+  },
   "flags": {},
   "_stats": {
     "compendiumSource": null,
@@ -1329,15 +1366,11 @@
     "coreVersion": "13.350",
     "systemId": "pbta",
     "systemVersion": "1.1.22",
-    "createdTime": 1761854578330,
-    "modifiedTime": 1761854578330,
-    "lastModifiedBy": "huLnHNA8To2T4B8h"
+    "createdTime": 1761855760816,
+    "modifiedTime": 1761855760817,
+    "lastModifiedBy": null
   },
-  "_id": "p4LM5eUI6cZNsGiE",
-  "ownership": {
-    "default": 0,
-    "huLnHNA8To2T4B8h": 3
-  },
-  "sort": 0,
-  "_key": "!actors!p4LM5eUI6cZNsGiE"
+  "_id": "AQUa7vhoo7KYXY3A",
+  "sort": 100000,
+  "_key": "!actors!AQUa7vhoo7KYXY3A"
 }

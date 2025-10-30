@@ -22,7 +22,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-const DEFAULT_DIRS = ['src/packs/adversaries', 'src/packs/champions-villains'];
+const DEFAULT_DIRS = ['src/packs/custom'];
 
 /** Parse CLI flags */
 function parseArgs(argv = process.argv.slice(2)) {
