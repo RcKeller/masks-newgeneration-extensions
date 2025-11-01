@@ -110,16 +110,6 @@ Hooks.on("getSceneControlButtons", (controls) => {
     onClick: withDelta("forward", +1)
   });
 
-  addTool("ongoingAdd", {
-    layer: "tokens",
-    name: "ongoingAdd",
-    title: "Add +1 Ongoing",
-    icon: "fa-solid fa-chevrons-right",
-    button: true,
-    visible: true,
-    onClick: withDelta("ongoing", +1)
-  });
-
   addTool("forwardRemove", {
     layer: "tokens",
     name: "forwardRemove",
@@ -130,11 +120,21 @@ Hooks.on("getSceneControlButtons", (controls) => {
     onClick: withDelta("forward", -1)
   });
 
+  addTool("ongoingAdd", {
+    layer: "tokens",
+    name: "ongoingAdd",
+    title: "Add +1 Ongoing",
+    icon: "fa-solid fa-right-from-bracket",
+    button: true,
+    visible: true,
+    onClick: withDelta("ongoing", +1)
+  });
+
   addTool("ongoingRemove", {
     layer: "tokens",
     name: "ongoingRemove",
     title: "Remove 1 Ongoing",
-    icon: "fa-solid fa-chevrons-left",
+    icon: "fa-solid fa-left-to-bracket",
     button: true,
     visible: true,
     onClick: withDelta("ongoing", -1)
