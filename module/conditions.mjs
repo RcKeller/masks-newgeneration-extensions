@@ -1,23 +1,26 @@
-/* global Hooks, game, foundry, ActiveEffect, canvas */
+/* global Hooks, game, foundry, ActiveEffect */
+
 /**
  * status-fx.mjs
  * ----------------------------------------------------------------------------
- * Automatic token status icons for Masks conditions (Afraid, Angry, Guilty,
- * Hopeless, Insecure). Uses native ActiveEffects with custom `statuses` tags,
- * so they render in the token's overlay using Foundry's built-in mechanism.
- *
- * ✅ v13+ APIs only
- * ✅ Works with Characters and NPCs
- * ✅ Works with linked and unlinked tokens (synthetic Actors)
- * ✅ Permission-aware: only GM or sheet owner writes
- * ✅ Efficient: delta-based (create/delete only when needed), batched I/O,
- *    and change detection keyed specifically to the conditions path
+ * This file manages the automatic synchronization of status effect icons
+ * on tokens based on the Actor's condition data in their sheet.
+ * It listens for actor updates and adds/removes ActiveEffects as needed
+ * to match the state of the 'Afraid', 'Angry', 'Guilty', 'Hopeless',
+ * and 'Insecure' conditions.
  */
 
+// Use the same namespace as other module files
 const NS = "masks-newgeneration-extensions";
 
-/** Icons to display for each condition (paths provided by user). */
-const MANAGED = Object.freeze({
+/**
+ * Defines the conditions we want to manage and their corresponding icons.
+ * - 'key': The string we look for in the actor's data (e.g., "Afraid").
+ * - 'id': A unique statusId we'll use to tag the ActiveEffect for tracking.
+ * - 'name': The display name for the ActiveEffect.
+ * - 'img': The path to the icon.
+ */
+const MANAGED_CONDITIONS = {
   Afraid: {
     id: `${NS}-afraid`,
     name: "Afraid",
@@ -43,190 +46,136 @@ const MANAGED = Object.freeze({
     name: "Insecure",
     img: "modules/masks-newgeneration-unofficial/images/gameicons/screaming-%23ffffff-%233da7db.svg"
   }
-});
-
-/** Internal: flag marker to identify effects created by this module (nice to have). */
-const FX_FLAG = "autoConditionEffect";
-
-/** Quick permission check: only GM or Actor owner should write. */
-function canWrite(actor) {
-  return game.user?.isGM || actor?.isOwner === true;
-}
-
-/** Robust change detector: did any nested Conditions option value change? */
-function didConditionsChange(changes, basePath = "system.attributes.conditions.options") {
-  const flat = foundry.utils.flattenObject(changes || {});
-  // Matches "system.attributes.conditions.options" and any deeper keys under it
-  for (const k of Object.keys(flat)) {
-    if (k === basePath || k.startsWith(`${basePath}.`)) return true;
-  }
-  // Also detect TokenDocument actorData overrides (for synthetic actors)
-  const tokenBase = `actorData.${basePath}`;
-  for (const k of Object.keys(flat)) {
-    if (k === tokenBase || k.startsWith(`${tokenBase}.`)) return true;
-  }
-  return false;
-}
+};
 
 /**
- * Extract the boolean state for a given condition key ("Afraid", …) from
- * an Actor. Works with both Character and NPC examples:
- *  system.attributes.conditions.options is an object keyed "0","1",...
- *  with entries like { label: "Afraid (-2 ...)", value: false }
+ * Finds the state of a specific condition (like "Afraid") from the actor's data.
+ * @param {Actor} actor - The actor document.
+ * @param {string} conditionKey - The string to search for, e.g., "Afraid".
+ * @returns {boolean} - True if the condition is active, false otherwise.
  */
-function getConditionState(actor, condKey) {
-  const opts = foundry.utils.getProperty(actor, "system.attributes.conditions.options");
-  if (!opts || typeof opts !== "object") return false;
-
-  const want = String(condKey).trim().toLowerCase();
-  for (const entry of Object.values(opts)) {
-    const label = String(entry?.label ?? "").toLowerCase().trim();
-    // Normalize away anything in parentheses, e.g., "Afraid (-2 to engage)"
-    const base = label.split("(")[0].trim();
-    if (base === want) return !!entry?.value;
+const getConditionState = (actor, conditionKey) => {
+  // This path is consistent for both 'character' and 'npc' types
+  const conditions = foundry.utils.getProperty(actor, "system.attributes.conditions.options");
+  if (!conditions || typeof conditions !== "object") {
+    return false;
   }
-  return false;
-}
 
-/** Return a map of current managed statusId -> ActiveEffect id present on the actor. */
-function readCurrentManagedEffects(actor) {
-  /** @type {Map<string,string>} */
-  const map = new Map();
-  if (!actor?.effects) return map;
-
-  const managedIds = new Set(Object.values(MANAGED).map(m => m.id));
-  for (const eff of actor.effects) {
-    // Prefer explicit module flag; otherwise, detect by statuses membership
-    const ours = eff.getFlag(NS, FX_FLAG) === true ||
-                 (Array.isArray(eff.statuses) && eff.statuses.some(s => managedIds.has(s)));
-    if (!ours) continue;
-
-    // Map every managed status present on the effect (normally just one)
-    for (const s of eff.statuses ?? []) {
-      if (managedIds.has(s)) map.set(s, eff.id);
+  // Iterate over the values of the conditions object (e.g., '0', '1', ...)
+  for (const conditionData of Object.values(conditions)) {
+    // Check that the label exists and starts with our key
+    // This handles both "Afraid" and "Afraid (-2 to engage)"
+    if (conditionData?.label && String(conditionData.label).startsWith(conditionKey)) {
+      return !!conditionData.value;
     }
   }
-  return map;
-}
+  return false;
+};
 
 /**
- * Core: compute delta and apply minimal create/delete to reflect the current
- * Conditions on the actor.
+ * Synchronizes all managed status effects for a given actor based on their sheet data.
+ * This function is designed to be efficient by performing batch create/delete operations.
+ * @param {Actor} actor - The actor to synchronize.
  */
-async function syncConditionEffects(actor) {
-  if (!actor) return;
-  if (!canWrite(actor)) return;
+const syncConditionEffects = async (actor) => {
+  // Ensure actor and effects collection are available
+  if (!actor?.effects) return;
 
-  // Delta: what is present vs. what *should* be present
-  const current = readCurrentManagedEffects(actor);
-  const toCreate = [];
-  const toDelete = [];
+  const effectsToCreate = [];
+  const effectsToDelete = [];
 
-  for (const [key, def] of Object.entries(MANAGED)) {
-    const shouldBeActive = getConditionState(actor, key);
-    const hasNow = current.has(def.id);
+  // Get all *managed* status IDs.
+  const managedEffectIds = new Set(Object.values(MANAGED_CONDITIONS).map(c => c.id));
+  
+  // Find effects on the actor that *we* manage.
+  // We build a map of { statusId => effectId }
+  const currentEffects = new Map();
+  for (const effect of actor.effects) {
+    // Use the statuses set to identify our managed effects
+    for (const statusId of effect.statuses) {
+      if (managedEffectIds.has(statusId)) {
+        currentEffects.set(statusId, effect.id);
+        break; // Assume one effect per statusId
+      }
+    }
+  }
+  
+  // Compare sheet data state vs. active effect state
+  for (const [key, config] of Object.entries(MANAGED_CONDITIONS)) {
+    const isAfflicted = getConditionState(actor, key);
+    const hasEffect = currentEffects.has(config.id);
 
-    if (shouldBeActive && !hasNow) {
-      toCreate.push({
-        name: def.name,
-        img: def.img,
-        statuses: [def.id],      // tag with our unique statusId
-        origin: actor.uuid,
-        transfer: false,         // actor-level only; never transfer via items
-        disabled: false,
-        flags: { [NS]: { [FX_FLAG]: true } }
+    if (isAfflicted && !hasEffect) {
+      // Sheet says YES, but no effect exists: ADD EFFECT
+      effectsToCreate.push({
+        name: config.name,
+        img: config.img,
+        statuses: [config.id], // Tag it with our unique statusId
+        origin: actor.uuid,    // Good practice to link origin
+        transfer: false        // Don't transfer to items, etc.
       });
-    } else if (!shouldBeActive && hasNow) {
-      toDelete.push(current.get(def.id));
+    } else if (!isAfflicted && hasEffect) {
+      // Sheet says NO, but effect exists: REMOVE EFFECT
+      const effectId = currentEffects.get(config.id);
+      if (effectId) {
+        effectsToDelete.push(effectId);
+      }
     }
   }
 
-  if (!toCreate.length && !toDelete.length) return; // nothing to do
-
+  // Perform batch operations for efficiency
   try {
-    // Batch writes are efficient and minimize renders
-    if (toCreate.length) {
-      await ActiveEffect.create(toCreate, { parent: actor, keepId: false });
+    if (effectsToCreate.length > 0) {
+      await ActiveEffect.create(effectsToCreate, { parent: actor, keepId: false });
     }
-    if (toDelete.length) {
-      const uniqueIds = [...new Set(toDelete)];
-      await actor.deleteEmbeddedDocuments("ActiveEffect", uniqueIds);
+    if (effectsToDelete.length > 0) {
+      // Use Set to ensure no duplicates, just in case
+      const finalDeleteIds = [...new Set(effectsToDelete)];
+      await actor.deleteEmbeddedDocuments("ActiveEffect", finalDeleteIds);
     }
   } catch (err) {
-    console.error(`[${NS}] Condition effect sync failed for ${actor.name}`, err);
+    console.error(`[${NS}] Error synchronizing condition effects for ${actor.name}:`, err);
   }
-}
+};
 
-/* ------------------------------------------------------------------------ */
-/* Small scheduler to collapse rapid toggles into one write per Actor        */
-/* ------------------------------------------------------------------------ */
-const _pending = new Map(); // actor.id -> timerId
+/**
+ * Helper to check if the 'conditions' data path was part of an update.
+ * @param {object} changes - The 'changes' object from updateActor.
+ * @returns {boolean}
+ */
+const didConditionsChange = (changes) => {
+  // This check is robust: it triggers if 'options' is changed directly
+  // or if a nested property like 'options.0.value' is changed.
+  return foundry.utils.hasProperty(changes, "system.attributes.conditions.options");
+};
 
-function queueSync(actor, delay = 25) {
-  if (!actor) return;
-  const id = actor.id ?? actor.parent?.id ?? actor.uuid;
-  if (!id) return;
-  if (_pending.has(id)) {
-    clearTimeout(_pending.get(id));
-  }
-  const tid = setTimeout(async () => {
-    _pending.delete(id);
-    await syncConditionEffects(actor);
-  }, Math.max(10, delay));
-  _pending.set(id, tid);
-}
-
-/* ------------------------------------------------------------------------ */
-/* Hooks                                                                     */
-/* ------------------------------------------------------------------------ */
-
+// Register the main hook once the game is ready.
 Hooks.once("ready", () => {
-  // Keep in lock-step with sheet edits on ANY actor (Characters & NPCs; linked or synthetic)
-  Hooks.on("updateActor", (actor, changes) => {
-    if (!didConditionsChange(changes)) return;
-    queueSync(actor);
+  /**
+   * Main hook for keeping actor sheets and token effects in sync.
+   * This is the core of the functionality.
+   */
+  Hooks.on("updateActor", (actor, changes, options, userId) => {
+    // Check if the data we care about (conditions) was part of the update.
+    if (didConditionsChange(changes)) {
+      // Fire and forget: run the sync but don't block the update
+      // operation from completing. This keeps the UI snappy.
+      syncConditionEffects(actor);
+    }
   });
 
-  // Safety net for edge paths that write Conditions through Token actorData overrides.
-  Hooks.on("updateToken", (tokenDoc, changes) => {
-    if (!didConditionsChange(changes)) return;
-    const actor = tokenDoc?.actor;
-    if (actor) queueSync(actor);
-  });
-
-  // Initial pass: sync all world actors (PCs/NPCs). Only GM runs this to avoid duplication.
-  if (game.user?.isGM) {
-    const tasks = [];
-    for (const a of game.actors?.contents ?? []) {
-      tasks.push(syncConditionEffects(a));
+  // Optional: Run a one-time sync for all actors on load if you are the GM.
+  // This is good for scalability as it only runs once per GM client load
+  // and catches any actors who had conditions *before* this module was active.
+  if (game.user.isGM) {
+    console.log(`[${NS}] | Running one-time sync for condition icons.`);
+    const syncTasks = [];
+    for (const actor of game.actors) {
+      syncTasks.push(syncConditionEffects(actor));
     }
-    // Also sweep currently drawn tokens (unlinked/synthetic actors live here)
-    for (const t of canvas.tokens?.placeables ?? []) {
-      if (t?.actor) tasks.push(syncConditionEffects(t.actor));
-    }
-    Promise.allSettled(tasks).then(() =>
-      console.log(`[${NS}] Initial condition icon sync complete.`)
-    );
+    // Run all syncs in parallel and log when complete.
+    Promise.allSettled(syncTasks).then(() => {
+      console.log(`[${NS}] | One-time condition icon sync complete.`);
+    });
   }
-
-  // When the canvas is (re)ready (scene swap), sweep visible tokens (covers synthetic actors)
-  Hooks.on("canvasReady", () => {
-    if (!game.user?.isGM) return; // keep it to a single writer
-    const tasks = [];
-    for (const t of canvas.tokens?.placeables ?? []) {
-      if (t?.actor) tasks.push(syncConditionEffects(t.actor));
-    }
-    Promise.allSettled(tasks);
-  });
-
-  // New actors created during play (e.g., spawned NPCs) — GM syncs once.
-  Hooks.on("createActor", (actor) => {
-    if (game.user?.isGM) queueSync(actor, 1);
-  });
-
-  // New tokens dropped onto scene — GM syncs once (covers synthetic actor case).
-  Hooks.on("createToken", (tokenDoc) => {
-    if (!game.user?.isGM) return;
-    if (tokenDoc?.actor) queueSync(tokenDoc.actor, 1);
-  });
 });
