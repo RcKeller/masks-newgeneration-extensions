@@ -113,4 +113,30 @@
   color: #F44336;
 }
 
+/* PbtA acted-this-round overlay for combat tracker */
+#combat li.combatant {
+  position: relative;
+  /* Reveal on row hover */
+  /* Keep visible while keyboard focusing the control */
+}
+#combat li.combatant > .pbta-gone-toggle {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  z-index: 2;
+  opacity: 0;
+  transition: var(--ui-fade-delay);
+  width: 55px;
+  height: 55px;
+  font-size: 65px;
+  background-color: transparent;
+  color: var(--color-level-success-bg);
+}
+#combat li.combatant:hover > .pbta-gone-toggle {
+  opacity: 0.4;
+}
+#combat li.combatant > .pbta-gone-toggle:focus {
+  opacity: 0.4;
+}
+
 /*# sourceMappingURL=masks-extensions.css.map */

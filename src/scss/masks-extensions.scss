@@ -129,3 +129,36 @@
     }
   }
 }
+
+/* PbtA acted-this-round overlay for combat tracker */
+#combat {
+  li.combatant {
+    position: relative;
+
+    >.pbta-gone-toggle {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      z-index: 2;
+      opacity: 0;
+      transition: var(--ui-fade-delay);
+      width: 55px;
+      height: 55px;
+      // line-height: 22px;
+      font-size: 65px;
+      background-color: transparent;
+      color: var(--color-level-success-bg)
+      /* inherit Foundry button visuals via existing classes */
+    }
+
+    /* Reveal on row hover */
+    &:hover>.pbta-gone-toggle {
+      opacity: 0.4;
+    }
+
+    /* Keep visible while keyboard focusing the control */
+    >.pbta-gone-toggle:focus {
+      opacity: 0.4;
+    }
+  }
+}
