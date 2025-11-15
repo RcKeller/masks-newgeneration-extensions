@@ -45,7 +45,7 @@ function countActiveConditions(dataLike) {
 function deriveHP(actor) {
 	const isChar = actor?.type === "character";
 	let max = isChar ? 5 : Number(foundry.utils.getProperty(actor, PATH.TIER));
-	if (!Number.isFinite(max)) max = isChar ? 5 : 3;
+	if (!Number.isFinite(max)) max = isChar ? 5 : 5;
 	max = clamp(max, 0, 5);
 
 	const conds = countActiveConditions(actor);
@@ -209,8 +209,8 @@ async function migrateExistingActorsAndTokens() {
 		if (a.type === "npc") {
 			const tier = Number(foundry.utils.getProperty(a, PATH.TIER));
 			if (!Number.isFinite(tier)) {
-				console.log(`[${NS}] Adding tier 3 to NPC ${a.name}`);
-				tasks.push(a.update({ [PATH.TIER]: 3 }));
+				console.log(`[${NS}] Adding tier 5 to NPC ${a.name}`);
+				tasks.push(a.update({ [PATH.TIER]: 5 }));
 			}
 		}
 		// Ensure HP field exists
@@ -263,7 +263,7 @@ function patchSheetConfig() {
 			npcAttrs.tier = {
 				type: "Number",
 				label: "Tier",
-				value: 3,
+				value: 5,
 				min: 0,
 				max: 5,
 				position: "Top",
@@ -306,8 +306,8 @@ Hooks.once("ready", async () => {
 		if (actor.type === "npc") {
 			const tier = Number(foundry.utils.getProperty(actor, PATH.TIER));
 			if (!Number.isFinite(tier)) {
-				console.log(`[${NS}] Adding tier 3 to new NPC ${actor.name}`);
-				await actor.update({ [PATH.TIER]: 3 });
+				console.log(`[${NS}] Adding tier 5 to new NPC ${actor.name}`);
+				await actor.update({ [PATH.TIER]: 5 });
 			}
 		}
 		await ensureHpField(actor);
