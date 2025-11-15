@@ -45,6 +45,8 @@ const MANAGED = Object.freeze({
 
 const FX_FLAG = "autoConditionEffect";
 
+/** Health depends on unique active conditions - this file ensures they're properly managed */
+
 // Lowercase helpers and reverse lookups
 const COND_KEYS = Object.keys(MANAGED);
 const LOWER = Object.fromEntries(COND_KEYS.map((k) => [k, k.toLowerCase()]));

@@ -151,9 +151,13 @@ async function ensureTokenBar(tokenDoc) {
 	// Foundry expects a path relative to actor.system
 	const desired = "attributes.hp";
 	const cur = tokenDoc?.bar1?.attribute;
-	if (cur === desired) return;
+	const curBars = tokenDoc?.displayBars || 0;
+	const newBars = curBars < 20 ? 20 : curBars; // Show on hover if not already always shown
+	if (cur === desired && curBars >= 20) return;
 	try {
-		await tokenDoc.update({ "bar1.attribute": desired }, { diff: true });
+		const updates = { "bar1.attribute": desired };
+		if (curBars < 20) updates["displayBars"] = newBars;
+		await tokenDoc.update(updates, { diff: true });
 	} catch (err) {
 		console.warn(
 			`[${NS}] Could not set bar1 to HP for token ${tokenDoc.name}`,
@@ -205,11 +209,14 @@ async function migrateExistingActorsAndTokens() {
 		if (a.type === "npc") {
 			const tier = Number(foundry.utils.getProperty(a, PATH.TIER));
 			if (!Number.isFinite(tier)) {
+				console.log(`[${NS}] Adding tier 3 to NPC ${a.name}`);
 				tasks.push(a.update({ [PATH.TIER]: 3 }));
 			}
 		}
 		// Ensure HP field exists
-		tasks.push(ensureHpField(a));
+		if (await ensureHpField(a)) {
+			console.log(`[${NS}] Added HP field to ${a.name}`);
+		}
 	}
 	try {
 		await Promise.allSettled(tasks);
@@ -262,6 +269,7 @@ function patchSheetConfig() {
 				position: "Top",
 			};
 		}
+		console.log(`[${NS}] Patched PbtA sheet config with Tier/HP fields`);
 	} catch (err) {
 		console.warn(`[${NS}] Failed to patch PbtA sheet config for Tier/HP`, err);
 	}
@@ -294,6 +302,14 @@ Hooks.once("ready", async () => {
 
 	// New docs during play
 	Hooks.on("createActor", async (actor) => {
+		// Add tier to new NPCs
+		if (actor.type === "npc") {
+			const tier = Number(foundry.utils.getProperty(actor, PATH.TIER));
+			if (!Number.isFinite(tier)) {
+				console.log(`[${NS}] Adding tier 3 to new NPC ${actor.name}`);
+				await actor.update({ [PATH.TIER]: 3 });
+			}
+		}
 		await ensureHpField(actor);
 		await writeDerivedHP(actor);
 	});
